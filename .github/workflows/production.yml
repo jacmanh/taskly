@@ -1,0 +1,55 @@
+name: Production
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  build-and-push:
+    name: Push Docker image
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - uses: nrwl/nx-set-shas@v4
+
+      - name: Detect affected apps
+        id: affected
+        run: |
+          pnpm exec nx show projects --affected > affected.txt
+          echo "Affected apps:"
+          cat affected.txt
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and push Docker image
+        run: |
+          while IFS= read -r app; do
+            echo "Building and pushing Docker image for $app..."
+            pnpm exec nx run $app:docker-build --tag=ghcr.io/${{ github.repository }}-$app:${{ github.ref_name }}
+            docker push ghcr.io/${{ github.repository }}-$app:${{ github.ref_name }}
+          done < affected.txt
