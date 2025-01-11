@@ -19,7 +19,7 @@ COPY . .
 RUN npx nx run front:build:production
 
 FROM nginx:stable-alpine3.20 AS prod
-COPY nginx/nginx.conf /etc/nginx
+#COPY nginx/nginx.conf /etc/nginx
 COPY --from=build /app/dist/apps/front /usr/share/nginx/html
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
