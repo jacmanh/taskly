@@ -32,6 +32,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: fetch main branch if needed
+        if: github.ref != 'refs/heads/main'
+        run: git rev-parse --verify main || git remote set-branches origin main && git fetch --depth 1 origin main && git branch main origin/main
+
       - uses: nrwl/nx-set-shas@v4
 
       - run: pnpm exec nx affected:lint
