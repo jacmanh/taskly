@@ -63,3 +63,39 @@ jobs:
             docker push ghcr.io/${{ github.repository }}-$app:${{ github.ref_name }}
             docker push ghcr.io/${{ github.repository }}-$app:latest
           done
+          
+
+  deploy:
+    name: Deploy to production
+    runs-on: ubuntu-latest
+    depends-on: build-and-push
+
+    permissions:
+      contents: read
+      actions: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup SSH key
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Add SSH host to known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Connect and deploy
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            docker compose pull
+            docker compose down
+            docker compose up -d
+          EOF
