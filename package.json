@@ -1,5 +1,5 @@
 {
-  "name": "@flowboard/source",
+  "name": "@taskly/source",
   "type": "module",
   "version": "0.0.0",
   "license": "MIT",

@@ -15,7 +15,7 @@
 
 ## 🌐 Explore the Project
 
-- **Flowboard**: Check out the task management app we’re building as part of this project: [flowboard.myceoai.com](https://flowboard.myceoai.com)
+- **taskly**: Check out the task management app we’re building as part of this project: [tasklynhutch.myceoai.com](https://tasklynhutch.myceoai.com)
 - **Articles**: Read our series of articles, *“My CEO is an AI”*, about what we’re learning: [myceoai.com](https://myceoai.com)
 
 ---
