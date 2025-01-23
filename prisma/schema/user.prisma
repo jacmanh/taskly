@@ -1,0 +1,8 @@
+model User {
+  id        String   @id @default(uuid())
+  username  String
+  email     String
+  password  String
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
+}

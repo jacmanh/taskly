@@ -18,7 +18,7 @@
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noUnusedLocals": true,
     "pretty": true,
     "removeComments": false,
@@ -28,6 +28,11 @@
     "sourceMap": false,
     "strict": true,
     "target": "ESNext",
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": ["apps/*"],
+      "@api/*": ["apps/api/src/*"]
+    }
   }
 }

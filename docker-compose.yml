@@ -8,6 +8,9 @@ services:
       - '3200:3200'
     environment:
       - PORT=3200
+      - DATABASE_URL=postgresql://postgres:password@db:5432/postgres
+      - JWT_SECRET="awesomejwtsecret"
+      - SALT="42247"
     networks:
       - app_network
 
@@ -19,6 +22,17 @@ services:
       - api
     ports:
       - '8080:80'
+    networks:
+      - app_network
+
+  db:
+    image: postgres:17-alpine
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5432:5432'
     networks:
       - app_network
 
