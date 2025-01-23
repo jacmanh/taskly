@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import jwt from 'jsonwebtoken'
 
-const secretKey = process.env.JWT_SECRET
+const secretKey = process.env.JWT_SECRET || 'secret'
 
 export interface AuthenticatedRequest extends Request {
   userId: string
@@ -23,7 +23,7 @@ export const authenticate = async (
     }
 
     const token = authHeader.split(' ')[1]
-    const decoded = jwt.verify(token, secretKey!) as {
+    const decoded = jwt.verify(token, secretKey) as {
       id: string
       companyId: string
     }

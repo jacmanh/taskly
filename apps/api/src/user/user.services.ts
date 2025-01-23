@@ -17,11 +17,7 @@ export const getUserById = async (id: string, companyId: string) => {
 }
 
 export const createUser = async (data: Prisma.UserCreateInput) => {
-  try {
-    return db.user.create({
-      data,
-    })
-  } catch (error) {
-    throw error
-  }
+  return db.user.create({
+    data,
+  })
 }
