@@ -3,9 +3,9 @@ import { StatusCodes } from 'http-status-codes'
 import { z, ZodError } from 'zod'
 
 export const validateData =
-  <Schema extends z.ZodType<any>>(schema: Schema) =>
+  <Schema extends z.ZodType<unknown>>(schema: Schema) =>
   (
-    req: Request<{}, {}, z.infer<Schema>>,
+    req: Request<object, object, z.infer<Schema>>,
     res: Response,
     next: NextFunction
   ) => {
