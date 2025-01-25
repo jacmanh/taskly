@@ -2,7 +2,6 @@
   "compilerOptions": {
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
-    "composite": true,
     "declaration": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
@@ -31,8 +30,9 @@
     "verbatimModuleSyntax": false,
     "baseUrl": ".",
     "paths": {
+      "@api/*": ["apps/api/src/*"],
       "@app/*": ["apps/*"],
-      "@api/*": ["apps/api/src/*"]
+      "@taskly/shared": ["libs/shared/src/index.ts"]
     }
   }
 }
