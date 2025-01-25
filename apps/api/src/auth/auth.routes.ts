@@ -43,6 +43,7 @@ router.post(
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         path: '/',
+        expires: new Date(Date.now() + 86400000),
       })
       res.json({ token })
     } catch (error) {

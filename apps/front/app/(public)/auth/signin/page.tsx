@@ -13,10 +13,8 @@ const SignInPage = () => {
   })
 
   const onSubmit = async (data: SignInParams) => {
-    console.log(data)
     try {
       await signIn(data)
-      console.log('ok')
     } catch (error) {
       console.error(error)
     }
