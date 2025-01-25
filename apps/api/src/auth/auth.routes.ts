@@ -41,6 +41,7 @@ router.post(
       res.cookie('auth_token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
+        domain: process.env.COOKIE_DOMAIN,
         sameSite: 'strict',
         path: '/',
       })

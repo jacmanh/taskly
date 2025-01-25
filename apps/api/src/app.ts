@@ -9,6 +9,8 @@ import userRoutes from './user/user.routes.js'
 
 const app = express()
 
+console.log(process.env.SITE_URL)
+
 app.use(
   cors({
     origin: process.env.SITE_URL,
