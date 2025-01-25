@@ -40,6 +40,11 @@
       "options": {
         "command": "docker compose up front --build"
       }
+    },
+    "test": {
+      "options": {
+        "passWithNoTests": true
+      }
     }
   }
 }
