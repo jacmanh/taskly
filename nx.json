@@ -14,31 +14,28 @@
       }
     },
     {
-      "plugin": "@nx/vite/plugin",
+      "plugin": "@nx/next/plugin",
       "options": {
+        "startTargetName": "start",
         "buildTargetName": "build",
-        "previewTargetName": "preview",
-        "serveStaticTargetName": "serve-static",
-        "serveTargetName": "serve",
-        "testTargetName": "test"
+        "devTargetName": "dev",
+        "serveStaticTargetName": "serve-static"
       }
     }
   ],
   "generators": {
-    "@nx/react": {
+    "@nx/next": {
       "application": {
-        "babel": true,
-        "style": "tailwind",
-        "linter": "eslint",
-        "bundler": "vite"
-      },
-      "component": {
-        "style": "tailwind"
-      },
-      "library": {
         "style": "tailwind",
         "linter": "eslint"
       }
+    }
+  },
+  "targetDefaults": {
+    "@nx/esbuild:esbuild": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"]
     }
   }
 }

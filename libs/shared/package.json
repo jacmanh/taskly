@@ -1,0 +1,7 @@
+{
+  "name": "@taskly/shared",
+  "version": "0.0.1",
+  "main": "./index.cjs",
+  "types": "./index.d.ts",
+  "private": true
+}

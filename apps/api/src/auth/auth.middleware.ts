@@ -15,14 +15,24 @@ export const authenticate = async (
   next: NextFunction
 ) => {
   try {
-    const authHeader = req.headers.authorization
+    let token: string | null = null
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer ')
+    ) {
+      token = req.headers.authorization.split(' ')[1]
+    }
+
+    if (!token && req.cookies?.auth_token) {
+      token = req.cookies.auth_token
+    }
+
+    if (!token) {
       res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized' })
       return
     }
 
-    const token = authHeader.split(' ')[1]
     const decoded = jwt.verify(token, secretKey) as {
       id: string
       companyId: string

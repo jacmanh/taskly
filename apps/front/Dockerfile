@@ -12,14 +12,36 @@ COPY package.json pnpm-lock.yaml ./
 FROM node-builder AS prod-deps
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
+# Generate Prisma client
+FROM node-builder AS prisma
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+COPY prisma ./prisma
+RUN npx prisma generate
+
 # Build the app
 FROM node-builder AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
+COPY --from=prisma /app/node_modules/@prisma /app/node_modules/@prisma
+COPY --from=prisma /app/node_modules/.prisma /app/node_modules/.prisma
 RUN npx nx run front:build:production
 
-FROM nginx:stable-alpine3.20 AS prod
-#COPY nginx/nginx.conf /etc/nginx
-COPY --from=build /app/dist/apps/front /usr/share/nginx/html
+FROM node-builder AS prod
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=build /app/apps/front/public ./public
+COPY --from=build --chown=nextjs:nodejs /app/apps/front/.next/standalone ./
+COPY --from=build --chown=nextjs:nodejs /app/apps/front/.next/standalone/apps/front/server.js ./server.cjs
+COPY --from=build --chown=nextjs:nodejs /app/apps/front/.next/standalone/apps/front/.next ./.next
+COPY --from=build --chown=nextjs:nodejs /app/apps/front/.next/static ./public/_next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["node", "server.cjs"]

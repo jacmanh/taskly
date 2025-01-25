@@ -95,7 +95,7 @@ jobs:
       - name: Connect and deploy
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            docker compose pull
+            docker compose pull api front
             docker compose down api front
             docker compose up api front -d
           EOF

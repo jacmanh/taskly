@@ -4,11 +4,11 @@ import {
   generateToken,
 } from '@api/auth/auth.utils.js'
 import { seedDemoData } from '@api/seed.js'
+import { signInSchema, signUpSchema } from '@taskly/shared'
 import bcrypt from 'bcrypt'
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { validateData } from '../middleware/validation.middleware.js'
-import { signInSchema, signUpSchema } from './auth.schemas.js'
 
 const router = Router()
 
@@ -37,6 +37,13 @@ router.post(
       // ensuring that each connected user has their own isolated environment for interaction.
       const user = await seedDemoData()
       const token = generateToken(user)
+
+      res.cookie('auth_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        path: '/',
+      })
       res.json({ token })
     } catch (error) {
       next(error)
