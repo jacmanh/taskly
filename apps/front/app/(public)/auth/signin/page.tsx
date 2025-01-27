@@ -2,10 +2,14 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SignInParams, signInSchema } from '@taskly/shared'
+import { isAxiosError } from 'axios'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import { useSignIn } from '../auth.api'
 
 const SignInPage = () => {
+  const router = useRouter()
   const { mutateAsync: signIn } = useSignIn()
 
   const { handleSubmit, register } = useForm<SignInParams>({
@@ -14,9 +18,14 @@ const SignInPage = () => {
 
   const onSubmit = async (data: SignInParams) => {
     try {
-      await signIn(data)
+      const response = await signIn(data)
+      if (response.success) {
+        router.push('/')
+      }
     } catch (error) {
-      console.error(error)
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message)
+      }
     }
   }
 

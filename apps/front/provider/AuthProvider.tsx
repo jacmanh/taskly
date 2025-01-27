@@ -2,15 +2,13 @@
 
 import { User } from '@prisma/client'
 import { createContext, PropsWithChildren } from 'react'
-import { useGetMe } from '../../(protected)/user/user.api'
 
 export const AuthContext = createContext<User | undefined>(undefined)
 
-type AuthProviderProps = PropsWithChildren<unknown>
+type AuthProviderProps = PropsWithChildren<{
+  user?: User
+}>
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const { data: user } = useGetMe()
-
-  console.log(user)
+export const AuthProvider = ({ user, children }: AuthProviderProps) => {
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>
 }

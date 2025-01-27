@@ -1,4 +1,6 @@
 import './global.css'
+import { ToastProvider } from '@app/front/provider/ToastProvider'
+import React from 'react'
 import ReactQueryProvider from '../provider/ReactQueryProvider'
 
 export const metadata = {
@@ -14,7 +16,9 @@ export default function RootLayout({
   return (
     <ReactQueryProvider>
       <html lang="en">
-        <body>{children}</body>
+        <body>
+          <ToastProvider>{children}</ToastProvider>
+        </body>
       </html>
     </ReactQueryProvider>
   )
