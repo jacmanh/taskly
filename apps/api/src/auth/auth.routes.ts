@@ -21,7 +21,7 @@ router.post(
       const { email, password } = req.body
 
       const saltRounds = parseInt(process.env.SALT || '10', 10)
-      const hashedPassword = bcrypt.hashSync(password, saltRounds)
+      const hashedPassword = bcrypt.hashSync('password', saltRounds)
 
       if (
         email !== 'demo@company-demo.com' ||
@@ -45,7 +45,7 @@ router.post(
         path: '/',
         expires: new Date(Date.now() + 86400000),
       })
-      res.json({ token })
+      res.json({ success: true })
     } catch (error) {
       next(error)
     }
@@ -62,7 +62,16 @@ router.post(
       // we don't want to create new users for demo purposes
       const user = await seedDemoData()
       const token = generateToken(user)
-      res.json({ token })
+
+      res.cookie('auth_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        path: '/',
+        expires: new Date(Date.now() + 86400000),
+      })
+
+      res.json({ success: true })
 
       /* ## CREATE USER ##
        * For demo purpose creation is disabled
@@ -84,5 +93,10 @@ router.post(
     }
   }
 )
+
+router.post('/logout', (req, res) => {
+  res.clearCookie('auth_token')
+  res.json({ success: true })
+})
 
 export default router

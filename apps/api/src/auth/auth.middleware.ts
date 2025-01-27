@@ -15,18 +15,7 @@ export const authenticate = async (
   next: NextFunction
 ) => {
   try {
-    let token: string | null = null
-
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer ')
-    ) {
-      token = req.headers.authorization.split(' ')[1]
-    }
-
-    if (!token && req.cookies?.auth_token) {
-      token = req.cookies.auth_token
-    }
+    const token = req.cookies.auth_token
 
     if (!token) {
       res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized' })

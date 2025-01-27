@@ -6,28 +6,36 @@ const API_URL =
 const axiosInstance = axios.create({
   baseURL: API_URL,
   withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 })
 
-const replaceUrl = (url: string) => {
+axiosInstance.interceptors.request.use(async (config) => {
+  // replace url for local development
   if (process.env.NODE_ENV === 'development') {
-    return url.replace(/^\/api/, '')
+    config.url = config.url?.replace(/^\/api/, '')
   }
-  return url
-}
+  return config
+})
 
 export const HttpService = {
-  get: async (url: string) => {
-    const response = await axiosInstance.get(replaceUrl(url))
+  get: async <T = unknown>(
+    url: string,
+    headers?: Record<string, string>
+  ): Promise<T> => {
+    const response = await axiosInstance.get<T>(url, { headers })
     return response.data
   },
-  post: async (url: string, body: unknown) => {
-    const response = await axiosInstance(replaceUrl(url), {
-      method: 'POST',
-      data: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  post: async <T = unknown>(
+    url: string,
+    body: unknown,
+    headers?: Record<string, string>
+  ): Promise<T> => {
+    const response = await axiosInstance.post<T>(url, body, {
+      headers,
     })
+
     return response.data
   },
 }

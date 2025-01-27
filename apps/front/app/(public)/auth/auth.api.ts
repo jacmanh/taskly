@@ -1,10 +1,21 @@
 import { useMutation } from '@tanstack/react-query'
 import { SignInParams } from '@taskly/shared'
+import { AxiosError } from 'axios'
 import { HttpService } from '../../../core/httpService'
 
+type SignInResponse = {
+  success: boolean
+}
 export const useSignIn = () =>
-  useMutation<unknown, object, SignInParams>({
-    mutationFn: async ({ email, password }) => {
-      return await HttpService.post('/api/auth/signin', { email, password })
-    },
+  useMutation<SignInResponse, AxiosError, SignInParams>({
+    mutationFn: async ({ email, password }) =>
+      await HttpService.post('/api/auth/signin', {
+        email,
+        password,
+      }),
+  })
+
+export const useLogout = () =>
+  useMutation<SignInResponse, AxiosError>({
+    mutationFn: async () => await HttpService.post('/api/auth/logout', {}),
   })
