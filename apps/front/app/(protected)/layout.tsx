@@ -12,6 +12,7 @@ import './layout.css'
 const fetchUser = async () => {
   try {
     const token = await getCookie('auth_token', { cookies })
+    console.log(token)
     if (!token) {
       return undefined
     }
@@ -20,6 +21,7 @@ const fetchUser = async () => {
       Cookie: `auth_token=${token}`,
     })
   } catch (error) {
+    console.log(error)
     return undefined
   }
 }
@@ -30,6 +32,8 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const user = await fetchUser()
+
+  console.log(user)
 
   if (!user) {
     redirect('/auth/signin')
