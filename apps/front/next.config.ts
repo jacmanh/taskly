@@ -6,8 +6,7 @@ import { NextConfig } from 'next'
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
-const API_URL =
-  process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_API_URL : ''
+const API_URL = process.env.NEXT_PUBLIC_API_URL || ''
 
 const nextConfig: NextConfig = {
   output: 'standalone',
@@ -27,7 +26,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: `${API_URL}/:path*`,
+        destination: `${API_URL}/api/:path*`,
       },
     ]
   },

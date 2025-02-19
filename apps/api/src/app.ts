@@ -23,8 +23,8 @@ app.get('/', (req, res) => {
   res.send({ message: 'Hello World' })
 })
 
-app.use('/user', userRoutes)
-app.use('/auth', authRoutes)
+app.use('/api/user', userRoutes)
+app.use('/api/auth', authRoutes)
 
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Not Found' })
