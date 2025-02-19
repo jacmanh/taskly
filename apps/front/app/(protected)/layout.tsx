@@ -16,10 +16,14 @@ const fetchUser = async () => {
       return undefined
     }
 
-    return await HttpService.get<User>('/api/user/me', {
-      Cookie: `auth_token=${token}`,
-    })
+    return await HttpService.get<User>(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user/me`,
+      {
+        Cookie: `auth_token=${token}`,
+      }
+    )
   } catch (error) {
+    console.log(error)
     return undefined
   }
 }
