@@ -2,9 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node10",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "types": ["jest", "node"]
   },
   "include": [

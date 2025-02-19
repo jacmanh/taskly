@@ -1,0 +1,10 @@
+.field {
+    @apply transition-all;
+    @apply min-h-10;
+    @apply px-2;
+    @apply outline-0;
+    @apply rounded-md;
+    @apply bg-white;
+    @apply border border-gray-300;
+    @apply focus:ring-1 focus:ring-primary;
+}

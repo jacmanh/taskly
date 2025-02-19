@@ -1,0 +1,13 @@
+.app-layout {
+  width: calc(100% - 40px);
+  height: calc(100vh - 40px);
+  margin: 20px;
+
+  @apply bg-gray-100;
+  background: linear-gradient(
+    160deg,
+    rgba(243, 244, 246, 0.8) 0%,
+    rgba(243, 244, 246, 0.8) 15%,
+    rgba(243, 244, 246, 1) 30%
+  );
+}

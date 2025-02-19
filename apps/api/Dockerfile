@@ -2,7 +2,7 @@ FROM node:18-alpine AS node-builder
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+RUN corepack enable && corepack prepare pnpm@8.12.0 --activate
 
 WORKDIR /app
 
