@@ -48,7 +48,7 @@ jobs:
       - name: Detect affected apps
         id: affected
         run: |
-          AFFECTED_APPS=$(pnpm exec nx show projects --affected | tr '\n' ' ')
+          AFFECTED_APPS=$(pnpm exec nx show projects --affected --exclude='*,!tag:app' | tr '\n' ' ')
           echo "Affected apps: $AFFECTED_APPS"
           echo "apps=$AFFECTED_APPS" >> $GITHUB_ENV
 
@@ -63,7 +63,6 @@ jobs:
             docker push ghcr.io/${{ github.repository }}-$app:${{ github.ref_name }}
             docker push ghcr.io/${{ github.repository }}-$app:latest
           done
-          
 
   deploy:
     name: Deploy to production

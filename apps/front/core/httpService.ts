@@ -1,22 +1,11 @@
 import axios from 'axios'
 
-const API_URL =
-  process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_API_URL : ''
-
 const axiosInstance = axios.create({
-  baseURL: API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
-})
-
-axiosInstance.interceptors.request.use(async (config) => {
-  // replace url for local development
-  if (process.env.NODE_ENV === 'development') {
-    config.url = config.url?.replace(/^\/api/, '')
-  }
-  return config
 })
 
 export const HttpService = {
