@@ -32,7 +32,8 @@
     "paths": {
       "@api/*": ["apps/api/src/*"],
       "@app/*": ["apps/*"],
-      "@taskly/shared": ["libs/shared/src/index.ts"]
+      "@taskly/shared": ["libs/shared/src/index.ts"],
+      "@taskly/ui": ["libs/ui/src/index.ts"]
     }
   }
 }

@@ -12,6 +12,17 @@ const API_URL =
 const nextConfig: NextConfig = {
   output: 'standalone',
   cleanDistDir: true,
+  transpilePackages: ['@taskly/shared', '@taskly/ui'],
+  experimental: {
+    typedRoutes: true,
+  },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    })
+    return config
+  },
   async rewrites() {
     return [
       {

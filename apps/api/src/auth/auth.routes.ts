@@ -45,7 +45,7 @@ router.post(
         path: '/',
         expires: new Date(Date.now() + 86400000),
       })
-      res.json({ success: true })
+      res.json({ success: true, user })
     } catch (error) {
       next(error)
     }

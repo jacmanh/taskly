@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  @apply bg-gray-100;
+  background-image: url('assets/body.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: top left;
+  background-repeat: no-repeat;
+}
+
+h1 {
+  @apply text-4xl;
+}
+
+h2 {
+  @apply text-3xl;
+}
+
+h3 {
+  @apply text-2xl;
+}
+
+h4 {
+  @apply text-xl;
+}
+
+p {
+  @apply my-2;
+}
+
+code {
+  @apply bg-gray-200;
+  @apply text-gray-700;
+  @apply px-1;
+  @apply rounded-sm;
+}

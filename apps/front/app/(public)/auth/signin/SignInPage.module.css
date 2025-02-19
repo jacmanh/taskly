@@ -1,0 +1,37 @@
+.animatedCard {
+  max-height: 500px;
+  transition: max-height 0.5s ease-in-out;
+}
+
+.animatedCardLoading {
+  max-height: 110px;
+}
+
+.welcome {
+  @apply flex flex-col;
+  @apply items-center justify-center;
+  visibility: hidden;
+  opacity: 0;
+  max-height: 0;
+  transition: opacity 0.3s ease-in-out 0.3s;
+}
+
+.form {
+  visibility: visible;
+  opacity: 1;
+  max-height: 100%;
+  transition: opacity 0.2s linear, max-height 0.5s ease-in-out;
+}
+
+.animatedCardLoading .welcome {
+  opacity: 1;
+  visibility: visible;
+  max-height: 170px;
+  transition: opacity 0.2s linear 0.4s, max-height 0.2s ease-in-out 0.2s;
+}
+
+.animatedCardLoading .form {
+  opacity: 0;
+  max-height: 0;
+  visibility: hidden;
+}
