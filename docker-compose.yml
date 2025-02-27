@@ -12,6 +12,10 @@ services:
       - DATABASE_URL=postgresql://postgres:password@db:5432/postgres
       - JWT_SECRET="awesomejwtsecret"
       - SALT="42247"
+    labels:
+      - "ofelia.enabled=true"
+      - "ofelia.job-exec.db-reset.schedule=@weekly"
+      - "ofelia.job-exec.db-reset.command=npx prisma migrate reset --skip-seed --force"
     networks:
       - app_network
 
@@ -46,6 +50,17 @@ services:
       - '5432:5432'
     networks:
       - app_network
+
+  ofelia:
+    image: mcuadros/ofelia:latest
+    depends_on:
+      - api
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - app_network
+    restart: always
 
 networks:
   app_network:
