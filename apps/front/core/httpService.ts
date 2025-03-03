@@ -26,4 +26,22 @@ export const HttpService = {
 
     return response.data
   },
+  put: async <T = unknown>(
+    url: string,
+    body: unknown,
+    headers?: Record<string, string>
+  ): Promise<T> => {
+    const response = await axiosInstance.put<T>(url, body, {
+      headers,
+    })
+
+    return response.data
+  },
+  delete: async <T = unknown>(
+    url: string,
+    headers?: Record<string, string>
+  ): Promise<T> => {
+    const response = await axiosInstance.delete<T>(url, { headers })
+    return response.data
+  },
 }
