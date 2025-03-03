@@ -30,7 +30,7 @@ const navbarItems: Array<NavbarItem> = [
   },
   {
     name: 'Tasks',
-    href: '/user',
+    href: '/list',
     icon: 'list',
   },
 ]
