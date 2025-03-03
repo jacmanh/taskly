@@ -5,4 +5,13 @@ model User {
   password  String
   company   Company? @relation(fields: [companyId], references: [id])
   companyId String?
+
+  // Tasks authored by this user
+  authoredTasks Task[] @relation("TaskAuthor")
+
+  // Tasks assigned to this user
+  assignedTasks Task[] @relation("TaskAssignee")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

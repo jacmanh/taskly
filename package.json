@@ -3,7 +3,9 @@
   "type": "module",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dev:start": "nx run-many --target=serve,dev --projects=api,front --parallel"
+  },
   "private": true,
   "devDependencies": {
     "@babel/core": "^7.14.5",

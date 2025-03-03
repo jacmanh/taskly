@@ -1,0 +1,31 @@
+enum TaskStatus {
+  todo
+  in_progress @map("in-progress")
+  done
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String
+  status      TaskStatus @default(todo)
+  date        DateTime   @default(now())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Company relationship
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+
+  // Author relationship (user who created the task)
+  authorId String
+  author   User   @relation("TaskAuthor", fields: [authorId], references: [id])
+
+  // Assignee relationship (user responsible for completing the task)
+  assigneeId String?
+  assignee   User?   @relation("TaskAssignee", fields: [assigneeId], references: [id])
+
+  @@index([companyId])
+  @@index([authorId])
+  @@index([assigneeId])
+}

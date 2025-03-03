@@ -8,7 +8,7 @@ export const Card = ({ children, ...props }: CardProps) => {
     <div
       {...props}
       className={classNames(
-        'bg-white p-4 m-auto shadow shadow-gray-200 rounded-md border border-gray-200',
+        'bg-white p-4 shadow shadow-gray-200 rounded-md border border-gray-200',
         props.className
       )}
     >

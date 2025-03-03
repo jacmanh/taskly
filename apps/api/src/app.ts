@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
 import authRoutes from './auth/auth.routes.js'
+import taskRoutes from './task/task.routes.js'
 import userRoutes from './user/user.routes.js'
 
 const app = express()
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/user', userRoutes)
 app.use('/api/auth', authRoutes)
+app.use('/api/task', taskRoutes)
 
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Not Found' })

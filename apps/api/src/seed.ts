@@ -1,3 +1,4 @@
+import { TaskStatus } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import { PrismaClient } from './prismaClient.js'
 
@@ -23,6 +24,25 @@ export async function seedDemoData() {
         username: 'demo',
         companyId: company.id,
       },
+    })
+
+    await prisma.task.createMany({
+      data: [
+        {
+          title: 'Complete project proposal',
+          description: 'Draft the initial proposal for the client meeting',
+          status: TaskStatus.todo,
+          authorId: demoUser.id,
+          companyId: company.id,
+        },
+        {
+          title: 'Review pull requests',
+          description: "Check and approve team's code changes",
+          status: TaskStatus.in_progress,
+          authorId: demoUser.id,
+          companyId: company.id,
+        },
+      ],
     })
 
     return demoUser
