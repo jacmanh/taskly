@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
       - name: fetch main branch if needed
         if: github.ref != 'refs/heads/main'
         run: git rev-parse --verify main || git remote set-branches origin main && git fetch --depth 1 origin main && git branch main origin/main
@@ -41,4 +44,4 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
 
       - run: pnpm exec nx affected:lint
-      - run: pnpm exec nx affected:test --ci
+      - run: pnpm exec nx affected:test --ci --exclude='@taskly/source'

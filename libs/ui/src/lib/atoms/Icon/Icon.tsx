@@ -4,6 +4,13 @@ import HomeIcon from './assets/home.svg'
 import ListIcon from './assets/list.svg'
 import UserIcon from './assets/user.svg'
 
+export const IconList = {
+  check: CheckIcon,
+  home: HomeIcon,
+  list: ListIcon,
+  user: UserIcon,
+}
+
 export type IconProps = {
   name: keyof typeof IconList
 } & React.SVGProps<SVGSVGElement>
@@ -16,11 +23,4 @@ export const Icon = ({ name, ...props }: IconProps) => {
   }
 
   return <IconComponent {...props} />
-}
-
-const IconList = {
-  check: CheckIcon,
-  home: HomeIcon,
-  list: ListIcon,
-  user: UserIcon,
 }

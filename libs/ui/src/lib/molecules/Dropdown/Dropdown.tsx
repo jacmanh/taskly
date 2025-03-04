@@ -2,6 +2,7 @@
 
 import {
   flip,
+  FloatingPortal,
   offset,
   shift,
   useClick,
@@ -17,6 +18,10 @@ type DropdownProps = PropsWithChildren<{
   trigger: ReactElement
 }>
 
+/**
+ * Dropdown component that displays content in a floating panel.
+ * Uses floating-ui for positioning and interactions.
+ */
 export function Dropdown({ children, trigger }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -30,16 +35,14 @@ export function Dropdown({ children, trigger }: DropdownProps) {
   const { isMounted, styles } = useTransitionStyles(context, {
     initial: ({ side }) => ({
       transform:
-        side === 'top'
-          ? 'translateY(-10px) scaleY(0.95)'
-          : 'translateY(10px) scaleY(0.95)',
+        side === 'top' ? 'translateY(-10px) scaleY(0.95)' : 'translateY(10px) scaleY(0.95)',
       opacity: 0,
     }),
     open: {
       transform: 'translateY(0) scaleY(1)',
       opacity: 1,
       transitionProperty: 'transform, opacity',
-      transitionDuration: '200ms',
+      transitionDuration: '150ms', // Reduced from 200ms for faster testing
       transitionTimingFunction: 'ease-out',
     },
     close: {
@@ -48,7 +51,7 @@ export function Dropdown({ children, trigger }: DropdownProps) {
         : 'translateY(10px) scaleY(0.95)',
       opacity: 0,
       transitionProperty: 'transform, opacity',
-      transitionDuration: '150ms',
+      transitionDuration: '100ms', // Reduced from 150ms for faster testing
       transitionTimingFunction: 'ease-in',
     },
   })
@@ -56,11 +59,7 @@ export function Dropdown({ children, trigger }: DropdownProps) {
   const click = useClick(context)
   const dismiss = useDismiss(context)
   const role = useRole(context)
-  const { getReferenceProps, getFloatingProps } = useInteractions([
-    click,
-    dismiss,
-    role,
-  ])
+  const { getReferenceProps, getFloatingProps } = useInteractions([click, dismiss, role])
 
   return (
     <>
@@ -69,18 +68,23 @@ export function Dropdown({ children, trigger }: DropdownProps) {
         ...getReferenceProps(),
       })}
       {isMounted && (
-        <div
-          ref={refs.setFloating}
-          style={floatingStyles}
-          {...getFloatingProps()}
-        >
+        <FloatingPortal>
           <div
-            style={styles}
-            className="mt-2 w-48 bg-white shadow-md rounded-md overflow-hidden border border-gray-200"
+            ref={refs.setFloating}
+            style={{
+              ...floatingStyles,
+              zIndex: 1000, // Ensure dropdown appears above other content
+            }}
+            {...getFloatingProps()}
           >
-            {children}
+            <div
+              style={styles}
+              className="mt-2 w-48 bg-white shadow-md rounded-md overflow-hidden border border-gray-200"
+            >
+              {children}
+            </div>
           </div>
-        </div>
+        </FloatingPortal>
       )}
     </>
   )

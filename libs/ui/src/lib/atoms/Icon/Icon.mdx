@@ -1,0 +1,42 @@
+import {
+  Canvas,
+  Controls,
+  Description,
+  IconGallery,
+  IconItem,
+  Meta,
+  Story,
+  Subtitle,
+  Title,
+} from '@storybook/blocks'
+import { Icon, IconList } from './Icon'
+
+<Meta title="Atoms/Iconography" />
+
+# Iconography
+
+<IconGallery>
+  {Object.keys(IconList).map((iconName) => (
+    <IconItem name={iconName} key={iconName}>
+      <Icon name={iconName} />
+    </IconItem>
+  ))}
+</IconGallery>
+
+# How to use
+
+```tsx
+<Icon name="Add" />
+```
+
+Use font size and color props to customize the icon.
+
+<div style={{ fontSize: '24px', color: 'red' }}>
+  <Icon name="home" />
+</div>
+
+```tsx
+<div style={{ fontSize: '24px', color: 'red' }}>
+  <Icon name="home" />
+</div>
+```

@@ -7,8 +7,18 @@
   "// targets": "to see all targets run: nx show project ui --web",
   "targets": {
     "test": {
+      "executor": "nx:run-commands",
       "options": {
-        "passWithNoTests": true
+        "command": "npx concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npx http-server storybook-static --port 6006 --silent\" \"npx wait-on http://localhost:6006 && npx test-storybook --url http://localhost:6006 --junit --maxWorkers=2\"",
+        "cwd": "."
+      },
+      "dependsOn": ["build-storybook"]
+    },
+    "build-storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "storybook build",
+        "cwd": "."
       }
     }
   }

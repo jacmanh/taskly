@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { ButtonHTMLAttributes, PropsWithChildren } from 'react'
+import { ButtonHTMLAttributes, forwardRef, PropsWithChildren } from 'react'
 import styles from './Button.module.css'
 
 type ButtonProps = PropsWithChildren<
@@ -8,18 +8,21 @@ type ButtonProps = PropsWithChildren<
   } & ButtonHTMLAttributes<HTMLButtonElement>
 >
 
-export const Button = ({ variant, ...props }: ButtonProps) => {
-  return (
-    <button
-      {...props}
-      className={classNames(
-        styles.button,
-        {
-          [styles.buttonPrimary]: variant === 'primary',
-          [styles.buttonSecondary]: variant === 'secondary',
-        },
-        props.className
-      )}
-    />
-  )
-}
+export const Button = forwardRef(
+  ({ variant, ...props }: ButtonProps, ref: React.Ref<HTMLButtonElement>) => {
+    return (
+      <button
+        {...props}
+        className={classNames(
+          styles.button,
+          {
+            [styles.buttonPrimary]: variant === 'primary',
+            [styles.buttonSecondary]: variant === 'secondary',
+          },
+          props.className
+        )}
+        ref={ref}
+      />
+    )
+  }
+)
