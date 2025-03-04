@@ -1,0 +1,54 @@
+- This is a Monorepo managed with NX
+- apps/api is an express api
+- apps/front is a next.js app
+- libs/ is a library folder that handles every shared logic between apps
+
+# Rules
+1. I prefer my files to be featured layered.
+2. I like clean code with correct naming.
+- apps/api and apps/front share the same package.json and tsconfig.json
+- libs/ is included in both apps/api and apps/front
+- libs/shared is a common library for every app
+- always use named exports if possible
+
+# Prompt Structure
+- Context: Provide relevant project context to guide the AI.
+- Requirements: Clearly specify what the code should achieve.
+- Examples: Include at least one input/output example to illustrate expectations.
+
+# Code Style Guidelines
+- Naming Conventions: Use camelCase for variable names and PascalCase for class names.
+- Indentation: Use 2 spaces for indentation throughout the codebase.
+- File Organization: Maintain a layered structure, separating concerns logically.
+
+# Testing Requirements
+- Unit Tests: Always include unit tests for new functions using Jest (for JavaScript/TypeScript).
+- Test Coverage: Aim for at least 80% test coverage for critical components.
+
+# Error Handling and Logging
+- Error Handling: Include try/catch blocks in functions that may throw errors.
+- Logging: Use console.error for logging errors and provide meaningful messages.
+
+# Feedback Loop
+- Iterative Feedback: After generating code, request feedback on clarity and functionality.
+- Alternative Suggestions: If the initial output is not satisfactory, suggest alternative implementations.
+
+# Performance Considerations
+- Optimize Code: Focus on performance optimizations where applicable.
+- Avoid Redundancy: Minimize unnecessary computations and avoid large data structures when possible.
+
+# Documentation
+- Comments: Include JSDoc comments for all public functions and complex logic.
+- Inline Documentation: Avoid inline comments if not necessary.
+
+## Commands
+- nx run api:build
+- nx run front:build
+- nx run api:serve // to serve the api
+- nx run front:dev // to serve the front
+
+## Notes
+My production setup is:
+- github actions // to run the tests and create docker images
+- docker-compose file on my OVH VPS to run the app
+- NGINX on my OVH VPS for reverse proxy
