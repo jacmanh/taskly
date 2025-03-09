@@ -1,11 +1,17 @@
+import { fileURLToPath } from 'node:url'
 import path from 'path'
 import type { StorybookConfig } from '@storybook/react-vite'
 import react from '@vitejs/plugin-react'
 import { mergeConfig } from 'vite'
 import svgr from 'vite-plugin-svgr'
 
+const dirname = path.dirname(fileURLToPath(import.meta.url))
+
 const config: StorybookConfig = {
-  stories: ['../**/*.mdx', '../**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    path.join(dirname, '../**/*.mdx'),
+    path.join(dirname, '../**/*.stories.@(js|jsx|mjs|ts|tsx)'),
+  ],
   addons: [
     {
       name: '@storybook/addon-essentials',
@@ -26,10 +32,10 @@ const config: StorybookConfig = {
     return mergeConfig(config, {
       resolve: {
         alias: {
-          '@taskly/shared': path.resolve(__dirname, '../libs/shared/src/index.ts'),
-          '@taskly/ui': path.resolve(__dirname, '../libs/ui/src/index.ts'),
+          '@taskly/shared': path.resolve(dirname, '../libs/shared/src/index.ts'),
+          '@taskly/ui': path.resolve(dirname, '../libs/ui/src/index.ts'),
           // Mock Prisma client for Storybook
-          '@prisma/client': path.resolve(__dirname, './mocks/prisma-client.js'),
+          '@prisma/client': path.resolve(dirname, './mocks/prisma-client.js'),
         },
       },
       plugins: [
@@ -42,7 +48,7 @@ const config: StorybookConfig = {
         }),
       ],
       css: {
-        postcss: path.resolve(__dirname, './postcss.config.cjs'),
+        postcss: path.resolve(dirname, './postcss.config.cjs'),
       },
       assetsInclude: ['**/*.svg'],
     })
