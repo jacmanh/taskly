@@ -13,6 +13,8 @@ jobs:
   build-and-push:
     name: Push Docker image
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
 
     permissions:
       packages: write
