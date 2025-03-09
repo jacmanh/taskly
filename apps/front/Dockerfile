@@ -20,6 +20,10 @@ RUN npx prisma generate
 
 # Build the app
 FROM node-builder AS build
+
+# Add build arguments for Next.js public environment variables
+ARG NEXT_PUBLIC_GA_MEASUREMENT_ID
+ENV NEXT_PUBLIC_GA_MEASUREMENT_ID=${NEXT_PUBLIC_GA_MEASUREMENT_ID}
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
 COPY --from=prisma /app/node_modules/@prisma /app/node_modules/@prisma

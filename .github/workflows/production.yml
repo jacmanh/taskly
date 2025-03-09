@@ -59,7 +59,11 @@ jobs:
         run: |
           for app in $apps; do
             echo "Building and pushing Docker image for $app..."
-            pnpm exec nx run $app:docker-build --tag=ghcr.io/${{ github.repository }}-$app:${{ github.ref_name }} --tag=ghcr.io/${{ github.repository }}-$app:latest
+            if [ "$app" = "front" ]; then
+              pnpm exec nx run $app:docker-build --tag=ghcr.io/${{ github.repository }}-$app:${{ github.ref_name }} --tag=ghcr.io/${{ github.repository }}-$app:latest --build-arg NEXT_PUBLIC_GA_MEASUREMENT_ID="${{ secrets.NEXT_PUBLIC_GA_MEASUREMENT_ID }}"
+            else
+              pnpm exec nx run $app:docker-build --tag=ghcr.io/${{ github.repository }}-$app:${{ github.ref_name }} --tag=ghcr.io/${{ github.repository }}-$app:latest
+            fi
             docker push ghcr.io/${{ github.repository }}-$app:${{ github.ref_name }}
             docker push ghcr.io/${{ github.repository }}-$app:latest
           done
