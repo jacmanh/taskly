@@ -10,29 +10,22 @@ import React from 'react'
 import './layout.css'
 
 const fetchUser = async () => {
+  const token = await getCookie('auth_token', { cookies })
   try {
-    const token = await getCookie('auth_token', { cookies })
     if (!token) {
       return undefined
     }
 
-    return await HttpService.get<User>(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/user/me`,
-      {
-        Cookie: `auth_token=${token}`,
-      }
-    )
+    return await HttpService.get<User>(`${process.env.NEXT_PUBLIC_API_URL}/api/user/me`, {
+      Cookie: `auth_token=${token}`,
+    })
   } catch (error) {
     console.log(error)
     return undefined
   }
 }
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const user = await fetchUser()
 
   if (!user) {
@@ -51,9 +44,7 @@ export default async function RootLayout({
           <Navbar />
         </aside>
         <main className="w-full p-2">
-          <div className="w-full h-full bg-white rounded-md border border-gray-200">
-            {children}
-          </div>
+          <div className="w-full h-full bg-white rounded-md border border-gray-200">{children}</div>
         </main>
       </div>
     </AuthProvider>
