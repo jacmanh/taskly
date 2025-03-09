@@ -1,31 +1,32 @@
 /**
  * Google Analytics script component for Next.js
  */
-'use client';
+'use client'
 
-import { usePathname, useSearchParams } from 'next/navigation';
-import Script from 'next/script';
-import { useEffect } from 'react';
-import { trackView } from '../core/analytics';
+import { usePathname } from 'next/navigation'
+import Script from 'next/script'
+import { Suspense, useEffect } from 'react'
+import { trackView } from '../core/analytics'
+import { SearchParamsTracker } from './SearchParamsTracker'
 
+/**
+ * Main Google Analytics component that loads scripts and initializes tracking
+ */
 export function GoogleAnalytics() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const pathname = usePathname()
+  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
-  // Track page views when the route changes
+  // Track page views when the path changes
   useEffect(() => {
-    if (!measurementId) return;
-    
-    // Combine pathname and search params for full URL tracking
-    const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
-    
-    // Track the page view
-    trackView(url);
-  }, [pathname, searchParams, measurementId]);
+    if (!measurementId || !pathname) return
+
+    // Track the page view with just the pathname
+    // Search params will be handled by the SearchParamsTracker component
+    trackView(pathname)
+  }, [pathname, measurementId])
 
   // Only render the GA script if we have a measurement ID
-  if (!measurementId) return null;
+  if (!measurementId) return null
 
   return (
     <>
@@ -48,8 +49,12 @@ export function GoogleAnalytics() {
           `,
         }}
       />
+      {/* Wrap useSearchParams in a Suspense boundary */}
+      <Suspense fallback={null}>
+        <SearchParamsTracker />
+      </Suspense>
     </>
-  );
+  )
 }
 
-export default GoogleAnalytics;
+export default GoogleAnalytics
