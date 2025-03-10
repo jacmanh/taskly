@@ -12,9 +12,10 @@ export interface TaskItemProps {
   }
   displayStatus?: boolean
   className?: string
+  onClick?: () => void
 }
 
-export const TaskItem = ({ task, displayStatus, className }: TaskItemProps) => {
+export const TaskItem = ({ task, displayStatus, className, onClick }: TaskItemProps) => {
   const statusClasses = {
     todo: 'bg-gray-100 text-gray-700',
     in_progress: 'bg-yellow-100 text-yellow-700',
@@ -34,10 +35,8 @@ export const TaskItem = ({ task, displayStatus, className }: TaskItemProps) => {
   }
 
   return (
-    <Card className={className || 'min-w-64'}>
-      <div className="text-sm text-gray-500 font-semibold">
-        {formatDate(task.date)}
-      </div>
+    <Card className={className || 'min-w-64'} onClick={onClick}>
+      <div className="text-sm text-gray-500 font-semibold">{formatDate(task.date)}</div>
       <div className="text-lg font-semibold">{task.title}</div>
       <div className="text-sm text-gray-500">{task.description}</div>
       {displayStatus && (

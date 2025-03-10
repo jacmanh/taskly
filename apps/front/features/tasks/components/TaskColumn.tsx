@@ -1,8 +1,10 @@
 import { Task, TaskStatus } from '@prisma/client'
+import { useModal } from '@taskly/ui'
 import classNames from 'classnames'
 import { useRef, useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { DraggableTaskItem } from './DraggableTaskItem'
+import { TaskDetailModal } from './TaskDetailModal'
 
 interface TaskColumnProps {
   title: string
@@ -17,44 +19,40 @@ interface DragItem {
   status: TaskStatus
 }
 
-export const TaskColumn = ({ title, status, tasks, bgColor, onTaskMoved }: TaskColumnProps) => {
-  const dropRef = useRef<HTMLDivElement>(null)
-  const [showPlaceholder, setShowPlaceholder] = useState(false)
+export const TaskColumn = ({
+  title,
+  status,
+  tasks,
+  bgColor,
+  onTaskMoved: handleTaskMoved,
+}: TaskColumnProps) => {
+  const { openModal } = useModal()
+  const ref = useRef<HTMLDivElement>(null)
+  const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(false)
 
   const [{ isOver }, drop] = useDrop<DragItem, void, { isOver: boolean }>(() => ({
     accept: 'TASK',
-    drop: (item: DragItem) => {
-      if (item.status !== status) {
-        onTaskMoved(item.id, status)
+    drop: ({ id, status: droppedStatus }) => {
+      if (droppedStatus !== status) {
+        handleTaskMoved(id, status)
       }
-      setShowPlaceholder(false)
+      setIsPlaceholderVisible(false)
     },
-    hover: (item) => {
-      // Only show placeholder if the task is from a different column
-      if (item.status !== status) {
-        setShowPlaceholder(true)
-      }
+    hover: ({ status: droppedStatus }) => {
+      setIsPlaceholderVisible(droppedStatus !== status)
     },
     collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
+      isOver: monitor.isOver(),
     }),
   }))
 
-  // Connect the drop ref to our React ref
-  drop(dropRef)
+  drop(ref)
 
   return (
     <div
-      ref={dropRef}
-      className={classNames(
-        'rounded-lg p-4',
-        bgColor,
-        { 'ring-2 ring-blue-400': isOver },
-        'transition-all'
-      )}
-      onDragLeave={() => {
-        setShowPlaceholder(false)
-      }}
+      ref={ref}
+      className={classNames('rounded-lg p-4', bgColor, { 'ring-2 ring-blue-400': isOver })}
+      onDragLeave={() => setIsPlaceholderVisible(false)}
     >
       <h4 className="font-semibold text-lg mb-3 flex items-center justify-between">
         {title}
@@ -65,12 +63,16 @@ export const TaskColumn = ({ title, status, tasks, bgColor, onTaskMoved }: TaskC
           <p className="text-gray-500 text-sm italic text-center py-4">No tasks in this column</p>
         ) : (
           tasks.map((task) => (
-            <DraggableTaskItem key={task.id} task={task} displayStatus={false} className="w-full" />
+            <DraggableTaskItem
+              key={task.id}
+              task={task}
+              displayStatus={false}
+              className="w-full"
+              onClick={() => openModal(<TaskDetailModal taskId={task.id} />)}
+            />
           ))
         )}
-
-        {/* Simple placeholder with gray dotted border */}
-        {isOver && showPlaceholder && (
+        {isOver && isPlaceholderVisible && (
           <div className="border-2 border-dashed border-gray-300 rounded-lg h-24 bg-gray-50 flex items-center justify-center">
             <p className="text-gray-400 text-sm">Drop here</p>
           </div>

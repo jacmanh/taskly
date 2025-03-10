@@ -13,3 +13,8 @@ export { Dropdown } from './lib/molecules/Dropdown/Dropdown'
 export { DropdownItem } from './lib/molecules/Dropdown/DropdownItem'
 export { TaskItem } from './lib/molecules/TaskItem/TaskItem'
 export type { TaskItemProps } from './lib/molecules/TaskItem/TaskItem'
+
+export { useModal, ModalProvider } from './lib/molecules/Modal/ModalProvider'
+export { ModalHeader } from './lib/molecules/Modal/ModalHeader'
+export { ModalBody } from './lib/molecules/Modal/ModalBody'
+export { ModalFooter } from './lib/molecules/Modal/ModalFooter'
