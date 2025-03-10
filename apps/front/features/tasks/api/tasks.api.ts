@@ -1,6 +1,6 @@
-import { HttpService } from '@app/front/core/httpService'
-import { Task, TaskStatus } from '@prisma/client'
+import { TaskStatus } from '@prisma/client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Task, TaskService } from '../services/task.service'
 
 /**
  * Hook to get all tasks for the current user
@@ -8,9 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 export const useGetUserTasks = () =>
   useQuery<Task[]>({
     queryKey: ['tasks', 'user'],
-    queryFn: async () => {
-      return await HttpService.get<Task[]>('/api/task')
-    },
+    queryFn: () => TaskService.getUserTasks(),
   })
 
 /**
@@ -19,9 +17,7 @@ export const useGetUserTasks = () =>
 export const useGetCompanyTasks = () =>
   useQuery<Task[]>({
     queryKey: ['tasks', 'company'],
-    queryFn: async () => {
-      return await HttpService.get<Task[]>('/api/task/company')
-    },
+    queryFn: () => TaskService.getCompanyTasks(),
   })
 
 /**
@@ -30,9 +26,7 @@ export const useGetCompanyTasks = () =>
 export const useGetTaskById = (id: string) =>
   useQuery<Task>({
     queryKey: ['tasks', id],
-    queryFn: async () => {
-      return await HttpService.get<Task>(`/api/task/${id}`)
-    },
+    queryFn: () => TaskService.getTaskById(id),
     enabled: !!id, // Only run the query if an ID is provided
   })
 
@@ -41,16 +35,10 @@ export const useGetTaskById = (id: string) =>
  */
 export const useUpdateTaskStatus = () => {
   const queryClient = useQueryClient()
-  
+
   return useMutation({
-    mutationFn: async ({ 
-      taskId, 
-      status 
-    }: { 
-      taskId: string; 
-      status: TaskStatus 
-    }) => {
-      return await HttpService.put<Task>(`/api/task/${taskId}`, { status })
+    mutationFn: async ({ taskId, status }: { taskId: string; status: TaskStatus }) => {
+      return await TaskService.updateTaskStatus(taskId, status)
     },
     onSuccess: () => {
       // Invalidate and refetch tasks queries

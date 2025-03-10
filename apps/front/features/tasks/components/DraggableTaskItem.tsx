@@ -8,6 +8,7 @@ import { useDrag } from 'react-dnd'
 export interface DraggableTaskItemProps extends Omit<TaskItemProps, 'task'> {
   task: Task
   onTaskMoved?: (taskId: string, newStatus: TaskStatus) => void
+  onClick?: () => void
 }
 
 interface DragItem {
@@ -48,7 +49,7 @@ export const DraggableTaskItem = ({ task, ...props }: DraggableTaskItemProps) =>
         { 'shadow-lg': isDragging }
       )}
     >
-      <TaskItem task={uiTask} {...props} />
+      <TaskItem task={uiTask} {...props} onClick={props.onClick} />
     </div>
   )
 }
