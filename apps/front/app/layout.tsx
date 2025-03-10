@@ -1,4 +1,5 @@
 import { ToastProvider } from '@app/front/provider/ToastProvider'
+import { ModalProvider } from '@taskly/ui'
 import React from 'react'
 import { GoogleAnalytics } from '../components/GoogleAnalytics'
 import ReactQueryProvider from '../provider/ReactQueryProvider'
@@ -15,7 +16,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <html lang="en">
         <head />
         <body>
-          <ToastProvider>{children}</ToastProvider>
+          <ModalProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </ModalProvider>
           <GoogleAnalytics />
         </body>
       </html>
