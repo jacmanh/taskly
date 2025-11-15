@@ -1,0 +1,87 @@
+{
+  "name": "api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "dependsOn": ["prisma-generate"],
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/api",
+        "main": "apps/api/src/main.ts",
+        "tsConfig": "apps/api/tsconfig.app.json",
+        "assets": [
+          "apps/api/src/assets",
+          {
+            "glob": "**/*",
+            "input": "apps/api/prisma",
+            "output": "./prisma"
+          }
+        ],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/api/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "api:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api:build:development"
+        },
+        "production": {
+          "buildTarget": "api:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "prisma-generate": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/node_modules/.prisma/client"],
+      "options": {
+        "command": "prisma generate",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prisma-migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma migrate dev",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prisma-studio": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma studio",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prisma-push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma db push",
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "front",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/front",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/front"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/front"
+        },
+        "production": {
+          "outputPath": "dist/apps/front"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "front:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "front:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "front:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "front:build:production"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

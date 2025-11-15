@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install:*)",
+      "Bash(pnpm build:*)",
+      "Bash(tree:*)",
+      "Bash(pnpm dev:front:*)",
+      "Bash(pnpm build:front:*)",
+      "Bash(cat:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm add:*)",
+      "Bash(npx prisma init)",
+      "Bash(curl:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(find:*)",
+      "Bash(node -e:*)",
+      "Bash(pnpm build:api:*)",
+      "Bash(nx build:*)",
+      "Bash(npx ts-node:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

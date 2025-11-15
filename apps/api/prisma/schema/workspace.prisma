@@ -1,0 +1,19 @@
+model Workspace {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique       // ex: team-name, pratique pour les URLs
+  color     String?                // optionnel (tag visuel)
+  icon      String?                // optionnel (emoji/logo)
+
+  ownerId   String
+  owner     User     @relation("WorkspaceOwner", fields: [ownerId], references: [id])
+
+  members   WorkspaceMember[]
+  projects  Project[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  archivedAt DateTime?
+
+  @@map("workspaces")
+}

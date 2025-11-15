@@ -1,0 +1,13 @@
+{
+  "name": "front",
+  "version": "0.0.1",
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.9",
+    "@taskly/design-system": "workspace:*",
+    "@taskly/types": "workspace:*",
+    "axios": "^1.13.2"
+  },
+  "devDependencies": {
+    "@tanstack/react-query-devtools": "^5.90.2"
+  }
+}
