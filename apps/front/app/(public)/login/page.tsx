@@ -5,35 +5,36 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { User, Mail, Lock } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react';
 import { Input, Button } from '@taskly/design-system';
 import { useAuth } from '@features/auth/hooks/useAuth';
 import {
-  registerSchema,
-  type RegisterFormData,
-} from '@features/auth/schemas/register.schema';
+  loginSchema,
+  type LoginFormData,
+} from '@features/auth/schemas/login.schema';
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const router = useRouter();
-  const { register: registerUser, isLoading } = useAuth();
+  const { login, isLoading } = useAuth();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
-  } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     setSubmitError(null);
 
     try {
-      await registerUser(data);
-      router.push('/dashboard');
+      await login(data);
     } catch (err: any) {
-      setSubmitError(err?.message || 'Registration failed. Please try again.');
+      setSubmitError(
+        err?.message || 'Login failed. Please check your credentials.'
+      );
     }
   };
 
@@ -42,15 +43,15 @@ export default function RegisterPage() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
+            Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
             <Link
-              href="/login"
+              href="/register"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-              sign in to your existing account
+              create a new account
             </Link>
           </p>
         </div>
@@ -67,16 +68,6 @@ export default function RegisterPage() {
             </div>
           )}
           <div className="space-y-4">
-            <div>
-              <Input
-                type="text"
-                label="Full name"
-                placeholder="Full name (optional)"
-                disabled={isLoading || isSubmitting}
-                icon={<User size={18} />}
-                {...register('name')}
-              />
-            </div>
             <div>
               <Input
                 type="email"
@@ -101,18 +92,6 @@ export default function RegisterPage() {
                 {...register('password')}
               />
             </div>
-            <div>
-              <Input
-                type="password"
-                label="Confirm password"
-                placeholder="Confirm password"
-                disabled={isLoading || isSubmitting}
-                required
-                icon={<Lock size={18} />}
-                error={errors.confirmPassword?.message}
-                {...register('confirmPassword')}
-              />
-            </div>
           </div>
 
           <Button
@@ -121,9 +100,7 @@ export default function RegisterPage() {
             loading={isLoading || isSubmitting}
             className="w-full"
           >
-            {isLoading || isSubmitting
-              ? 'Creating account...'
-              : 'Create account'}
+            {isLoading || isSubmitting ? 'Signing in...' : 'Sign in'}
           </Button>
         </form>
       </div>

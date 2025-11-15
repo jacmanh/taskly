@@ -10,3 +10,10 @@ export type {
   RefreshTokenResponse,
   ApiError,
 } from './auth';
+
+// Workspace types
+export type {
+  Workspace,
+  CreateWorkspaceInput,
+  UpdateWorkspaceInput,
+} from './workspace';

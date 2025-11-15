@@ -1,16 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@features/auth/hooks/useAuth';
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const { user, logout, isLoading } = useAuth();
-
-  const handleLogout = async () => {
-    await logout();
-    router.push('/login');
-  };
+  const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -26,27 +19,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">Taskly</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-700">
-                {user.name || user.email}
-              </div>
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -75,7 +47,9 @@ export default function DashboardPage() {
                   <dd className="mt-1 text-sm text-gray-900">{user.id}</dd>
                 </div>
                 <div className="sm:col-span-1">
-                  <dt className="text-sm font-medium text-gray-500">Email Verified</dt>
+                  <dt className="text-sm font-medium text-gray-500">
+                    Email Verified
+                  </dt>
                   <dd className="mt-1 text-sm text-gray-900">
                     {user.emailVerified ? 'Yes' : 'No'}
                   </dd>

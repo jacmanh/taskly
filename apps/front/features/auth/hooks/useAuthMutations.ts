@@ -12,12 +12,13 @@ export function useLogin() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (credentials: LoginCredentials) => authService.login(credentials),
+    mutationFn: (credentials: LoginCredentials) =>
+      authService.login(credentials),
     onSuccess: (data) => {
       // Set user data in cache
       queryClient.setQueryData(authQueryKeys.user(), data.user);
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Redirect to workspaces
+      router.push('/workspaces');
     },
   });
 }
@@ -30,12 +31,13 @@ export function useRegister() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (credentials: RegisterCredentials) => authService.register(credentials),
+    mutationFn: (credentials: RegisterCredentials) =>
+      authService.register(credentials),
     onSuccess: (data) => {
       // Set user data in cache
       queryClient.setQueryData(authQueryKeys.user(), data.user);
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Redirect to workspaces
+      router.push('/workspaces');
     },
   });
 }

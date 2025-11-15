@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Define public routes that don't require authentication
-const publicRoutes = ['/', '/login', '/register'];
+const publicRoutes = ['/login', '/register'];
 
 // Define routes that should redirect to dashboard if already authenticated
 const authRoutes = ['/login', '/register'];
@@ -17,13 +17,18 @@ export function middleware(request: NextRequest) {
   // Get the refresh token from cookies
   const hasRefreshToken = request.cookies.has('refreshToken');
 
-  // If trying to access auth routes (login/register) while authenticated, redirect to dashboard
+  // If on home page and authenticated, redirect to workspaces
+  if (pathname === '/' && hasRefreshToken) {
+    return NextResponse.redirect(new URL('/workspaces', request.url));
+  }
+
+  // If trying to access auth routes (login/register) while authenticated, redirect to workspaces
   if (isAuthRoute && hasRefreshToken) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL('/workspaces', request.url));
   }
 
   // If trying to access protected route without authentication, redirect to login
-  if (!isPublicRoute && !hasRefreshToken) {
+  if (!isPublicRoute && pathname !== '/' && !hasRefreshToken) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('from', pathname);
     return NextResponse.redirect(loginUrl);
