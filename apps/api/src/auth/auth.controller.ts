@@ -16,6 +16,7 @@ import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto';
 import { Public } from './decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { AuthenticatedUser } from './interfaces/authenticated-user.interface';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { createApiError } from '../common/errors/api-error.util';
 
@@ -96,7 +97,7 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(
-    @CurrentUser() user: any,
+    @CurrentUser() user: AuthenticatedUser,
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ): Promise<void> {

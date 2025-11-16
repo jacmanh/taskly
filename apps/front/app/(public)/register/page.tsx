@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,7 +13,6 @@ import {
 } from '@features/auth/schemas/register.schema';
 
 export default function RegisterPage() {
-  const router = useRouter();
   const { register: registerUser, isLoading } = useAuth();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -31,7 +29,7 @@ export default function RegisterPage() {
 
     try {
       await registerUser(data);
-    } catch (err: any) {
+    } catch (err) {
       setSubmitError(err?.message || 'Registration failed. Please try again.');
     }
   };

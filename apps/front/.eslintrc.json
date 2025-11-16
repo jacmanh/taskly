@@ -1,0 +1,17 @@
+{
+  "extends": ["next/core-web-vitals", "../../.eslintrc.json"],
+  "ignorePatterns": ["!**/*", "node_modules", ".next", "out", "dist"],
+  "settings": {
+    "next": {
+      "rootDir": ["apps/front/"]
+    }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "@nx/enforce-module-boundaries": "off"
+      }
+    }
+  ]
+}

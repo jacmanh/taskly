@@ -1,6 +1,12 @@
 'use client';
 
-import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { usePathname } from 'next/navigation';
 import type { LoginCredentials, RegisterCredentials } from '@taskly/types';
 import type { AuthContextType } from '../types/auth-context';
@@ -9,7 +15,9 @@ import { useCurrentUser } from '../hooks/useCurrentUser';
 import { authService } from '../services/auth.service';
 import { getAccessToken } from '../services/axios';
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -25,7 +33,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [hasToken, setHasToken] = useState(() => !!getAccessToken());
 
   // Don't enable the query by default - it will be enabled when needed
-  const { data: user, isLoading, refetch } = useCurrentUser({ enabled: hasToken });
+  const {
+    data: user,
+    isLoading,
+    refetch,
+  } = useCurrentUser({ enabled: hasToken });
 
   // Initialize auth state on mount only for protected routes
   useEffect(() => {
@@ -43,6 +55,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // This will trigger useCurrentUser to fetch the user
         await refetch();
       } catch (error) {
+        void error;
         // No valid session - middleware will handle redirect
         console.error('No valid session');
       }
@@ -89,7 +102,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       accessToken,
       isAuthenticated: !!user && !!accessToken,
       isLoading:
-        isLoading || loginMutation.isPending || registerMutation.isPending || logoutMutation.isPending,
+        isLoading ||
+        loginMutation.isPending ||
+        registerMutation.isPending ||
+        logoutMutation.isPending,
       login,
       register,
       logout,

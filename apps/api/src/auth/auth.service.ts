@@ -5,13 +5,20 @@ import {
   BadRequestException,
   HttpStatus,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, type JwtSignOptions } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
-import type { RefreshTokenResponse, AuthResponseWithRefreshToken } from '@taskly/types';
+import type {
+  RefreshTokenResponse,
+  AuthResponseWithRefreshToken,
+} from '@taskly/types';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto, RegisterDto } from './dto';
-import { JwtPayload, JwtRefreshPayload } from './interfaces/jwt-payload.interface';
+import {
+  JwtPayload,
+  JwtRefreshPayload,
+} from './interfaces/jwt-payload.interface';
+import { AuthenticatedUser } from './interfaces/authenticated-user.interface';
 import { createApiError } from '../common/errors/api-error.util';
 
 @Injectable()
@@ -19,10 +26,12 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<AuthResponseWithRefreshToken> {
+  async register(
+    registerDto: RegisterDto
+  ): Promise<AuthResponseWithRefreshToken> {
     const { email, password, name } = registerDto;
 
     // Check whether the user already exists
@@ -35,13 +44,16 @@ export class AuthService {
         createApiError(
           HttpStatus.CONFLICT,
           'AUTH_EMAIL_ALREADY_EXISTS',
-          'An account with this email already exists.',
-        ),
+          'An account with this email already exists.'
+        )
       );
     }
 
     // Hash the password with the configured number of rounds
-    const rounds = parseInt(this.configService.get<string>('BCRYPT_ROUNDS') || '12', 10);
+    const rounds = parseInt(
+      this.configService.get<string>('BCRYPT_ROUNDS') || '12',
+      10
+    );
     const hashedPassword = await bcrypt.hash(password, rounds);
 
     // Create the user
@@ -83,8 +95,8 @@ export class AuthService {
         createApiError(
           HttpStatus.UNAUTHORIZED,
           'AUTH_INVALID_CREDENTIALS',
-          'Invalid email or password.',
-        ),
+          'Invalid email or password.'
+        )
       );
     }
 
@@ -94,8 +106,8 @@ export class AuthService {
         createApiError(
           HttpStatus.UNAUTHORIZED,
           'AUTH_ACCOUNT_DISABLED',
-          'This account has been disabled.',
-        ),
+          'This account has been disabled.'
+        )
       );
     }
 
@@ -107,8 +119,8 @@ export class AuthService {
         createApiError(
           HttpStatus.UNAUTHORIZED,
           'AUTH_INVALID_CREDENTIALS',
-          'Invalid email or password.',
-        ),
+          'Invalid email or password.'
+        )
       );
     }
 
@@ -135,10 +147,12 @@ export class AuthService {
     };
   }
 
-  async refreshAccessToken(refreshToken: string): Promise<RefreshTokenResponse> {
+  async refreshAccessToken(
+    refreshToken: string
+  ): Promise<RefreshTokenResponse> {
     try {
       // Validate the refresh token signature
-      const payload = await this.jwtService.verifyAsync<JwtRefreshPayload>(refreshToken, {
+      await this.jwtService.verifyAsync<JwtRefreshPayload>(refreshToken, {
         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
       });
 
@@ -153,8 +167,8 @@ export class AuthService {
           createApiError(
             HttpStatus.UNAUTHORIZED,
             'AUTH_INVALID_REFRESH_TOKEN',
-            'Refresh token is invalid.',
-          ),
+            'Refresh token is invalid.'
+          )
         );
       }
 
@@ -167,8 +181,8 @@ export class AuthService {
           createApiError(
             HttpStatus.UNAUTHORIZED,
             'AUTH_REFRESH_TOKEN_EXPIRED',
-            'Refresh token has expired.',
-          ),
+            'Refresh token has expired.'
+          )
         );
       }
 
@@ -178,8 +192,8 @@ export class AuthService {
           createApiError(
             HttpStatus.UNAUTHORIZED,
             'AUTH_ACCOUNT_DISABLED',
-            'This account has been disabled.',
-          ),
+            'This account has been disabled.'
+          )
         );
       }
 
@@ -199,8 +213,8 @@ export class AuthService {
         createApiError(
           HttpStatus.UNAUTHORIZED,
           'AUTH_REFRESH_TOKEN_INVALID',
-          'Refresh token is invalid or expired.',
-        ),
+          'Refresh token is invalid or expired.'
+        )
       );
     }
   }
@@ -222,7 +236,7 @@ export class AuthService {
     }
   }
 
-  async validateUser(userId: string): Promise<any> {
+  async validateUser(userId: string): Promise<AuthenticatedUser> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -240,23 +254,29 @@ export class AuthService {
         createApiError(
           HttpStatus.UNAUTHORIZED,
           'AUTH_USER_NOT_FOUND',
-          'User not found or inactive.',
-        ),
+          'User not found or inactive.'
+        )
       );
     }
 
     return user;
   }
 
-  private async generateAccessToken(userId: string, email: string): Promise<string> {
+  private async generateAccessToken(
+    userId: string,
+    email: string
+  ): Promise<string> {
     const payload: JwtPayload = {
       sub: userId,
       email,
     };
 
-    return this.jwtService.signAsync(payload as any, {
+    const expiresIn = (this.configService.get<string>('JWT_EXPIRES_IN') ||
+      '15m') as JwtSignOptions['expiresIn'];
+
+    return this.jwtService.signAsync(payload, {
       secret: this.configService.get<string>('JWT_SECRET'),
-      expiresIn: (this.configService.get<string>('JWT_EXPIRES_IN') || '15m') as any,
+      expiresIn,
     });
   }
 
@@ -268,13 +288,18 @@ export class AuthService {
       tokenId,
     };
 
-    const refreshToken = await this.jwtService.signAsync(payload as any, {
+    const refreshExpiresIn = (this.configService.get<string>(
+      'JWT_REFRESH_EXPIRES_IN'
+    ) || '7d') as JwtSignOptions['expiresIn'];
+
+    const refreshToken = await this.jwtService.signAsync(payload, {
       secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-      expiresIn: (this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') || '7d') as any,
+      expiresIn: refreshExpiresIn,
     });
 
     // Compute the expiration date from the configured TTL string
-    const expiresIn = this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') || '7d';
+    const expiresIn =
+      this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') || '7d';
     const expiresAt = this.calculateExpirationDate(expiresIn);
 
     // Persist the refresh token in the database for revocation tracking
@@ -298,8 +323,8 @@ export class AuthService {
         createApiError(
           HttpStatus.BAD_REQUEST,
           'AUTH_INVALID_EXPIRATION_FORMAT',
-          'Invalid expiration format. Expected value+unit, e.g. 15m.',
-        ),
+          'Invalid expiration format. Expected value+unit, e.g. 15m.'
+        )
       );
     }
 
@@ -320,8 +345,8 @@ export class AuthService {
           createApiError(
             HttpStatus.BAD_REQUEST,
             'AUTH_INVALID_EXPIRATION_UNIT',
-            'Invalid expiration unit. Use s, m, h, or d.',
-          ),
+            'Invalid expiration unit. Use s, m, h, or d.'
+          )
         );
     }
   }

@@ -46,7 +46,22 @@
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/front/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "eslint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint apps/front --ext .ts,.tsx,.js,.jsx"
+      }
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p apps/front/tsconfig.json --noEmit"
+      }
     }
   }
 }

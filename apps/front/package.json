@@ -8,6 +8,7 @@
     "axios": "^1.13.2"
   },
   "devDependencies": {
-    "@tanstack/react-query-devtools": "^5.90.2"
+    "@tanstack/react-query-devtools": "^5.90.2",
+    "tailwindcss-animate": "^1.0.7"
   }
 }

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Workspace, CreateWorkspaceInput } from '@taskly/types';
+import type { CreateWorkspaceInput } from '@taskly/types';
 import { workspacesService } from '../services/workspaces.service';
 import { workspacesQueryKeys } from '../constants/query-keys';
 import { useProtectedQuery } from '@features/auth/hooks/useProtectedQuery';

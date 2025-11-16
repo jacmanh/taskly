@@ -2,6 +2,7 @@ import { Controller, Get, Patch, Body, UseGuards, Param } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { UsersService } from '../services/users.service';
+import { AuthenticatedUser } from '../../auth/interfaces/authenticated-user.interface';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -9,7 +10,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('me')
-  async getCurrentUser(@CurrentUser() user: any) {
+  async getCurrentUser(@CurrentUser() user: AuthenticatedUser) {
     return this.usersService.findById(user.id);
   }
 
@@ -20,7 +21,7 @@ export class UsersController {
 
   @Patch('me')
   async updateCurrentUser(
-    @CurrentUser() user: any,
+    @CurrentUser() user: AuthenticatedUser,
     @Body() updateData: { name?: string; avatar?: string }
   ) {
     return this.usersService.updateProfile(user.id, updateData);

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,7 +13,6 @@ import {
 } from '@features/auth/schemas/login.schema';
 
 export default function LoginPage() {
-  const router = useRouter();
   const { login, isLoading } = useAuth();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -31,7 +29,7 @@ export default function LoginPage() {
 
     try {
       await login(data);
-    } catch (err: any) {
+    } catch (err) {
       setSubmitError(
         err?.message || 'Login failed. Please check your credentials.'
       );

@@ -6,17 +6,21 @@ import {
   useDeleteWorkspace,
 } from '@features/workspaces/hooks/useWorkspaces';
 import { WorkspaceList } from '@features/workspaces/components/WorkspaceList';
+import { useCreateWorkspaceDrawer } from '@features/workspaces/hooks/useCreateWorkspaceDrawer';
 
 export default function WorkspacesPage() {
   const { user, isLoading: authLoading } = useAuth();
   const { data: workspaces = [], isLoading, error } = useWorkspaces();
   const { mutate: deleteWorkspace, isPending: isDeleting } =
     useDeleteWorkspace();
+  const { openCreateDrawer } = useCreateWorkspaceDrawer();
 
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-600">Chargement de l'authentification...</div>
+        <div className="text-gray-600">
+          Chargement de l&apos;authentification...
+        </div>
       </div>
     );
   }
@@ -37,11 +41,21 @@ export default function WorkspacesPage() {
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           {/* Header */}
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">Mes Workspaces</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Gérez tous vos workspaces et collaborez avec votre équipe
-            </p>
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">
+                Mes Workspaces
+              </h2>
+              <p className="mt-2 text-sm text-gray-600">
+                Gérez tous vos workspaces et collaborez avec votre équipe
+              </p>
+            </div>
+            <button
+              onClick={openCreateDrawer}
+              className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 font-medium transition-colors"
+            >
+              + Créer un workspace
+            </button>
           </div>
 
           {/* Error Message */}

@@ -13,6 +13,7 @@ import { CreateWorkspaceDto } from '../dto/create-workspace.dto';
 import { UpdateWorkspaceDto } from '../dto/update-workspace.dto';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { AuthenticatedUser } from '../../auth/interfaces/authenticated-user.interface';
 
 @Controller('workspaces')
 @UseGuards(JwtAuthGuard)
@@ -20,12 +21,12 @@ export class WorkspacesController {
   constructor(private readonly service: WorkspacesService) {}
 
   @Get()
-  findByCurrentUser(@CurrentUser() user: any) {
+  findByCurrentUser(@CurrentUser() user: AuthenticatedUser) {
     return this.service.findByCurrentUser(user.id);
   }
 
   @Post()
-  create(@Body() dto: CreateWorkspaceDto, @CurrentUser() user: any) {
+  create(@Body() dto: CreateWorkspaceDto, @CurrentUser() user: AuthenticatedUser) {
     return this.service.create(dto, user.id);
   }
 
