@@ -1,12 +1,13 @@
 'use client';
 
-import { useCallback, type ReactNode } from 'react';
+import { useCallback, type ReactNode, type ButtonHTMLAttributes } from 'react';
 
 // Types for props
-export interface ButtonProps {
+export interface ButtonProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'subtle';
+  size?: 'sm' | 'md' | 'lg' | 'icon';
   disabled?: boolean;
   loading?: boolean;
   type?: 'button' | 'submit' | 'reset';
@@ -28,6 +29,8 @@ const variantClasses = {
     'border-2 border-accent-500 text-accent-600 bg-transparent hover:bg-accent-50 focus:ring-accent-500',
   ghost:
     'text-neutral-700 bg-transparent hover:bg-neutral-100 focus:ring-neutral-500',
+  subtle:
+    'border border-neutral-200 text-neutral-600 bg-white hover:bg-neutral-50 focus:ring-neutral-300',
 } as const;
 
 // Size class mapping
@@ -35,6 +38,7 @@ const sizeClasses = {
   sm: 'px-3 py-1.5 text-xs',
   md: 'px-4 py-2 text-sm',
   lg: 'px-6 py-3 text-base',
+  icon: 'h-5 w-5 p-0',
 } as const;
 
 export function Button({
@@ -46,6 +50,7 @@ export function Button({
   type = 'button',
   onClick,
   className = '',
+  ...rest
 }: ButtonProps) {
   // Typed handler with useCallback
   const handleClick = useCallback(() => {
@@ -76,6 +81,7 @@ export function Button({
       onClick={handleClick}
       disabled={isDisabled}
       className={classNames}
+      {...rest}
     >
       {loading ? (
         <span className="flex items-center gap-2">

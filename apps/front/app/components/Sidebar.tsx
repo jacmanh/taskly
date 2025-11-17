@@ -1,13 +1,23 @@
 'use client';
 
-import { Home, FolderKanban, Zap } from 'lucide-react';
+import { Home, Zap } from 'lucide-react';
 import { NavItem } from './NavItem';
 import { WorkspaceDropdown } from '@features/workspaces/components/WorkspaceDropdown';
 import { WorkspaceSettingsDropdown } from '@features/workspaces/components/WorkspaceSettingsDropdown';
 import { useAuth } from '@features/auth/hooks/useAuth';
+import { useCurrentWorkspace } from '@features/workspaces/hooks/useCurrentWorkspace';
+import { useWorkspaceProjects } from '@features/projects/hooks/useProjects';
+import { ProjectMenu } from '@features/projects/components/ProjectMenu';
 
 export function Sidebar() {
   const { user } = useAuth();
+  const { currentWorkspace, isLoading: workspaceLoading } =
+    useCurrentWorkspace();
+  const {
+    data: projects = [],
+    isLoading: projectsLoading,
+    isError: projectsError,
+  } = useWorkspaceProjects(currentWorkspace?.id);
 
   return (
     <aside className="w-64 h-screen bg-neutral-50 border-r border-neutral-200 flex flex-col">
@@ -22,10 +32,12 @@ export function Sidebar() {
       </div>
 
       {/* Scrollable Navigation Content */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-        <NavItem href="/dashboard" icon={<Home size={18} />}>
-          Dashboard
-        </NavItem>
+      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-4">
+        <ul className="space-y-1">
+          <NavItem href="/dashboard" icon={<Home size={18} />}>
+            Dashboard
+          </NavItem>
+        </ul>
 
         <div className="pt-4 pb-2">
           <h3 className="px-3 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
@@ -33,13 +45,19 @@ export function Sidebar() {
           </h3>
         </div>
 
-        <NavItem href="/workspaces" icon={<FolderKanban size={18} />}>
-          Projects
-        </NavItem>
+        <ProjectMenu
+          projects={projects}
+          projectsLoading={projectsLoading}
+          projectsError={projectsError}
+          workspace={currentWorkspace}
+          isLoading={workspaceLoading}
+        />
 
-        <NavItem href="/sprints" icon={<Zap size={18} />}>
-          Sprints
-        </NavItem>
+        <ul className="space-y-1">
+          <NavItem href="/sprints" icon={<Zap size={18} />}>
+            Sprints
+          </NavItem>
+        </ul>
       </nav>
 
       {/* Footer: Settings & User */}
