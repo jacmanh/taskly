@@ -22,16 +22,28 @@ export class WorkspacesService {
   }
 
   async create(dto: CreateWorkspaceDto, ownerId: string) {
-    // Business validation here
+    // Generate slug from name
+    const slug = this.generateSlug(dto.name);
+
     return this.repo.create({
       name: dto.name,
-      slug: dto.slug,
-      color: dto.color,
-      icon: dto.icon,
+      slug,
       owner: {
         connect: { id: ownerId },
       },
     });
+  }
+
+  private generateSlug(name: string): string {
+    return name
+      .toLowerCase()
+      .trim()
+      .normalize('NFD') // Normalize accented characters
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+      .replace(/[^a-z0-9\s-]/g, '') // Remove non-alphanumeric characters except spaces and hyphens
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+      .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
   }
 
   async update(id: string, dto: UpdateWorkspaceDto) {

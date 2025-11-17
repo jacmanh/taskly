@@ -12,9 +12,6 @@ export interface Workspace {
 
 export interface CreateWorkspaceInput {
   name: string;
-  slug: string;
-  color?: string;
-  icon?: string;
 }
 
 export interface UpdateWorkspaceInput {

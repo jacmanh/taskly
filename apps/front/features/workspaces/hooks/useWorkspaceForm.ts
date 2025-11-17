@@ -11,9 +11,6 @@ import {
 
 const DEFAULT_VALUES: WorkspaceFormData = {
   name: '',
-  slug: '',
-  color: '#0ea5e9',
-  icon: '📋',
 };
 
 export function useWorkspaceForm() {
