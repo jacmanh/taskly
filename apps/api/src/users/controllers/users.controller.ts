@@ -2,7 +2,7 @@ import { Controller, Get, Patch, Body, UseGuards, Param } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { UsersService } from '../services/users.service';
-import { AuthenticatedUser } from '../../auth/interfaces/authenticated-user.interface';
+import { AuthenticatedUser } from '@taskly/types';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)

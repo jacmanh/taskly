@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, HttpStatus } from '@nestjs/common';
 import { WorkspacesRepository } from '../repositories/workspaces.repository';
 import { CreateWorkspaceDto } from '../dto/create-workspace.dto';
 import { UpdateWorkspaceDto } from '../dto/update-workspace.dto';
+import { createApiError } from '../../common/errors/api-error.util';
 
 @Injectable()
 export class WorkspacesService {
@@ -13,7 +14,15 @@ export class WorkspacesService {
 
   async findOne(id: string) {
     const workspace = await this.repo.findById(id);
-    if (!workspace) throw new NotFoundException(`Workspace ${id} not found`);
+    if (!workspace) {
+      throw new NotFoundException(
+        createApiError(
+          HttpStatus.NOT_FOUND,
+          'WORKSPACE_NOT_FOUND',
+          'Workspace not found.',
+        ),
+      );
+    }
     return workspace;
   }
 
@@ -46,13 +55,37 @@ export class WorkspacesService {
       .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
   }
 
-  async update(id: string, dto: UpdateWorkspaceDto) {
-    await this.findOne(id); // Verify exists
+  async update(id: string, dto: UpdateWorkspaceDto, userId: string) {
+    const workspace = await this.findOne(id);
+
+    // Verify user is the owner
+    if (workspace.ownerId !== userId) {
+      throw new ForbiddenException(
+        createApiError(
+          HttpStatus.FORBIDDEN,
+          'WORKSPACE_UPDATE_DENIED',
+          'You do not have permission to update this workspace.',
+        ),
+      );
+    }
+
     return this.repo.update(id, dto);
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
+  async remove(id: string, userId: string) {
+    const workspace = await this.findOne(id);
+
+    // Verify user is the owner
+    if (workspace.ownerId !== userId) {
+      throw new ForbiddenException(
+        createApiError(
+          HttpStatus.FORBIDDEN,
+          'WORKSPACE_DELETE_DENIED',
+          'You do not have permission to delete this workspace.',
+        ),
+      );
+    }
+
     return this.repo.delete(id);
   }
 }

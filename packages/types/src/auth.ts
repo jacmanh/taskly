@@ -40,6 +40,18 @@ export interface AuthResponseWithRefreshToken extends AuthResponse {
 }
 
 /**
+ * Authenticated user (from JWT payload)
+ */
+export interface AuthenticatedUser {
+  id: string;
+  email: string;
+  name: string | null;
+  avatar: string | null;
+  emailVerified: boolean;
+  isActive: boolean;
+}
+
+/**
  * API Error response
  */
 export interface ApiError {

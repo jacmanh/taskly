@@ -16,7 +16,7 @@ import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto';
 import { Public } from './decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { AuthenticatedUser } from './interfaces/authenticated-user.interface';
+import { AuthenticatedUser } from '@taskly/types';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { createApiError } from '../common/errors/api-error.util';
 

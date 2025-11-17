@@ -8,6 +8,7 @@ export type {
   AuthResponse,
   AuthResponseWithRefreshToken,
   RefreshTokenResponse,
+  AuthenticatedUser,
   ApiError,
 } from './auth';
 
@@ -17,3 +18,10 @@ export type {
   CreateWorkspaceInput,
   UpdateWorkspaceInput,
 } from './workspace';
+
+// Project types
+export type {
+  Project,
+  CreateProjectInput,
+  UpdateProjectInput,
+} from './project';

@@ -18,7 +18,7 @@ import {
   JwtPayload,
   JwtRefreshPayload,
 } from './interfaces/jwt-payload.interface';
-import { AuthenticatedUser } from './interfaces/authenticated-user.interface';
+import { AuthenticatedUser } from '@taskly/types';
 import { createApiError } from '../common/errors/api-error.util';
 
 @Injectable()
