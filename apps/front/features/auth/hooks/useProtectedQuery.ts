@@ -3,13 +3,16 @@ import {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query';
-import { getAccessToken } from '../services/axios';
+import { useAuth } from './useAuth';
 
 /**
  * Wrapper around useQuery that automatically disables the query
  * if there's no access token available.
  *
  * This prevents 401 errors on initial render when tokens haven't been loaded yet.
+ *
+ * The query will automatically re-enable when authentication is complete,
+ * ensuring proper reactivity to auth state changes.
  */
 export function useProtectedQuery<
   TQueryFnData = unknown,
@@ -19,9 +22,16 @@ export function useProtectedQuery<
 >(
   options: UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>
 ): UseQueryResult<TData, TError> {
+  const { user, isLoading: authLoading } = useAuth();
+
+  // Enable the query only when:
+  // 1. Auth has finished loading
+  // 2. User is authenticated
+  // 3. Custom enabled condition (if provided) is true
+  const isEnabled = !authLoading && !!user && (options.enabled ?? true);
+
   return useQuery({
     ...options,
-    // Only enable if we have an access token
-    enabled: options.enabled ?? !!getAccessToken(),
+    enabled: isEnabled,
   });
 }

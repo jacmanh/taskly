@@ -16,7 +16,8 @@
       "Bash(node -e:*)",
       "Bash(pnpm build:api:*)",
       "Bash(nx build:*)",
-      "Bash(npx ts-node:*)"
+      "Bash(npx ts-node:*)",
+      "Bash(pnpm lint:*)"
     ],
     "deny": [],
     "ask": []

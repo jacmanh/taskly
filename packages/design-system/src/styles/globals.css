@@ -3,38 +3,21 @@
 @tailwind utilities;
 
 .card {
-  background-color: white;
-  border-radius: 1rem;
-  border: 1px solid #e2e8f0;
-  padding: 1.5rem;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  @apply bg-neutral-50 rounded-2xl border border-neutral-200 p-6 shadow-sm;
 }
 
 .input {
-  width: 100%;
-  border-radius: 0.75rem;
-  border: 1px solid #cbd5e1;
-  background-color: white;
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  color: #0f172a;
-  transition: all 0.2s;
+  @apply w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm text-neutral-900 transition-all;
 }
 
 .input::placeholder {
-  color: #94a3b8;
+  @apply text-neutral-500;
 }
 
 .input:focus {
-  outline: none;
-  border-color: transparent;
-  box-shadow: 0 0 0 2px #0ea5e9;
+  @apply outline-none border-transparent ring-2 ring-accent-500;
 }
 
 .label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #334155;
-  margin-bottom: 0.5rem;
+  @apply block text-sm font-medium text-neutral-700 mb-2;
 }

@@ -86,10 +86,15 @@ export function DrawerProvider({ children }: { children: React.ReactNode }) {
 
     if (!drawerToClose) return;
 
+    // Store the drawer info we need before it might become undefined
+    const drawerIdToClose = drawerToClose.id;
+    const onBeforeClose = drawerToClose.onBeforeClose;
+    const onClose = drawerToClose.onClose;
+
     // Call onBeforeClose BEFORE marking as closed (component still mounted)
-    if (drawerToClose.onBeforeClose) {
+    if (onBeforeClose) {
       try {
-        await drawerToClose.onBeforeClose();
+        await onBeforeClose();
       } catch (error) {
         console.error('Error in onBeforeClose:', error);
       }
@@ -99,25 +104,25 @@ export function DrawerProvider({ children }: { children: React.ReactNode }) {
     setDrawers((prev) => {
       // Mark drawer as closing (isOpen = false)
       const updatedDrawers = prev.map((d) =>
-        d.id === drawerToClose!.id ? { ...d, isOpen: false } : d
+        d.id === drawerIdToClose ? { ...d, isOpen: false } : d
       );
 
       // Schedule removal after animation completes
       const timeout = setTimeout(() => {
         if (isMountedRef.current) {
           setDrawers((current) =>
-            current.filter((d) => d.id !== drawerToClose!.id)
+            current.filter((d) => d.id !== drawerIdToClose)
           );
-          timeoutsRef.current.delete(drawerToClose!.id);
+          timeoutsRef.current.delete(drawerIdToClose);
 
           // Call onClose AFTER drawer is fully removed
-          if (drawerToClose!.onClose) {
-            drawerToClose!.onClose();
+          if (onClose) {
+            onClose();
           }
         }
       }, DRAWER_CLOSE_ANIMATION_DURATION);
 
-      timeoutsRef.current.set(drawerToClose!.id, timeout);
+      timeoutsRef.current.set(drawerIdToClose, timeout);
 
       return updatedDrawers;
     });

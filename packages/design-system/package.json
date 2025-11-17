@@ -13,5 +13,8 @@
   },
   "devDependencies": {
     "tailwindcss-animate": "^1.0.7"
+  },
+  "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.1.16"
   }
 }

@@ -21,13 +21,13 @@ const baseClasses =
 // Variant class mapping
 const variantClasses = {
   primary:
-    'bg-primary-500 text-white shadow-sm hover:bg-primary-600 hover:shadow-md focus:ring-primary-500',
+    'bg-accent-500 text-white shadow-sm hover:bg-accent-600 hover:shadow-md focus:ring-accent-500',
   secondary:
-    'bg-secondary-100 text-secondary-900 hover:bg-secondary-200 focus:ring-secondary-500',
+    'bg-neutral-100 text-neutral-900 hover:bg-neutral-200 focus:ring-neutral-500',
   outline:
-    'border-2 border-primary-500 text-primary-600 bg-transparent hover:bg-primary-50 focus:ring-primary-500',
+    'border-2 border-accent-500 text-accent-600 bg-transparent hover:bg-accent-50 focus:ring-accent-500',
   ghost:
-    'text-secondary-700 bg-transparent hover:bg-secondary-100 focus:ring-secondary-500',
+    'text-neutral-700 bg-transparent hover:bg-neutral-100 focus:ring-neutral-500',
 } as const;
 
 // Size class mapping

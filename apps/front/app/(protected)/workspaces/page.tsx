@@ -7,6 +7,7 @@ import {
 } from '@features/workspaces/hooks/useWorkspaces';
 import { WorkspaceList } from '@features/workspaces/components/WorkspaceList';
 import { useCreateWorkspaceDrawer } from '@features/workspaces/hooks/useCreateWorkspaceDrawer';
+import { Button } from '@taskly/design-system';
 
 export default function WorkspacesPage() {
   const { user, isLoading: authLoading } = useAuth();
@@ -50,12 +51,12 @@ export default function WorkspacesPage() {
                 Gérez tous vos workspaces et collaborez avec votre équipe
               </p>
             </div>
-            <button
+            <Button
               onClick={openCreateDrawer}
               className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 font-medium transition-colors"
             >
               + Créer un workspace
-            </button>
+            </Button>
           </div>
 
           {/* Error Message */}

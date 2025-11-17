@@ -1,7 +1,7 @@
 'use client';
 
 import { Controller } from 'react-hook-form';
-import { Input, Drawer, cn } from '@taskly/design-system';
+import { Input, Drawer, cn, Button } from '@taskly/design-system';
 import { useWorkspaceForm } from '../hooks/useWorkspaceForm';
 
 interface WorkspaceFormProps {
@@ -119,21 +119,23 @@ export function WorkspaceForm({ onSuccess, onCancel }: WorkspaceFormProps) {
                 Icône
               </label>
               <div className="mt-2 flex gap-2 flex-wrap">
-                {['📋', '🎯', '🚀', '💼', '⚡', '🎨', '📊', '🔧'].map((icon) => (
-                  <button
-                    key={icon}
-                    type="button"
-                    onClick={() => field.onChange(icon)}
-                    disabled={isPending}
-                    className={`text-2xl w-10 h-10 rounded-md border-2 transition-all flex items-center justify-center ${
-                      field.value === icon
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-secondary-200'
-                    }`}
-                  >
-                    {icon}
-                  </button>
-                ))}
+                {['📋', '🎯', '🚀', '💼', '⚡', '🎨', '📊', '🔧'].map(
+                  (icon) => (
+                    <button
+                      key={icon}
+                      type="button"
+                      onClick={() => field.onChange(icon)}
+                      disabled={isPending}
+                      className={`text-2xl w-10 h-10 rounded-md border-2 transition-all flex items-center justify-center ${
+                        field.value === icon
+                          ? 'border-primary-500 bg-primary-50'
+                          : 'border-secondary-200'
+                      }`}
+                    >
+                      {icon}
+                    </button>
+                  )
+                )}
               </div>
             </div>
           )}
@@ -142,15 +144,17 @@ export function WorkspaceForm({ onSuccess, onCancel }: WorkspaceFormProps) {
         {/* Info Box */}
         <div className="p-3 bg-primary-50 border border-primary-200 rounded-md">
           <p className="text-xs text-primary-900">
-            ℹ️ Vous serez automatiquement ajouté comme propriétaire du workspace.
+            ℹ️ Vous serez automatiquement ajouté comme propriétaire du
+            workspace.
           </p>
         </div>
       </div>
 
       <Drawer.Footer>
         <div className="flex gap-3 w-full">
-          <button
+          <Button
             type="button"
+            variant="secondary"
             onClick={() => {
               reset();
               onCancel?.();
@@ -166,8 +170,8 @@ export function WorkspaceForm({ onSuccess, onCancel }: WorkspaceFormProps) {
             )}
           >
             Annuler
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             onClick={handleSubmit(onSubmit(onSuccess))}
             disabled={!isValid || isPending}
@@ -188,7 +192,7 @@ export function WorkspaceForm({ onSuccess, onCancel }: WorkspaceFormProps) {
             ) : (
               'Créer'
             )}
-          </button>
+          </Button>
         </div>
       </Drawer.Footer>
     </>

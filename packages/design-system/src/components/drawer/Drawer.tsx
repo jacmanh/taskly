@@ -63,12 +63,12 @@ const DrawerHeaderComponent: React.FC<DrawerHeaderProps> = ({
     return (
       <>
         {title && (
-          <SheetTitle className="text-lg font-semibold text-secondary-900">
+          <SheetTitle className="text-lg font-semibold text-neutral-900">
             {title}
           </SheetTitle>
         )}
         {description && (
-          <p className="mt-1 text-sm text-secondary-500">{description}</p>
+          <p className="mt-1 text-sm text-neutral-500">{description}</p>
         )}
       </>
     );
@@ -138,12 +138,12 @@ const DrawerRoot = React.forwardRef<HTMLDivElement, DrawerProps>(
       title || description ? (
         <>
           {title && (
-            <SheetTitle className="text-lg font-semibold text-secondary-900">
+            <SheetTitle className="text-lg font-semibold text-neutral-900">
               {title}
             </SheetTitle>
           )}
           {description && (
-            <p className="mt-1 text-sm text-secondary-500">{description}</p>
+            <p className="mt-1 text-sm text-neutral-500">{description}</p>
           )}
         </>
       ) : null;
@@ -177,13 +177,13 @@ const DrawerRoot = React.forwardRef<HTMLDivElement, DrawerProps>(
             {/* Header */}
             <SheetHeader
               className={cn(
-                'border-b border-secondary-200 px-6 py-4 flex-shrink-0 relative',
+                'border-b border-neutral-200 px-6 py-4 flex-shrink-0 relative',
                 headerClassName
               )}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">{resolvedHeaderContent}</div>
-                <SheetClose className="absolute top-4 right-4 h-6 w-6 rounded-md opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary-100 flex-shrink-0">
+                <SheetClose className="absolute top-4 right-4 h-6 w-6 rounded-md opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-neutral-100 flex-shrink-0">
                   <X className="h-4 w-4" />
                   <span className="sr-only">Close</span>
                 </SheetClose>
@@ -204,7 +204,7 @@ const DrawerRoot = React.forwardRef<HTMLDivElement, DrawerProps>(
             {shouldRenderFooter && (
               <SheetFooter
                 className={cn(
-                  'border-t border-secondary-200 bg-secondary-50 px-6 py-4 flex-shrink-0 gap-3 sm:flex-row',
+                  'border-t border-neutral-200 bg-neutral-100 px-6 py-4 flex-shrink-0 gap-3 sm:flex-row',
                   footerClassName,
                   footerSection?.className
                 )}

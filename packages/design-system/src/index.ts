@@ -1,6 +1,7 @@
 export * from './lib/design-system';
 export { Button, type ButtonProps } from './components/button';
 export { Input, type InputProps } from './components/input';
+export { Spinner, type SpinnerProps } from './components/spinner';
 export { cn } from './lib/utils';
 
 // Drawer System - Complete export
@@ -17,3 +18,22 @@ export {
   type DrawerContextType,
   type DrawerState,
 } from './components/drawer';
+
+// Dropdown Menu - Complete export
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+} from './components/dropdown-menu';

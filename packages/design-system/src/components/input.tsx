@@ -17,14 +17,14 @@ export interface InputProps
 
 // Base input classes
 const baseClasses =
-  'w-full px-4 py-2 rounded-lg border-2 border-gray-200 text-gray-900 transition-all focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-200 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-500';
+  'w-full px-4 py-2 rounded-lg border-2 border-neutral-200 text-neutral-900 transition-all focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-200 disabled:bg-neutral-100 disabled:cursor-not-allowed disabled:text-neutral-500';
 
 // Error state classes
 const errorClasses =
   'border-error-500 focus:border-error-500 focus:ring-error-200';
 
 // Placeholder classes
-const placeholderClasses = 'placeholder-gray-400';
+const placeholderClasses = 'placeholder-neutral-400';
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
@@ -125,7 +125,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <label
             htmlFor={inputId}
             className={`text-sm font-medium ${
-              error ? 'text-error-600' : 'text-gray-700'
+              error ? 'text-error-600' : 'text-neutral-700'
             }`}
           >
             {label}
@@ -134,7 +134,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <div className="relative">
           {icon && iconPosition === 'left' && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none">
               {icon}
             </div>
           )}
@@ -154,7 +154,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...rest}
           />
           {icon && iconPosition === 'right' && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none">
               {icon}
             </div>
           )}
