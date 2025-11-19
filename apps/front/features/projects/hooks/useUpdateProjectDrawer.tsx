@@ -1,22 +1,22 @@
 'use client';
 
 import { useDrawer } from '@taskly/design-system';
-import type { Project } from '@taskly/types';
 import { ProjectForm } from '../components/ProjectForm';
+import type { Project } from '@taskly/types';
 
-export function useCreateProjectDrawer() {
+export function useUpdateProjectDrawer() {
   const { openDrawer, closeDrawer } = useDrawer();
 
-  const openCreateProjectDrawer = (
-    workspaceId: string,
+  const openUpdateProjectDrawer = (
+    project: Project,
     onSuccess?: (project: Project) => void,
   ) => {
     openDrawer({
       children: (
         <ProjectForm
-          workspaceId={workspaceId}
-          onSuccess={(project) => {
-            onSuccess?.(project);
+          project={project}
+          onSuccess={(updatedProject) => {
+            onSuccess?.(updatedProject);
             closeDrawer();
           }}
           onCancel={() => closeDrawer()}
@@ -26,6 +26,6 @@ export function useCreateProjectDrawer() {
   };
 
   return {
-    openCreateProjectDrawer,
+    openUpdateProjectDrawer,
   };
 }

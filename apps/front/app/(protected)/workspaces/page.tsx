@@ -52,8 +52,8 @@ export default function WorkspacesPage() {
               </p>
             </div>
             <Button
+              variant="primary"
               onClick={openCreateDrawer}
-              className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 font-medium transition-colors"
             >
               + Créer un workspace
             </Button>

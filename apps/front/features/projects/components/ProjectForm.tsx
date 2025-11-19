@@ -1,20 +1,27 @@
 'use client';
 
-import { Input, Drawer, Button, cn, Textarea } from '@taskly/design-system';
+import type { Project } from '@taskly/types';
+import { Input, Drawer, Button, Textarea } from '@taskly/design-system';
 import { useProjectForm } from '../hooks/useProjectForm';
 
 interface ProjectFormProps {
-  workspaceId: string;
-  onSuccess?: () => void;
+  project?: Project;
+  workspaceId?: string;
+  onSuccess?: (project: Project) => void;
   onCancel?: () => void;
 }
 
 export function ProjectForm({
+  project,
   workspaceId,
   onSuccess,
   onCancel,
 }: ProjectFormProps) {
-  const { form, onSubmit, isPending } = useProjectForm(workspaceId);
+  const isEditing = !!project;
+  const { form, onSubmit, isPending } = useProjectForm({
+    workspaceId,
+    project,
+  });
   const {
     register,
     handleSubmit,
@@ -22,12 +29,15 @@ export function ProjectForm({
     formState: { errors, isValid },
   } = form;
 
+  const title = isEditing ? 'Modifier le projet' : 'Créer un projet';
+  const description = isEditing
+    ? 'Mettez à jour les informations de votre projet.'
+    : 'Ajoutez un projet à votre workspace actif.';
+  const submitButtonText = isEditing ? 'Sauvegarder' : 'Créer';
+
   return (
     <>
-      <Drawer.Header
-        title="Créer un projet"
-        description="Ajoutez un projet à votre workspace actif."
-      />
+      <Drawer.Header title={title} description={description} />
 
       <div className="space-y-5">
         <div className="space-y-3">
@@ -55,42 +65,28 @@ export function ProjectForm({
       </div>
 
       <Drawer.Footer>
-        <div className="flex gap-3 w-full">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => {
-              reset();
-              onCancel?.();
-            }}
-            disabled={isPending}
-            className={cn(
-              'px-4 py-2 rounded-md text-sm font-medium',
-              'border border-secondary-300 text-secondary-700',
-              'hover:bg-secondary-100 active:bg-secondary-200',
-              'transition-colors',
-              'disabled:opacity-50 disabled:cursor-not-allowed',
-              'w-full sm:w-auto'
-            )}
-          >
-            Annuler
-          </Button>
-          <Button
-            type="button"
-            onClick={handleSubmit(onSubmit(onSuccess))}
-            disabled={!isValid || isPending}
-            className={cn(
-              'px-4 py-2 rounded-md text-sm font-medium',
-              'bg-primary-600 text-white',
-              'hover:bg-primary-700 active:bg-primary-800',
-              'transition-colors',
-              'disabled:opacity-50 disabled:cursor-not-allowed',
-              'w-full sm:w-auto'
-            )}
-          >
-            {isPending ? 'Création...' : 'Créer'}
-          </Button>
-        </div>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            reset();
+            onCancel?.();
+          }}
+          disabled={isPending}
+          className="w-full sm:w-auto"
+        >
+          Annuler
+        </Button>
+        <Button
+          type="button"
+          variant="primary"
+          onClick={handleSubmit(onSubmit(onSuccess))}
+          disabled={!isValid || isPending}
+          loading={isPending}
+          className="w-full sm:w-auto"
+        >
+          {submitButtonText}
+        </Button>
       </Drawer.Footer>
     </>
   );

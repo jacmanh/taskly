@@ -2,8 +2,9 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback } from 'react';
-import { useCreateProject } from './useProjects';
+import { useCallback, useEffect } from 'react';
+import type { Project } from '@taskly/types';
+import { useCreateProject, useUpdateProject } from './useProjects';
 import {
   ProjectFormData,
   projectFormSchema,
@@ -14,8 +15,16 @@ const DEFAULT_VALUES: ProjectFormData = {
   description: '',
 };
 
-export function useProjectForm(workspaceId?: string) {
-  const { mutate: createProject, isPending } = useCreateProject();
+export function useProjectForm({
+  workspaceId,
+  project,
+}: {
+  workspaceId?: string;
+  project?: Project;
+}) {
+  const { mutate: createProject, isPending: isCreating } = useCreateProject();
+  const { mutate: updateProject, isPending: isUpdating } = useUpdateProject();
+  const isPending = isCreating || isUpdating;
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectFormSchema),
@@ -23,35 +32,61 @@ export function useProjectForm(workspaceId?: string) {
     mode: 'onChange',
   });
 
-  const onSubmit = useCallback(
-    (onSuccess?: () => void) => {
-      return (data: ProjectFormData) => {
-        if (!workspaceId) return;
+  useEffect(() => {
+    if (project) {
+      form.reset({
+        name: project.name,
+        description: project.description || '',
+      });
+    }
+  }, [project, form]);
 
-        createProject(
-          {
-            workspaceId,
-            input: {
-              name: data.name,
-              description: data.description || undefined,
+  const onSubmit = useCallback(
+    (onSuccess?: (project: Project) => void) => {
+      return (data: ProjectFormData) => {
+        if (project) {
+          updateProject(
+            {
+              workspaceId: project.workspaceId,
+              projectId: project.id,
+              input: {
+                name: data.name,
+                description: data.description || undefined,
+              },
             },
-          },
-          {
-            onSuccess: () => {
-              form.reset();
-              onSuccess?.();
+            {
+              onSuccess: (updatedProject) => {
+                form.reset();
+                onSuccess?.(updatedProject);
+              },
             },
-          }
-        );
+          );
+        } else if (workspaceId) {
+          createProject(
+            {
+              workspaceId,
+              input: {
+                name: data.name,
+                description: data.description || undefined,
+              },
+            },
+            {
+              onSuccess: (newProject) => {
+                form.reset();
+                onSuccess?.(newProject);
+              },
+            },
+          );
+        }
       };
     },
-    [createProject, form, workspaceId]
+    [createProject, updateProject, form, workspaceId, project],
   );
 
   return {
     form,
     onSubmit,
     isPending,
-    isDisabled: !workspaceId,
+    isDisabled: !workspaceId && !project,
   };
 }

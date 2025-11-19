@@ -2,7 +2,11 @@ import type { Metadata } from 'next';
 import '@taskly/design-system/styles/globals.css';
 import { QueryProvider } from '../lib/providers/QueryProvider';
 import { AuthProvider } from '@features/auth/contexts/AuthContext';
-import { DrawerProvider, DrawerContainer } from '@taskly/design-system';
+import {
+  DrawerProvider,
+  DrawerContainer,
+  ConfirmationModalProvider,
+} from '@taskly/design-system';
 
 export const metadata: Metadata = {
   title: 'Taskly',
@@ -20,8 +24,10 @@ export default function RootLayout({
         <QueryProvider>
           <AuthProvider>
             <DrawerProvider>
-              {children}
-              <DrawerContainer />
+              <ConfirmationModalProvider>
+                {children}
+                <DrawerContainer />
+              </ConfirmationModalProvider>
             </DrawerProvider>
           </AuthProvider>
         </QueryProvider>

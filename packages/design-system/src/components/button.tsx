@@ -1,45 +1,51 @@
 'use client';
 
 import { useCallback, type ReactNode, type ButtonHTMLAttributes } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '../lib/utils';
+
+// Button variants using cva for shadcn compatibility
+export const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+  {
+    variants: {
+      variant: {
+        primary:
+          'bg-accent-500 text-white shadow-sm hover:bg-accent-600 hover:shadow-md focus:ring-accent-500',
+        secondary:
+          'bg-neutral-100 text-neutral-900 hover:bg-neutral-200 focus:ring-neutral-500',
+        destructive:
+          'bg-error-500 text-white shadow-sm hover:bg-error-600 hover:shadow-md focus:ring-error-500',
+        outline:
+          'border-2 border-accent-500 text-accent-600 bg-transparent hover:bg-accent-50 focus:ring-accent-500',
+        ghost:
+          'text-neutral-700 bg-transparent hover:bg-neutral-100 focus:ring-neutral-500',
+        subtle:
+          'border border-neutral-200 text-neutral-600 bg-white hover:bg-neutral-50 focus:ring-neutral-300',
+      },
+      size: {
+        sm: 'px-3 py-1.5 text-xs',
+        md: 'px-4 py-2 text-sm',
+        lg: 'px-6 py-3 text-base',
+        icon: 'h-5 w-5 p-0',
+      },
+    },
+    defaultVariants: {
+      variant: 'primary',
+      size: 'md',
+    },
+  }
+);
 
 // Types for props
 export interface ButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'subtle';
-  size?: 'sm' | 'md' | 'lg' | 'icon';
   disabled?: boolean;
   loading?: boolean;
-  type?: 'button' | 'submit' | 'reset';
-  onClick?: () => void;
   className?: string;
 }
-
-// Base button classes
-const baseClasses =
-  'inline-flex items-center justify-center rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
-
-// Variant class mapping
-const variantClasses = {
-  primary:
-    'bg-accent-500 text-white shadow-sm hover:bg-accent-600 hover:shadow-md focus:ring-accent-500',
-  secondary:
-    'bg-neutral-100 text-neutral-900 hover:bg-neutral-200 focus:ring-neutral-500',
-  outline:
-    'border-2 border-accent-500 text-accent-600 bg-transparent hover:bg-accent-50 focus:ring-accent-500',
-  ghost:
-    'text-neutral-700 bg-transparent hover:bg-neutral-100 focus:ring-neutral-500',
-  subtle:
-    'border border-neutral-200 text-neutral-600 bg-white hover:bg-neutral-50 focus:ring-neutral-300',
-} as const;
-
-// Size class mapping
-const sizeClasses = {
-  sm: 'px-3 py-1.5 text-xs',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-3 text-base',
-  icon: 'h-5 w-5 p-0',
-} as const;
 
 export function Button({
   children,
@@ -53,35 +59,28 @@ export function Button({
   ...rest
 }: ButtonProps) {
   // Typed handler with useCallback
-  const handleClick = useCallback(() => {
-    if (!disabled && !loading && onClick) {
-      try {
-        onClick();
-      } catch (error) {
-        console.error('Button click error:', error);
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (!disabled && !loading && onClick) {
+        try {
+          onClick(event);
+        } catch (error) {
+          console.error('Button click error:', error);
+        }
       }
-    }
-  }, [disabled, loading, onClick]);
+    },
+    [disabled, loading, onClick]
+  );
 
   const isDisabled = disabled || loading;
 
-  // Build className string, filtering out empty strings
-  const classNames = [
-    baseClasses,
-    variantClasses[variant],
-    sizeClasses[size],
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
-
   return (
     <button
+      {...rest}
       type={type}
       onClick={handleClick}
       disabled={isDisabled}
-      className={classNames}
-      {...rest}
+      className={cn(buttonVariants({ variant, size }), className)}
     >
       {loading ? (
         <span className="flex items-center gap-2">

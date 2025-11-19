@@ -1,8 +1,28 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { CreateProjectInput, Project } from '@taskly/types';
+import type {
+  CreateProjectInput,
+  Project,
+  UpdateProjectInput,
+} from '@taskly/types';
 import { useProtectedQuery } from '@features/auth/hooks/useProtectedQuery';
 import { projectsQueryKeys } from '../constants/query-keys';
 import { projectsService } from '../services/projects.service';
+
+export interface CreateProjectMutationParams {
+  workspaceId: string;
+  input: CreateProjectInput;
+}
+
+export interface UpdateProjectMutationParams {
+  workspaceId: string;
+  projectId: string;
+  input: UpdateProjectInput;
+}
+
+export interface DeleteProjectMutationParams {
+  projectId: string;
+  workspaceId:string;
+}
 
 /**
  * Fetch projects that belong to the provided workspace id
@@ -24,14 +44,47 @@ export function useCreateProject() {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationFn: ({ workspaceId, input }: CreateProjectMutationParams) =>
+      projectsService.create(workspaceId, input),
+    onSuccess: (project) => {
+      queryClient.invalidateQueries({
+        queryKey: projectsQueryKeys.workspace(project.workspaceId),
+      });
+    },
+  });
+}
+
+/**
+ * Update project hook tied to react-query cache
+ */
+export function useUpdateProject() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
     mutationFn: ({
       workspaceId,
+      projectId,
       input,
-    }: {
-      workspaceId: string;
-      input: CreateProjectInput;
-    }) => projectsService.create(workspaceId, input),
-    onSuccess: (_project, { workspaceId }) => {
+    }: UpdateProjectMutationParams) =>
+      projectsService.update(workspaceId, projectId, input),
+    onSuccess: (project) => {
+      queryClient.invalidateQueries({
+        queryKey: projectsQueryKeys.workspace(project.workspaceId),
+      });
+    },
+  });
+}
+
+/**
+ * Delete project hook tied to react-query cache
+ */
+export function useDeleteProject() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ projectId, workspaceId }: DeleteProjectMutationParams) =>
+      projectsService.delete(workspaceId, projectId),
+    onSuccess: (_data, { workspaceId }) => {
       queryClient.invalidateQueries({
         queryKey: projectsQueryKeys.workspace(workspaceId),
       });

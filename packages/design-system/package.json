@@ -9,12 +9,16 @@
       "types": "./src/index.ts",
       "default": "./src/index.ts"
     },
-    "./styles/globals.css": "./src/styles/globals.css"
+    "./styles/globals.css": "./src/styles/globals.css",
+    "./tailwind.config": "./tailwind.config.js"
   },
   "devDependencies": {
     "tailwindcss-animate": "^1.0.7"
   },
   "dependencies": {
-    "@radix-ui/react-dropdown-menu": "^2.1.16"
+    "@radix-ui/react-alert-dialog": "^1.1.4",
+    "@radix-ui/react-dialog": "^1.1.4",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "class-variance-authority": "^0.7.1"
   }
 }

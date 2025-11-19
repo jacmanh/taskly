@@ -1,12 +1,20 @@
 'use client';
 
-import type { ReactNode } from 'react';
-import type { Project, Workspace } from '@taskly/types';
-import { Button, Spinner, cn } from '@taskly/design-system';
+import {
+  useConfirmationModal,
+  Button,
+  Spinner,
+  cn,
+} from '@taskly/design-system';
 import { Plus, FolderKanban } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 import { ProjectNavItem } from './ProjectNavItem';
 import { useCreateProjectDrawer } from '../hooks/useCreateProjectDrawer';
-import { usePathname } from 'next/navigation';
+import { useUpdateProjectDrawer } from '../hooks/useUpdateProjectDrawer';
+import { useDeleteProject } from '../hooks/useProjects';
+import { appRoutes } from '../../../lib/routes';
+import { Project, Workspace } from '@taskly/types';
+import { ReactNode } from 'react';
 
 interface ProjectMenuProps {
   projects: Project[];
@@ -24,23 +32,65 @@ export function ProjectMenu({
   isLoading,
 }: ProjectMenuProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { openCreateProjectDrawer } = useCreateProjectDrawer();
+  const { openUpdateProjectDrawer } = useUpdateProjectDrawer();
+  const { mutate: deleteProject } = useDeleteProject();
+  const { show: showConfirmationModal } = useConfirmationModal();
+
   const workspaceId = workspace?.id;
   const isProjectsLinkActive = workspace?.slug
     ? pathname.startsWith(`/${workspace.slug}`)
     : false;
 
   const handleCreateProject = () => {
-    if (!workspaceId) return;
-    openCreateProjectDrawer(workspaceId);
+    if (!workspaceId || !workspace) return;
+    openCreateProjectDrawer(workspaceId, (newProject) => {
+      router.push(appRoutes.workspaceProject(workspace.slug, newProject.slug));
+    });
   };
 
   const handleEditProject = (project: Project) => {
-    console.log('Edit project', project.id);
+    if (!workspace) return;
+    openUpdateProjectDrawer(project, (updatedProject) => {
+      const projectPath = appRoutes.workspaceProject(
+        workspace.slug,
+        project.slug
+      );
+      if (pathname === projectPath) {
+        router.push(
+          appRoutes.workspaceProject(workspace.slug, updatedProject.slug)
+        );
+      }
+    });
   };
 
-  const handleDeleteProject = (project: Project) => {
-    console.log('Delete project', project.id);
+  const handleDeleteProject = async (project: Project) => {
+    const isConfirmed = await showConfirmationModal({
+      title: `Delete project "${project.name}"?`,
+      description:
+        'Are you sure you want to delete this project? This action cannot be undone.',
+      confirmText: 'Delete',
+      variant: 'destructive',
+    });
+
+    if (isConfirmed) {
+      if (!workspaceId || !workspace) return;
+      deleteProject(
+        { projectId: project.id, workspaceId },
+        {
+          onSuccess: () => {
+            const projectPath = appRoutes.workspaceProject(
+              workspace.slug,
+              project.slug
+            );
+            if (pathname === projectPath) {
+              router.push('/dashboard');
+            }
+          },
+        }
+      );
+    }
   };
 
   let content: ReactNode = null;

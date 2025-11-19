@@ -118,9 +118,8 @@ const DrawerRoot = React.forwardRef<HTMLDivElement, DrawerProps>(
     },
     ref
   ) => {
-    const [headerContent, setHeaderContent] = React.useState<React.ReactNode>(
-      null
-    );
+    const [headerContent, setHeaderContent] =
+      React.useState<React.ReactNode>(null);
     const [footerSection, setFooterSection] = React.useState<{
       content: React.ReactNode;
       className?: string;
@@ -155,8 +154,7 @@ const DrawerRoot = React.forwardRef<HTMLDivElement, DrawerProps>(
         <SheetTitle className="sr-only">Drawer panel</SheetTitle>
       ) as React.ReactNode);
 
-    const resolvedFooterContent =
-      footerSection?.content ?? footer;
+    const resolvedFooterContent = footerSection?.content ?? footer;
 
     const shouldRenderFooter = Boolean(footerSection || footer);
 
@@ -204,7 +202,7 @@ const DrawerRoot = React.forwardRef<HTMLDivElement, DrawerProps>(
             {shouldRenderFooter && (
               <SheetFooter
                 className={cn(
-                  'border-t border-neutral-200 bg-neutral-100 px-6 py-4 flex-shrink-0 gap-3 sm:flex-row',
+                  'border-t border-neutral-200 bg-neutral-100 px-6 py-4 flex-shrink-0 gap-3 sm:flex-row justify-between',
                   footerClassName,
                   footerSection?.className
                 )}

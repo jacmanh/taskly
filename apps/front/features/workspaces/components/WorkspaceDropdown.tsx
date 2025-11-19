@@ -12,26 +12,17 @@ import {
   Spinner,
 } from '@taskly/design-system';
 import { useCurrentWorkspace } from '../hooks/useCurrentWorkspace';
-import { useDrawer } from '@taskly/design-system';
-import { WorkspaceForm } from './WorkspaceForm';
+import { useCreateWorkspaceDrawer } from '../hooks/useCreateWorkspaceDrawer';
 
 export function WorkspaceDropdown() {
   const [mounted, setMounted] = useState(false);
   const { currentWorkspace, workspaces, setCurrentWorkspace, isLoading } =
     useCurrentWorkspace();
-  const { openDrawer } = useDrawer();
+  const { openCreateDrawer } = useCreateWorkspaceDrawer();
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const handleCreateWorkspace = () => {
-    openDrawer({
-      title: 'Create Workspace',
-      description: 'Create a new workspace to organize your projects.',
-      children: <WorkspaceForm />,
-    });
-  };
 
   if (!mounted || isLoading) {
     return (
@@ -45,7 +36,7 @@ export function WorkspaceDropdown() {
   if (!currentWorkspace) {
     return (
       <button
-        onClick={handleCreateWorkspace}
+        onClick={openCreateDrawer}
         className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 rounded-lg transition-colors"
       >
         <span>No workspace</span>
@@ -95,7 +86,7 @@ export function WorkspaceDropdown() {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          onClick={handleCreateWorkspace}
+          onClick={openCreateDrawer}
           className="flex items-center gap-2 text-accent-600 cursor-pointer"
         >
           <Plus size={16} />

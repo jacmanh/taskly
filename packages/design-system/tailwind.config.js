@@ -2,8 +2,6 @@
 module.exports = {
   content: [
     './src/**/*.{js,ts,jsx,tsx}',
-    '../../apps/**/app/**/*.{js,ts,jsx,tsx}',
-    '../../apps/**/components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
@@ -21,6 +19,34 @@ module.exports = {
           800: '#262626',
           900: '#1A1A1A',   // Text primary
           950: '#0A0A0A',
+        },
+        // Secondary (alias for neutral)
+        secondary: {
+          50: '#FCFCFC',
+          100: '#F5F5F5',
+          200: '#E5E5E5',
+          300: '#D4D4D4',
+          400: '#A3A3A3',
+          500: '#6E6E6E',
+          600: '#525252',
+          700: '#404040',
+          800: '#262626',
+          900: '#1A1A1A',
+          950: '#0A0A0A',
+        },
+        // Primary (alias for accent)
+        primary: {
+          50: '#EEF2FF',
+          100: '#E0E7FF',
+          200: '#C7D2FE',
+          300: '#A5B4FC',
+          400: '#818CF8',
+          500: '#4F46E5',
+          600: '#4338CA',
+          700: '#3730A3',
+          800: '#312E81',
+          900: '#1E1B4B',
+          950: '#1E1B4B',
         },
         // Accent color (Indigo) - AI + actions
         accent: {

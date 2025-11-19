@@ -1,5 +1,5 @@
 export * from './lib/design-system';
-export { Button, type ButtonProps } from './components/button';
+export { Button, buttonVariants, type ButtonProps } from './components/button';
 export { Input, type InputProps } from './components/input';
 export { Textarea, type TextareaProps } from './components/textarea';
 export { Spinner, type SpinnerProps } from './components/spinner';
@@ -38,3 +38,12 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
 } from './components/dropdown-menu';
+
+// Confirmation Modal System - Complete export
+export {
+  ConfirmationModal,
+  ConfirmationModalProvider,
+  useConfirmationModal,
+  type ConfirmationModalProps,
+  type ConfirmationModalOptions,
+} from './components/confirmation-modal';
