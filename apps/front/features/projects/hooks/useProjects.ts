@@ -21,7 +21,7 @@ export interface UpdateProjectMutationParams {
 
 export interface DeleteProjectMutationParams {
   projectId: string;
-  workspaceId:string;
+  workspaceId: string;
 }
 
 /**

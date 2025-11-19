@@ -4,6 +4,18 @@ export { Input, type InputProps } from './components/input';
 export { Textarea, type TextareaProps } from './components/textarea';
 export { Spinner, type SpinnerProps } from './components/spinner';
 export { cn } from './lib/utils';
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+} from './components/select';
 
 // Drawer System - Complete export
 export {

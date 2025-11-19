@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -8,20 +7,28 @@ interface ConfirmationModalContextType {
   show: (props: Partial<ConfirmationModalProps>) => Promise<boolean>;
 }
 
-const ConfirmationModalContext = React.createContext<ConfirmationModalContextType | null>(null);
+const ConfirmationModalContext =
+  React.createContext<ConfirmationModalContextType | null>(null);
 
 export const useConfirmationModal = () => {
   const context = React.useContext(ConfirmationModalContext);
   if (!context) {
-    throw new Error('useConfirmationModal must be used within a ConfirmationModalProvider');
+    throw new Error(
+      'useConfirmationModal must be used within a ConfirmationModalProvider'
+    );
   }
   return context;
 };
 
-export const ConfirmationModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [modalProps, setModalProps] = React.useState<Partial<ConfirmationModalProps> | null>(null);
+export const ConfirmationModalProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
+  const [modalProps, setModalProps] =
+    React.useState<Partial<ConfirmationModalProps> | null>(null);
   const [isOpen, setIsOpen] = React.useState(false);
-  const promiseRef = React.useRef<{ resolve: (value: boolean) => void } | null>(null);
+  const promiseRef = React.useRef<{ resolve: (value: boolean) => void } | null>(
+    null
+  );
 
   const show = (props: Partial<ConfirmationModalProps>) => {
     setModalProps(props);

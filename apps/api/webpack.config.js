@@ -17,7 +17,12 @@ module.exports = composePlugins(withNx(), (config) => {
 
   // Exclude native dependencies from webpack bundling
   config.externals = config.externals || [];
-  config.externals.push('bcrypt', '@prisma/client', 'class-validator', 'class-transformer');
+  config.externals.push(
+    'bcrypt',
+    '@prisma/client',
+    'class-validator',
+    'class-transformer'
+  );
 
   return config;
 });

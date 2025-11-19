@@ -43,7 +43,9 @@ async function bootstrap() {
   const port = process.env.PORT ?? 3001;
   await app.listen(port);
   console.log(`🚀 API is running on: http://localhost:${port}/api`);
-  console.log(`🔒 Security features enabled: Helmet, CORS, Rate Limiting, Validation`);
+  console.log(
+    `🔒 Security features enabled: Helmet, CORS, Rate Limiting, Validation`
+  );
 }
 
 bootstrap();

@@ -8,7 +8,7 @@ import { UpdateProjectDto } from '../dto/update-project.dto';
 export class ProjectsService {
   constructor(
     private readonly repo: ProjectsRepository,
-    private readonly authService: AuthorizationService,
+    private readonly authService: AuthorizationService
   ) {}
 
   /**
@@ -35,7 +35,7 @@ export class ProjectsService {
     const project = await this.authService.verifyProjectInWorkspace(
       projectId,
       workspaceId,
-      userId,
+      userId
     );
     return project;
   }
@@ -67,9 +67,13 @@ export class ProjectsService {
     workspaceId: string,
     projectId: string,
     dto: UpdateProjectDto,
-    userId: string,
+    userId: string
   ) {
-    await this.authService.verifyProjectInWorkspace(projectId, workspaceId, userId);
+    await this.authService.verifyProjectInWorkspace(
+      projectId,
+      workspaceId,
+      userId
+    );
 
     // If name is being updated, regenerate slug
     const slug = dto.name ? this.generateSlug(dto.name) : undefined;
@@ -85,7 +89,11 @@ export class ProjectsService {
    * Verifies the project belongs to the workspace and user has access
    */
   async remove(workspaceId: string, projectId: string, userId: string) {
-    await this.authService.verifyProjectInWorkspace(projectId, workspaceId, userId);
+    await this.authService.verifyProjectInWorkspace(
+      projectId,
+      workspaceId,
+      userId
+    );
     return this.repo.delete(projectId);
   }
 

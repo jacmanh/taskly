@@ -29,7 +29,7 @@ export class AuthController {
   @Throttle({ default: { limit: 3, ttl: 60000 } }) // Limit to 3 attempts per minute
   async register(
     @Body() registerDto: RegisterDto,
-    @Res({ passthrough: true }) response: Response,
+    @Res({ passthrough: true }) response: Response
   ): Promise<AuthResponse> {
     const result = await this.authService.register(registerDto);
 
@@ -53,7 +53,7 @@ export class AuthController {
   @Throttle({ default: { limit: 5, ttl: 60000 } }) // Limit to 5 attempts per minute
   async login(
     @Body() loginDto: LoginDto,
-    @Res({ passthrough: true }) response: Response,
+    @Res({ passthrough: true }) response: Response
   ): Promise<AuthResponse> {
     const result = await this.authService.login(loginDto);
 
@@ -74,9 +74,7 @@ export class AuthController {
   @Public()
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  async refresh(
-    @Req() request: Request,
-  ): Promise<RefreshTokenResponse> {
+  async refresh(@Req() request: Request): Promise<RefreshTokenResponse> {
     // Retrieve the refresh token from the cookie jar
     const refreshToken = request.cookies?.refreshToken;
 
@@ -85,8 +83,8 @@ export class AuthController {
         createApiError(
           HttpStatus.UNAUTHORIZED,
           'AUTH_REFRESH_TOKEN_MISSING',
-          'Refresh token is missing.',
-        ),
+          'Refresh token is missing.'
+        )
       );
     }
 
@@ -99,7 +97,7 @@ export class AuthController {
   async logout(
     @CurrentUser() user: AuthenticatedUser,
     @Req() request: Request,
-    @Res({ passthrough: true }) response: Response,
+    @Res({ passthrough: true }) response: Response
   ): Promise<void> {
     const refreshToken = request.cookies?.refreshToken;
     await this.authService.logout(user.id, refreshToken);

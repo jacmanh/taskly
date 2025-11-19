@@ -5,7 +5,8 @@ import { useCurrentWorkspace } from '@features/workspaces/hooks/useCurrentWorksp
 
 export default function DashboardPage() {
   const { user, isLoading: authLoading } = useAuth();
-  const { currentWorkspace, isLoading: workspaceLoading } = useCurrentWorkspace();
+  const { currentWorkspace, isLoading: workspaceLoading } =
+    useCurrentWorkspace();
 
   if (authLoading || workspaceLoading) {
     return (
@@ -53,7 +54,9 @@ export default function DashboardPage() {
                 </dd>
               </div>
               <div className="sm:col-span-1">
-                <dt className="text-sm font-medium text-neutral-500">User ID</dt>
+                <dt className="text-sm font-medium text-neutral-500">
+                  User ID
+                </dt>
                 <dd className="mt-1 text-sm text-neutral-900">{user.id}</dd>
               </div>
               <div className="sm:col-span-1">

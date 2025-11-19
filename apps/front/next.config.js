@@ -6,8 +6,7 @@ const path = require('path');
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
-  nx: {
-  },
+  nx: {},
   transpilePackages: ['@taskly/design-system'],
   webpack: (config) => {
     config.resolve.alias = {

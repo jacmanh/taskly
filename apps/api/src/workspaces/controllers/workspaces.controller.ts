@@ -26,7 +26,10 @@ export class WorkspacesController {
   }
 
   @Post()
-  create(@Body() dto: CreateWorkspaceDto, @CurrentUser() user: AuthenticatedUser) {
+  create(
+    @Body() dto: CreateWorkspaceDto,
+    @CurrentUser() user: AuthenticatedUser
+  ) {
     return this.service.create(dto, user.id);
   }
 
@@ -34,7 +37,7 @@ export class WorkspacesController {
   update(
     @Param('id') id: string,
     @Body() dto: UpdateWorkspaceDto,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
     return this.service.update(id, dto, user.id);
   }

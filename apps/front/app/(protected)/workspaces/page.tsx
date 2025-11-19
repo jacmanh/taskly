@@ -51,10 +51,7 @@ export default function WorkspacesPage() {
                 Gérez tous vos workspaces et collaborez avec votre équipe
               </p>
             </div>
-            <Button
-              variant="primary"
-              onClick={openCreateDrawer}
-            >
+            <Button variant="primary" onClick={openCreateDrawer}>
               + Créer un workspace
             </Button>
           </div>

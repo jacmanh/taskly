@@ -9,7 +9,7 @@ export function useUpdateProjectDrawer() {
 
   const openUpdateProjectDrawer = (
     project: Project,
-    onSuccess?: (project: Project) => void,
+    onSuccess?: (project: Project) => void
   ) => {
     openDrawer({
       children: (

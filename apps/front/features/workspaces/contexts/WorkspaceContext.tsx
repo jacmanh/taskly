@@ -37,9 +37,7 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
     if (isLoading || workspaces.length === 0) return;
 
     const savedWorkspaceId =
-      typeof window !== 'undefined'
-        ? localStorage.getItem(STORAGE_KEY)
-        : null;
+      typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
 
     if (savedWorkspaceId) {
       const saved = workspaces.find((w) => w.id === savedWorkspaceId);

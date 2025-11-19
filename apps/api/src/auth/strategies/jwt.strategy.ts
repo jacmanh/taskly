@@ -10,7 +10,7 @@ import { createApiError } from '../../common/errors/api-error.util';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private configService: ConfigService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -21,14 +21,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: JwtPayload) {
     const user = await this.authService.validateUser(payload.sub);
-    
+
     if (!user) {
       throw new UnauthorizedException(
         createApiError(
           HttpStatus.UNAUTHORIZED,
           'AUTH_USER_NOT_FOUND',
-          'User not found or inactive.',
-        ),
+          'User not found or inactive.'
+        )
       );
     }
 

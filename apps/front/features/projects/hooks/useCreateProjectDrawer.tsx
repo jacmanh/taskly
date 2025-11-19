@@ -9,7 +9,7 @@ export function useCreateProjectDrawer() {
 
   const openCreateProjectDrawer = (
     workspaceId: string,
-    onSuccess?: (project: Project) => void,
+    onSuccess?: (project: Project) => void
   ) => {
     openDrawer({
       children: (

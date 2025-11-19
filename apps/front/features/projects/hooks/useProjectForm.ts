@@ -59,7 +59,7 @@ export function useProjectForm({
                 form.reset();
                 onSuccess?.(updatedProject);
               },
-            },
+            }
           );
         } else if (workspaceId) {
           createProject(
@@ -75,12 +75,12 @@ export function useProjectForm({
                 form.reset();
                 onSuccess?.(newProject);
               },
-            },
+            }
           );
         }
       };
     },
-    [createProject, updateProject, form, workspaceId, project],
+    [createProject, updateProject, form, workspaceId, project]
   );
 
   return {

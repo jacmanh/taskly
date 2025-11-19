@@ -11,6 +11,8 @@ model User {
   ownedWorkspaces Workspace[] @relation("WorkspaceOwner")
   memberships     WorkspaceMember[]
   refreshTokens   RefreshToken[]
+  assignedTasks   Task[]
+  createdTasks    Task[]      @relation("TaskCreator")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

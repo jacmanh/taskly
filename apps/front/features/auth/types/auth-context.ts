@@ -1,4 +1,8 @@
-import type { User, LoginCredentials, RegisterCredentials } from '@taskly/types';
+import type {
+  User,
+  LoginCredentials,
+  RegisterCredentials,
+} from '@taskly/types';
 
 /**
  * Auth Context Type - Frontend only

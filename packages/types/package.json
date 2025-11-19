@@ -12,7 +12,11 @@
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
-  "keywords": ["taskly", "types", "typescript"],
+  "keywords": [
+    "taskly",
+    "types",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC"
 }

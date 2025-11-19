@@ -46,7 +46,7 @@ export interface DrawerContextType {
   /** Open a new drawer (returns drawer ID) */
   openDrawer: (config: DrawerConfig) => string;
   /** Close a specific drawer by ID (closes top drawer if no ID provided) */
-  closeDrawer: (id?: string) => Promise<void>;
+  closeDrawer: (id?: string) => void;
   /** Close all drawers */
   closeAllDrawers: () => Promise<void>;
   /** Check if any drawer is currently open */

@@ -24,7 +24,11 @@ export class UsersService {
 
     if (!user) {
       throw new NotFoundException(
-        createApiError(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND', 'User not found.'),
+        createApiError(
+          HttpStatus.NOT_FOUND,
+          'USER_NOT_FOUND',
+          'User not found.'
+        )
       );
     }
 
@@ -48,7 +52,10 @@ export class UsersService {
     });
   }
 
-  async updateProfile(userId: string, data: { name?: string; avatar?: string }) {
+  async updateProfile(
+    userId: string,
+    data: { name?: string; avatar?: string }
+  ) {
     return this.prisma.user.update({
       where: { id: userId },
       data,

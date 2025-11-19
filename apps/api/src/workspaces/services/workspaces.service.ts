@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, ForbiddenException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+  HttpStatus,
+} from '@nestjs/common';
 import { WorkspacesRepository } from '../repositories/workspaces.repository';
 import { CreateWorkspaceDto } from '../dto/create-workspace.dto';
 import { UpdateWorkspaceDto } from '../dto/update-workspace.dto';
@@ -19,8 +24,8 @@ export class WorkspacesService {
         createApiError(
           HttpStatus.NOT_FOUND,
           'WORKSPACE_NOT_FOUND',
-          'Workspace not found.',
-        ),
+          'Workspace not found.'
+        )
       );
     }
     return workspace;
@@ -64,8 +69,8 @@ export class WorkspacesService {
         createApiError(
           HttpStatus.FORBIDDEN,
           'WORKSPACE_UPDATE_DENIED',
-          'You do not have permission to update this workspace.',
-        ),
+          'You do not have permission to update this workspace.'
+        )
       );
     }
 
@@ -81,8 +86,8 @@ export class WorkspacesService {
         createApiError(
           HttpStatus.FORBIDDEN,
           'WORKSPACE_DELETE_DENIED',
-          'You do not have permission to delete this workspace.',
-        ),
+          'You do not have permission to delete this workspace.'
+        )
       );
     }
 

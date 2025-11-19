@@ -9,6 +9,7 @@ import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { WorkspacesModule } from '../workspaces/workspaces.module';
 import { ProjectsModule } from '../projects/projects.module';
+import { TasksModule } from '../tasks/tasks.module';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Module({
@@ -28,6 +29,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
     UsersModule,
     WorkspacesModule,
     ProjectsModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [

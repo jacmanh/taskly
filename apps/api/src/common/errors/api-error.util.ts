@@ -4,7 +4,7 @@ import type { ApiError } from '@taskly/types';
 export const createApiError = (
   statusCode: HttpStatus,
   code: string,
-  message: string,
+  message: string
 ): ApiError => ({
   statusCode,
   code,

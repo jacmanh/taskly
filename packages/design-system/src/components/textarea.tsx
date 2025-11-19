@@ -73,7 +73,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           name={name}
           className={[
             baseClasses,
-            error ? 'border-error-500 focus:border-error-500 focus:ring-error-200' : '',
+            error
+              ? 'border-error-500 focus:border-error-500 focus:ring-error-200'
+              : '',
             className,
           ]
             .filter(Boolean)

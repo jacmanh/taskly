@@ -1,6 +1,10 @@
 // Main Drawer Component
 export { Drawer } from './Drawer';
-export type { DrawerProps, DrawerHeaderProps, DrawerFooterProps } from './Drawer';
+export type {
+  DrawerProps,
+  DrawerHeaderProps,
+  DrawerFooterProps,
+} from './Drawer';
 
 // Context and Provider
 export { DrawerProvider, useDrawer } from './DrawerContext';
@@ -12,8 +16,4 @@ export { DrawerContainer } from './DrawerContainer';
 export { DrawerErrorBoundary } from './DrawerErrorBoundary';
 
 // Types
-export type {
-  DrawerConfig,
-  DrawerContextType,
-  DrawerState,
-} from './types';
+export type { DrawerConfig, DrawerContextType, DrawerState } from './types';

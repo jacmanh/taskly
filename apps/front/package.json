@@ -3,9 +3,11 @@
   "version": "0.0.1",
   "dependencies": {
     "@tanstack/react-query": "^5.90.9",
+    "@tanstack/react-table": "^8.21.3",
     "@taskly/design-system": "workspace:*",
     "@taskly/types": "workspace:*",
     "axios": "^1.13.2",
+    "date-fns": "^4.1.0",
     "lucide-react": "^0.553.0"
   },
   "devDependencies": {

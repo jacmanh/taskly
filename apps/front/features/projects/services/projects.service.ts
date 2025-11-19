@@ -11,7 +11,7 @@ export const projectsService = {
    */
   async getByWorkspace(workspaceId: string): Promise<Project[]> {
     const { data } = await axiosInstance.get<Project[]>(
-      `/workspaces/${workspaceId}/projects`,
+      `/workspaces/${workspaceId}/projects`
     );
 
     return data;
@@ -22,11 +22,11 @@ export const projectsService = {
    */
   async create(
     workspaceId: string,
-    input: CreateProjectInput,
+    input: CreateProjectInput
   ): Promise<Project> {
     const { data } = await axiosInstance.post<Project>(
       `/workspaces/${workspaceId}/projects`,
-      input,
+      input
     );
 
     return data;
@@ -38,11 +38,11 @@ export const projectsService = {
   async update(
     workspaceId: string,
     projectId: string,
-    input: UpdateProjectInput,
+    input: UpdateProjectInput
   ): Promise<Project> {
     const { data } = await axiosInstance.patch<Project>(
       `/workspaces/${workspaceId}/projects/${projectId}`,
-      input,
+      input
     );
 
     return data;
@@ -53,7 +53,7 @@ export const projectsService = {
    */
   async delete(workspaceId: string, projectId: string): Promise<void> {
     await axiosInstance.delete(
-      `/workspaces/${workspaceId}/projects/${projectId}`,
+      `/workspaces/${workspaceId}/projects/${projectId}`
     );
   },
 };

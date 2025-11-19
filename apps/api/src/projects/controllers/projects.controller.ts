@@ -23,7 +23,7 @@ export class ProjectsController {
   @Get()
   findAll(
     @Param('workspaceId') workspaceId: string,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
     return this.service.findByWorkspaceId(workspaceId, user.id);
   }
@@ -32,7 +32,7 @@ export class ProjectsController {
   findOne(
     @Param('workspaceId') workspaceId: string,
     @Param('id') id: string,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
     return this.service.findOne(workspaceId, id, user.id);
   }
@@ -41,7 +41,7 @@ export class ProjectsController {
   create(
     @Param('workspaceId') workspaceId: string,
     @Body() dto: CreateProjectDto,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
     return this.service.create(workspaceId, dto, user.id);
   }
@@ -51,7 +51,7 @@ export class ProjectsController {
     @Param('workspaceId') workspaceId: string,
     @Param('id') id: string,
     @Body() dto: UpdateProjectDto,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
     return this.service.update(workspaceId, id, dto, user.id);
   }
@@ -60,7 +60,7 @@ export class ProjectsController {
   remove(
     @Param('workspaceId') workspaceId: string,
     @Param('id') id: string,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
     return this.service.remove(workspaceId, id, user.id);
   }

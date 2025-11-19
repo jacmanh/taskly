@@ -21,4 +21,7 @@ export type UserProfile = Omit<User, 'isActive'>;
 /**
  * User for auth responses (minimal data)
  */
-export type AuthUser = Pick<User, 'id' | 'email' | 'name' | 'avatar' | 'emailVerified'>;
+export type AuthUser = Pick<
+  User,
+  'id' | 'email' | 'name' | 'avatar' | 'emailVerified'
+>;

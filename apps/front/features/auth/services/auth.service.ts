@@ -11,7 +11,10 @@ export const authService = {
    * Register a new user
    */
   async register(credentials: RegisterCredentials): Promise<AuthResponse> {
-    const { data } = await axiosInstance.post<AuthResponse>('/auth/register', credentials);
+    const { data } = await axiosInstance.post<AuthResponse>(
+      '/auth/register',
+      credentials
+    );
     setAccessToken(data.accessToken);
     return data;
   },
@@ -20,7 +23,10 @@ export const authService = {
    * Login user
    */
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const { data } = await axiosInstance.post<AuthResponse>('/auth/login', credentials);
+    const { data } = await axiosInstance.post<AuthResponse>(
+      '/auth/login',
+      credentials
+    );
     setAccessToken(data.accessToken);
     return data;
   },
@@ -48,7 +54,9 @@ export const authService = {
    * Refresh access token
    */
   async refreshToken(): Promise<string> {
-    const { data } = await axiosInstance.post<{ accessToken: string }>('/auth/refresh');
+    const { data } = await axiosInstance.post<{ accessToken: string }>(
+      '/auth/refresh'
+    );
     setAccessToken(data.accessToken);
     return data.accessToken;
   },

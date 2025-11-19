@@ -1,23 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './src/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
         // Neutral base colors for UI
         neutral: {
-          50: '#FCFCFC',    // Background
-          100: '#F5F5F5',   // Surface
-          200: '#E5E5E5',   // Lines/Borders
+          50: '#FCFCFC', // Background
+          100: '#F5F5F5', // Surface
+          200: '#E5E5E5', // Lines/Borders
           300: '#D4D4D4',
           400: '#A3A3A3',
-          500: '#6E6E6E',   // Text secondary
+          500: '#6E6E6E', // Text secondary
           600: '#525252',
           700: '#404040',
           800: '#262626',
-          900: '#1A1A1A',   // Text primary
+          900: '#1A1A1A', // Text primary
           950: '#0A0A0A',
         },
         // Secondary (alias for neutral)
@@ -50,13 +48,13 @@ module.exports = {
         },
         // Accent color (Indigo) - AI + actions
         accent: {
-          50: '#EEF2FF',    // Subtle
+          50: '#EEF2FF', // Subtle
           100: '#E0E7FF',
           200: '#C7D2FE',
           300: '#A5B4FC',
           400: '#818CF8',
-          500: '#4F46E5',   // Main accent
-          600: '#4338CA',   // Hover
+          500: '#4F46E5', // Main accent
+          600: '#4338CA', // Hover
           700: '#3730A3',
           800: '#312E81',
           900: '#1E1B4B',
@@ -124,9 +122,9 @@ module.exports = {
           100: '#F3E8FF',
           200: '#E9D5FF',
           300: '#D8B4FE',
-          400: '#C4B5FD',   // Shadow
+          400: '#C4B5FD', // Shadow
           500: '#A78BFA',
-          600: '#7C3AED',   // Glow
+          600: '#7C3AED', // Glow
           700: '#6D28D9',
           800: '#5B21B6',
           900: '#4C1D95',
