@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { Workspace } from '@taskly/types';
-import { useWorkspaces } from '../hooks/useWorkspaces';
+import { useSuspenseWorkspaces } from '../hooks/useWorkspaces';
 
 interface WorkspaceContextValue {
   currentWorkspace: Workspace | null;
@@ -28,13 +28,13 @@ interface WorkspaceProviderProps {
 }
 
 export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
-  const { data: workspaces = [], isLoading } = useWorkspaces();
+  const { data: workspaces = [] } = useSuspenseWorkspaces();
   const [currentWorkspace, setCurrentWorkspaceState] =
     useState<Workspace | null>(null);
 
   // Load workspace from localStorage on mount
   useEffect(() => {
-    if (isLoading || workspaces.length === 0) return;
+    if (workspaces.length === 0) return;
 
     const savedWorkspaceId =
       typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
@@ -51,7 +51,7 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
     if (workspaces.length > 0 && !currentWorkspace) {
       setCurrentWorkspaceState(workspaces[0]);
     }
-  }, [workspaces, isLoading, currentWorkspace]);
+  }, [workspaces, currentWorkspace]);
 
   // Save to localStorage when workspace changes
   const setCurrentWorkspace = (workspace: Workspace | null) => {
@@ -71,7 +71,7 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
         currentWorkspace,
         setCurrentWorkspace,
         workspaces,
-        isLoading,
+        isLoading: false,
       }}
     >
       {children}

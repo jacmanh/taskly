@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { CreateWorkspaceInput } from '@taskly/types';
 import { workspacesService } from '../services/workspaces.service';
 import { workspacesQueryKeys } from '../constants/query-keys';
-import { useProtectedQuery } from '@features/auth/hooks/useProtectedQuery';
+import { useProtectedQuery, useProtectedSuspenseQuery } from '@features/auth/hooks/useProtectedQuery';
 
 /**
  * Hook to fetch all workspaces for the current user
@@ -11,6 +11,14 @@ export function useWorkspaces() {
   return useProtectedQuery({
     queryKey: workspacesQueryKeys.list(),
     queryFn: () => workspacesService.getMyWorkspaces(),
+  });
+}
+
+export function useSuspenseWorkspaces() {
+  return useProtectedSuspenseQuery({
+    queryKey: workspacesQueryKeys.list(),
+    queryFn: () => workspacesService.getMyWorkspaces(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 

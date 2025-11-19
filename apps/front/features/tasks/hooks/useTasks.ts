@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useProtectedQuery } from '@features/auth/hooks/useProtectedQuery';
+import { useProtectedQuery, useProtectedSuspenseQuery } from '@features/auth/hooks/useProtectedQuery';
 import type { Task, CreateTaskInput, UpdateTaskInput } from '@taskly/types';
 import { tasksService } from '../services/tasks.service';
 import { tasksQueryKeys } from '../constants/query-keys';
@@ -20,6 +20,14 @@ export function useProjectTasks(workspaceId?: string, projectId?: string) {
       : tasksQueryKeys.workspace(workspaceId!),
     queryFn: () => tasksService.getByWorkspace(workspaceId!, { projectId }),
     enabled: !!workspaceId && !!projectId,
+  });
+}
+
+export function useSuspenseProjectTasks(workspaceId: string, projectId: string) {
+  return useProtectedSuspenseQuery<Task[]>({
+    queryKey: tasksQueryKeys.project(projectId),
+    queryFn: () => tasksService.getByWorkspace(workspaceId, { projectId }),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 

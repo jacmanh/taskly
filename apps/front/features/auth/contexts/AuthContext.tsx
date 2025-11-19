@@ -31,6 +31,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const registerMutation = useRegister();
   const logoutMutation = useLogout();
   const [hasToken, setHasToken] = useState(() => !!getAccessToken());
+  const [isInitializing, setIsInitializing] = useState(true);
 
   // Don't enable the query by default - it will be enabled when needed
   const {
@@ -44,6 +45,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const isPublicRoute = publicRoutes.includes(pathname);
 
     if (isPublicRoute) {
+      setIsInitializing(false);
       return; // Don't try to refresh on public routes
     }
 
@@ -58,12 +60,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
         void error;
         // No valid session - middleware will handle redirect
         console.error('No valid session');
+      } finally {
+        setIsInitializing(false);
       }
     };
 
     // Only initialize if we don't have a token yet
     if (!hasToken) {
       initializeAuth();
+    } else {
+      setIsInitializing(false);
     }
   }, [pathname, refetch, hasToken]);
 
@@ -103,6 +109,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isAuthenticated: !!user && !!accessToken,
       isLoading:
         isLoading ||
+        isInitializing ||
         loginMutation.isPending ||
         registerMutation.isPending ||
         logoutMutation.isPending,
@@ -114,6 +121,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [
       accessToken,
       isLoading,
+      isInitializing,
       loginMutation.isPending,
       registerMutation.isPending,
       logoutMutation.isPending,
@@ -124,6 +132,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
       register,
     ]
   );
+
+  if (isInitializing || (hasToken && isLoading)) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-neutral-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neutral-900"></div>
+      </div>
+    );
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

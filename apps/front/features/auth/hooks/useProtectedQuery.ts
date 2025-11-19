@@ -1,7 +1,10 @@
 import {
   useQuery,
+  useSuspenseQuery,
   UseQueryOptions,
   UseQueryResult,
+  UseSuspenseQueryOptions,
+  UseSuspenseQueryResult,
 } from '@tanstack/react-query';
 import { useAuth } from './useAuth';
 
@@ -33,5 +36,36 @@ export function useProtectedQuery<
   return useQuery({
     ...options,
     enabled: isEnabled,
+  });
+}
+
+/**
+ * Wrapper around useSuspenseQuery that automatically suspends
+ * if auth is loading.
+ */
+export function useProtectedSuspenseQuery<
+  TQueryFnData = unknown,
+  TError = Error,
+  TData = TQueryFnData,
+  TQueryKey extends readonly unknown[] = readonly unknown[],
+>(
+  options: UseSuspenseQueryOptions<TQueryFnData, TError, TData, TQueryKey>
+): UseSuspenseQueryResult<TData, TError> {
+  const { user, isLoading: authLoading } = useAuth();
+
+  // Note: AuthProvider blocks rendering until initialization is complete,
+  // so we don't need to manually suspend for authLoading here.
+
+  if (!user) {
+    // If auth is ready but no user, we can't run the query.
+    // In a protected route, this should be handled by redirection,
+    // but for the query, we might need to throw or return a dummy?
+    // useSuspenseQuery doesn't support 'enabled', so we must ensure this is only called
+    // when we expect a user.
+    throw new Error('User not authenticated');
+  }
+
+  return useSuspenseQuery({
+    ...options,
   });
 }

@@ -4,7 +4,7 @@ import type {
   Project,
   UpdateProjectInput,
 } from '@taskly/types';
-import { useProtectedQuery } from '@features/auth/hooks/useProtectedQuery';
+import { useProtectedQuery, useProtectedSuspenseQuery } from '@features/auth/hooks/useProtectedQuery';
 import { projectsQueryKeys } from '../constants/query-keys';
 import { projectsService } from '../services/projects.service';
 
@@ -34,6 +34,14 @@ export function useWorkspaceProjects(workspaceId?: string) {
       : projectsQueryKeys.list(),
     queryFn: () => projectsService.getByWorkspace(workspaceId as string),
     enabled: !!workspaceId,
+  });
+}
+
+export function useSuspenseWorkspaceProjects(workspaceId: string) {
+  return useProtectedSuspenseQuery<Project[]>({
+    queryKey: projectsQueryKeys.workspace(workspaceId),
+    queryFn: () => projectsService.getByWorkspace(workspaceId),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 

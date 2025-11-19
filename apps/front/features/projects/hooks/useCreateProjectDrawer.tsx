@@ -19,7 +19,7 @@ export function useCreateProjectDrawer() {
             onSuccess?.(project);
             closeDrawer();
           }}
-          onCancel={() => closeDrawer()}
+          onCancel={closeDrawer}
         />
       ),
     });
