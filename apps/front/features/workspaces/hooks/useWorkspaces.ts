@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { CreateWorkspaceInput } from '@taskly/types';
+import type { CreateWorkspaceInput, UpdateWorkspaceInput } from '@taskly/types';
 import { workspacesService } from '../services/workspaces.service';
 import { workspacesQueryKeys } from '../constants/query-keys';
 import { useProtectedQuery, useProtectedSuspenseQuery } from '@features/auth/hooks/useProtectedQuery';
@@ -49,7 +49,7 @@ export function useUpdateWorkspace() {
       input,
     }: {
       id: string;
-      input: Partial<CreateWorkspaceInput>;
+      input: UpdateWorkspaceInput;
     }) => workspacesService.updateWorkspace(id, input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: workspacesQueryKeys.all });

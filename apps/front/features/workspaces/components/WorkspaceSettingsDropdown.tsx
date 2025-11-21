@@ -10,10 +10,13 @@ import {
   DropdownMenuTrigger,
 } from '@taskly/design-system';
 import { useLogout } from '@features/auth/hooks/useAuthMutations';
+import { WorkspaceSettingsModal } from './WorkspaceSettingsModal';
 
 export function WorkspaceSettingsDropdown() {
   const [mounted, setMounted] = useState(false);
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
+
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -33,34 +36,44 @@ export function WorkspaceSettingsDropdown() {
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500">
-        <Settings size={18} />
-        <span>Settings</span>
-      </DropdownMenuTrigger>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500">
+          <Settings size={18} />
+          <span>Settings</span>
+        </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="start" className="w-56">
-        <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
-          <Settings size={16} />
-          <span>Workspace settings</span>
-        </DropdownMenuItem>
+        <DropdownMenuContent align="start" className="w-56">
+          <DropdownMenuItem
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => setShowSettingsModal(true)}
+          >
+            <Settings size={16} />
+            <span>Workspace settings</span>
+          </DropdownMenuItem>
 
-        <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
-          <Users size={16} />
-          <span>Members</span>
-        </DropdownMenuItem>
+          <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+            <Users size={16} />
+            <span>Members</span>
+          </DropdownMenuItem>
 
-        <DropdownMenuSeparator />
+          <DropdownMenuSeparator />
 
-        <DropdownMenuItem
-          onClick={handleLogout}
-          disabled={isLoggingOut}
-          className="flex items-center gap-2 text-error-600 cursor-pointer"
-        >
-          <LogOut size={16} />
-          <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <DropdownMenuItem
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="flex items-center gap-2 text-error-600 cursor-pointer"
+          >
+            <LogOut size={16} />
+            <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <WorkspaceSettingsModal
+        open={showSettingsModal}
+        onOpenChange={setShowSettingsModal}
+      />
+    </>
   );
 }

@@ -97,17 +97,17 @@ export function useUpdateTask() {
   });
 }
 
-interface ArchiveTaskMutationParams {
+interface DeleteTaskMutationParams {
   workspaceId: string;
   taskId: string;
   projectId: string;
 }
 
-export function useArchiveTask() {
+export function useDeleteTask() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ workspaceId, taskId }: ArchiveTaskMutationParams) =>
+    mutationFn: ({ workspaceId, taskId }: DeleteTaskMutationParams) =>
       tasksService.delete(workspaceId, taskId),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({

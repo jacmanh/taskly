@@ -59,3 +59,19 @@ export {
   type ConfirmationModalProps,
   type ConfirmationModalOptions,
 } from './components/confirmation-modal';
+
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from './lib/radix/dialog';
+
+export { RadioGroup, RadioGroupItem } from './lib/radix/radio-group';
+export { Label } from './lib/radix/label';

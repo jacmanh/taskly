@@ -30,7 +30,7 @@ function ProjectTasks({
       children: (
         <TaskDrawer
           task={task}
-          workspaceId={currentWorkspace.id}
+          workspace={currentWorkspace}
           onClose={closeDrawer}
         />
       ),

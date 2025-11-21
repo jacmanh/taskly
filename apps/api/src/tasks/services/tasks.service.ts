@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TasksRepository } from '../repositories/tasks.repository';
 import { AuthorizationService } from '../../authorization/authorization.service';
+import { WorkspacesRepository } from '../../workspaces/repositories/workspaces.repository';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
 
@@ -8,7 +9,8 @@ import { UpdateTaskDto } from '../dto/update-task.dto';
 export class TasksService {
   constructor(
     private readonly tasksRepo: TasksRepository,
-    private readonly authorizationService: AuthorizationService
+    private readonly authorizationService: AuthorizationService,
+    private readonly workspacesRepo: WorkspacesRepository
   ) {}
 
   async findByWorkspaceId(
@@ -17,7 +19,7 @@ export class TasksService {
     filters?: {
       projectId?: string;
       sprintId?: string;
-      assignedToId?: string;
+      assignedId?: string;
       status?: string;
       priority?: string;
       includeArchived?: boolean;
@@ -58,7 +60,7 @@ export class TasksService {
     // If a sprint is provided, verify it belongs to the workspace
     // TODO: Add sprint verification when Sprint service is implemented
 
-    // If assignedToId is provided, verify the user exists and has access to workspace
+    // If assignedId is provided, verify the user exists and has access to workspace
     // TODO: Add user membership verification
 
     return this.tasksRepo.create({
@@ -73,9 +75,9 @@ export class TasksService {
       createdBy: {
         connect: { id: userId },
       },
-      ...(createTaskDto.assignedToId && {
+      ...(createTaskDto.assignedId && {
         assignedTo: {
-          connect: { id: createTaskDto.assignedToId },
+          connect: { id: createTaskDto.assignedId },
         },
       }),
       ...(createTaskDto.sprintId && {
@@ -111,7 +113,7 @@ export class TasksService {
     // If a sprint is provided, verify it belongs to the workspace
     // TODO: Add sprint verification when Sprint service is implemented
 
-    // If assignedToId is provided, verify the user exists and has access to workspace
+    // If assignedId is provided, verify the user exists and has access to workspace
     // TODO: Add user membership verification
 
     return this.tasksRepo.update(taskId, {
@@ -133,9 +135,9 @@ export class TasksService {
           connect: { id: updateTaskDto.projectId },
         },
       }),
-      ...(updateTaskDto.assignedToId !== undefined && {
-        assignedTo: updateTaskDto.assignedToId
-          ? { connect: { id: updateTaskDto.assignedToId } }
+      ...(updateTaskDto.assignedId !== undefined && {
+        assignedTo: updateTaskDto.assignedId
+          ? { connect: { id: updateTaskDto.assignedId } }
           : { disconnect: true },
       }),
       ...(updateTaskDto.sprintId !== undefined && {
@@ -153,6 +155,12 @@ export class TasksService {
       workspaceId,
       userId
     );
+
+    const workspace = await this.workspacesRepo.findById(workspaceId);
+
+    if (workspace?.deleteStrategy === 'HARD') {
+      return this.tasksRepo.delete(taskId);
+    }
 
     return this.tasksRepo.archive(taskId);
   }

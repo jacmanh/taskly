@@ -28,7 +28,7 @@ export class UpdateTaskDto implements UpdateTaskInput {
 
   @IsString()
   @IsOptional()
-  assignedToId?: UpdateTaskInput['assignedToId'];
+  assignedId?: UpdateTaskInput['assignedId'];
 
   @IsString()
   @IsOptional()

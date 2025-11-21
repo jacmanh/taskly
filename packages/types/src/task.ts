@@ -18,12 +18,12 @@ export interface Task {
   priority: TaskPriority;
   dueDate: Date | null;
   projectId: string;
-  assignedToId: string | null;
+  assignedId: string | null;
   sprintId: string | null;
   createdById: string;
   createdAt: Date;
   updatedAt: Date;
-  archivedAt: Date | null;
+  deletedAt: Date | null;
   // Relations (populated by API)
   project?: {
     id: string;
@@ -56,7 +56,7 @@ export interface CreateTaskInput {
   priority?: TaskPriority;
   dueDate?: Date;
   projectId: string;
-  assignedToId?: string;
+  assignedId?: string;
   sprintId?: string;
 }
 
@@ -67,6 +67,6 @@ export interface UpdateTaskInput {
   priority?: TaskPriority;
   dueDate?: Date;
   projectId?: string;
-  assignedToId?: string;
+  assignedId?: string;
   sprintId?: string;
 }

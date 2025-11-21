@@ -18,6 +18,7 @@ export type {
   CreateWorkspaceInput,
   UpdateWorkspaceInput,
 } from './workspace';
+export { DeleteStrategy } from './workspace';
 
 // Project types
 export type {

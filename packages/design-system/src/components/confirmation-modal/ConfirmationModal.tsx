@@ -10,7 +10,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '../../lib/shadcn/alert-dialog';
+} from '../../lib/radix/alert-dialog';
 import { buttonVariants } from '../button';
 import { cn } from '../../lib/utils';
 

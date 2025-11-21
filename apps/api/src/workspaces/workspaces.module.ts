@@ -8,6 +8,6 @@ import { WorkspacesRepository } from './repositories/workspaces.repository';
   imports: [PrismaModule],
   controllers: [WorkspacesController],
   providers: [WorkspacesService, WorkspacesRepository],
-  exports: [WorkspacesService],
+  exports: [WorkspacesService, WorkspacesRepository],
 })
 export class WorkspacesModule {}

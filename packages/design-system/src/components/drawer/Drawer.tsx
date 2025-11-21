@@ -9,7 +9,7 @@ import {
   SheetFooter,
   SheetTitle,
   SheetClose,
-} from '../../lib/shadcn/sheet';
+} from '../../lib/radix/sheet';
 import { X } from 'lucide-react';
 
 interface DrawerSectionsContextValue {

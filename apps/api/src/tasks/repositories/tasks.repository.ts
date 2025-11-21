@@ -30,7 +30,7 @@ export class TasksRepository {
         },
       },
     });
-    if (task?.archivedAt) {
+    if (task?.deletedAt) {
       return null;
     }
     return task;
@@ -41,7 +41,7 @@ export class TasksRepository {
     filters?: {
       projectId?: string;
       sprintId?: string;
-      assignedToId?: string;
+      assignedId?: string;
       status?: string;
       priority?: string;
       includeArchived?: boolean;
@@ -54,7 +54,7 @@ export class TasksRepository {
     };
 
     if (!filters?.includeArchived) {
-      where.archivedAt = null;
+      where.deletedAt = null;
     }
 
     if (filters?.projectId) {
@@ -65,8 +65,8 @@ export class TasksRepository {
       where.sprintId = filters.sprintId;
     }
 
-    if (filters?.assignedToId) {
-      where.assignedToId = filters.assignedToId;
+    if (filters?.assignedId) {
+      where.assignedId = filters.assignedId;
     }
 
     if (filters?.status) {
@@ -171,8 +171,35 @@ export class TasksRepository {
     return this.prisma.task.update({
       where: { id },
       data: {
-        archivedAt: new Date(),
+        deletedAt: new Date(),
+        description: null,
       },
+      include: {
+        project: true,
+        assignedTo: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true,
+          },
+        },
+        sprint: true,
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true,
+          },
+        },
+      },
+    });
+  }
+
+  delete(id: string) {
+    return this.prisma.task.delete({
+      where: { id },
       include: {
         project: true,
         assignedTo: {

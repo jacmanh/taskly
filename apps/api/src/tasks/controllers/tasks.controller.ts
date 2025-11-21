@@ -27,7 +27,7 @@ export class TasksController {
     @CurrentUser() user: AuthenticatedUser,
     @Query('projectId') projectId?: string,
     @Query('sprintId') sprintId?: string,
-    @Query('assignedToId') assignedToId?: string,
+    @Query('assignedId') assignedId?: string,
     @Query('status') status?: string,
     @Query('priority') priority?: string,
     @Query('includeArchived') includeArchived?: string
@@ -35,7 +35,7 @@ export class TasksController {
     return this.tasksService.findByWorkspaceId(workspaceId, user.id, {
       projectId,
       sprintId,
-      assignedToId,
+      assignedId,
       status,
       priority,
       includeArchived: includeArchived === 'true',

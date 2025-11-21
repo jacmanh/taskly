@@ -1,16 +1,16 @@
 'use client';
 
 import { Drawer, Button, useConfirmationModal } from '@taskly/design-system';
-import type { Task } from '@taskly/types';
+import type { Task, Workspace } from '@taskly/types';
 import { TaskStatus, TaskPriority } from '@taskly/types';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Calendar, User, Flag, CheckCircle2, Clock } from 'lucide-react';
-import { useArchiveTask } from '../hooks/useTasks';
+import { useDeleteTask } from '../hooks/useTasks';
 
 interface TaskDrawerProps {
   task: Task;
-  workspaceId: string;
+  workspace: Workspace;
   onClose: () => void;
 }
 
@@ -66,24 +66,23 @@ function getPriorityBadgeColor(priority: TaskPriority): string {
   }
 }
 
-export function TaskDrawer({ task, workspaceId, onClose }: TaskDrawerProps) {
-  const { mutate: archiveTask, isPending: isArchiving } = useArchiveTask();
+export function TaskDrawer({ task, workspace, onClose }: TaskDrawerProps) {
+  const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
   const { show: showConfirmationModal } = useConfirmationModal();
 
-  const handleArchive = async () => {
+  const handleDelete = async () => {
     const confirmed = await showConfirmationModal({
-      title: `Archiver "${task.title}" ?`,
-      description:
-        'La tâche restera disponible pour les statistiques mais sera retirée des listes actives.',
-      confirmText: 'Archiver',
+      title: `Supprimer "${task.title}" ?`,
+      description: 'Cette action ne peut pas être annulée.',
+      confirmText: 'Supprimer',
       cancelText: 'Annuler',
       variant: 'destructive',
     });
 
     if (!confirmed) return;
 
-    archiveTask(
-      { workspaceId, taskId: task.id, projectId: task.projectId },
+    deleteTask(
+      { workspaceId: workspace.id, taskId: task.id, projectId: task.projectId },
       {
         onSuccess: () => {
           onClose();
@@ -241,7 +240,7 @@ export function TaskDrawer({ task, workspaceId, onClose }: TaskDrawerProps) {
             variant="outline"
             className="w-full"
             onClick={onClose}
-            disabled={isArchiving}
+            disabled={isDeleting}
           >
             Fermer
           </Button>
@@ -249,10 +248,10 @@ export function TaskDrawer({ task, workspaceId, onClose }: TaskDrawerProps) {
             type="button"
             variant="destructive"
             className="w-full"
-            onClick={handleArchive}
-            loading={isArchiving}
+            onClick={handleDelete}
+            loading={isDeleting}
           >
-            Archiver la tâche
+            Supprimer la tâche
           </Button>
         </div>
       </Drawer.Footer>

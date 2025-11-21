@@ -1,4 +1,4 @@
-import type { Workspace, CreateWorkspaceInput } from '@taskly/types';
+import type { Workspace, CreateWorkspaceInput, UpdateWorkspaceInput } from '@taskly/types';
 import { axiosInstance } from '@features/auth/services/axios';
 
 export const workspacesService = {
@@ -23,7 +23,7 @@ export const workspacesService = {
    */
   async updateWorkspace(
     id: string,
-    input: Partial<CreateWorkspaceInput>
+    input: UpdateWorkspaceInput
   ): Promise<Workspace> {
     const { data } = await axiosInstance.patch<Workspace>(
       `/workspaces/${id}`,

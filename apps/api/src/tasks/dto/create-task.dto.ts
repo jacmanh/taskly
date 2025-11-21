@@ -28,7 +28,7 @@ export class CreateTaskDto implements CreateTaskInput {
 
   @IsString()
   @IsOptional()
-  assignedToId?: CreateTaskInput['assignedToId'];
+  assignedId?: CreateTaskInput['assignedId'];
 
   @IsString()
   @IsOptional()

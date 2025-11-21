@@ -1,3 +1,8 @@
+export enum DeleteStrategy {
+  SOFT = 'SOFT',
+  HARD = 'HARD',
+}
+
 export interface Workspace {
   id: string;
   name: string;
@@ -8,6 +13,7 @@ export interface Workspace {
   createdAt: Date;
   updatedAt: Date;
   archivedAt?: Date | null;
+  deleteStrategy: DeleteStrategy;
 }
 
 export interface CreateWorkspaceInput {
@@ -19,4 +25,5 @@ export interface UpdateWorkspaceInput {
   slug?: string;
   color?: string;
   icon?: string;
+  deleteStrategy?: DeleteStrategy;
 }
