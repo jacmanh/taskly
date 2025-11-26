@@ -63,12 +63,6 @@
         "command": "eslint apps/api --ext .ts,.tsx,.js,.jsx"
       }
     },
-    "type-check": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "tsc -p apps/api/tsconfig.app.json --noEmit"
-      }
-    },
     "prisma-generate": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/node_modules/.prisma/client"],

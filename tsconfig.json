@@ -1,0 +1,25 @@
+{
+  "compileOnSave": false,
+  "include": [],
+  "files": [],
+  "exclude": ["node_modules", "tmp"],
+  "references": [
+    {
+      "path": "./apps/front"
+    },
+    {
+      "path": "./apps/api"
+    },
+    {
+      "path": "./packages/design-system"
+    },
+    {
+      "path": "./packages/types"
+    },
+    {
+      "path": "./packages/telemetry"
+    }
+  ],
+
+  "extends": "./tsconfig.base.json"
+}

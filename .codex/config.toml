@@ -1,0 +1,3 @@
+model = "gpt-5-codex"
+[projects."/Users/jacman/Sites/taskly"]
+trust_level = "trusted"

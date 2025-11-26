@@ -1,0 +1,121 @@
+openapi: 3.0.3
+info:
+  title: Task Inline Edit
+  version: 0.1.0
+  description: Contract for inline editing of task fields via Taskly API
+servers:
+  - url: https://api.taskly.example.com
+paths:
+  /tasks/{taskId}:
+    patch:
+      summary: Update editable task fields inline
+      description: Updates title, description, status, or dueDate for a task while enforcing permissions and optimistic concurrency tokens.
+      tags:
+        - Tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID of the task being updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskInlineRequest'
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Authentication required
+        '403':
+          description: User lacks edit permission
+        '409':
+          description: Conflict due to stale updatedAt token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictResponse'
+components:
+  schemas:
+    UpdateTaskInlineRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 140
+        description:
+          type: string
+          maxLength: 5000
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        dueDate:
+          type: string
+          format: date
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last known timestamp to detect concurrent updates
+      additionalProperties: false
+    Task:
+      type: object
+      required: [id, title, status, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        dueDate:
+          type: string
+          format: date
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+    TaskStatus:
+      type: string
+      enum: [OPEN, IN_PROGRESS, BLOCKED, DONE]
+    ValidationError:
+      type: object
+      required: [message, fieldErrors]
+      properties:
+        message:
+          type: string
+        fieldErrors:
+          type: array
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+    ConflictResponse:
+      type: object
+      required: [message, latest]
+      properties:
+        message:
+          type: string
+        latest:
+          $ref: '#/components/schemas/Task'

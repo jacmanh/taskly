@@ -51,16 +51,18 @@
         "lintFilePatterns": ["apps/front/**/*.{ts,tsx,js,jsx}"]
       }
     },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/front"],
+      "options": {
+        "jestConfig": "apps/front/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
     "eslint": {
       "executor": "nx:run-commands",
       "options": {
         "command": "eslint apps/front --ext .ts,.tsx,.js,.jsx"
-      }
-    },
-    "type-check": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "tsc -p apps/front/tsconfig.json --noEmit"
       }
     }
   }

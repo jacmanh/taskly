@@ -17,6 +17,14 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/packages/design-system"],
+      "options": {
+        "jestConfig": "packages/design-system/jest.config.ts",
+        "passWithNoTests": true
+      }
     }
   }
 }

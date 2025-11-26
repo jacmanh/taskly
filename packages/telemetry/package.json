@@ -1,0 +1,18 @@
+{
+  "name": "@taskly/telemetry",
+  "version": "0.0.1",
+  "description": "Shared telemetry helpers for Taskly apps and services",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./events": "./src/events.ts"
+  },
+  "sideEffects": false,
+  "keywords": [
+    "telemetry",
+    "taskly"
+  ],
+  "author": "",
+  "license": "ISC"
+}
