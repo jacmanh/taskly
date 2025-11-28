@@ -64,6 +64,20 @@
       "options": {
         "command": "eslint apps/front --ext .ts,.tsx,.js,.jsx"
       }
+    },
+    "e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright test",
+        "cwd": "apps/front"
+      }
+    },
+    "e2e:ui": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright test --ui",
+        "cwd": "apps/front"
+      }
     }
   }
 }

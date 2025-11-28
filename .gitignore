@@ -44,3 +44,8 @@ out/
 # temp
 tmp/
 
+# playwright
+.auth/
+test-results/
+playwright-report/
+

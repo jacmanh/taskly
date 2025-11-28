@@ -1,0 +1,434 @@
+{
+  "title": "Task Inline Edit - Success Metrics Dashboard",
+  "description": "Monitors inline edit feature performance and success criteria (SC-001, SC-002, SC-003)",
+  "widgets": [
+    {
+      "id": 1,
+      "definition": {
+        "title": "SC-001: p95 Save Latency (<1s target)",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "p95:taskly.task_inline_edit.duration_ms{event:task_inline_edit_saved,outcome:success}",
+            "display_type": "line",
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            }
+          }
+        ],
+        "markers": [
+          {
+            "value": "y = 1000",
+            "display_type": "error dashed",
+            "label": "SLO: 1000ms"
+          }
+        ],
+        "yaxis": {
+          "label": "",
+          "scale": "linear",
+          "min": "auto",
+          "max": "auto",
+          "include_zero": true
+        }
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 6,
+        "height": 3
+      }
+    },
+    {
+      "id": 2,
+      "definition": {
+        "title": "SC-002: Failure Rate (<5% target)",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_value",
+        "requests": [
+          {
+            "q": "(sum:taskly.task_inline_edit.count{event:task_inline_edit_failed}.as_count() / sum:taskly.task_inline_edit.count{event:task_inline_edit_started}.as_count()) * 100",
+            "aggregator": "avg"
+          }
+        ],
+        "autoscale": true,
+        "precision": 2,
+        "custom_unit": "%"
+      },
+      "layout": {
+        "x": 6,
+        "y": 0,
+        "width": 3,
+        "height": 3
+      }
+    },
+    {
+      "id": 3,
+      "definition": {
+        "title": "SC-003: Edit Page Navigation Reduction",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "sum:taskly.task_viewer.edit_page_navigation.count{}.as_count().rollup(sum, 3600)",
+            "display_type": "bars",
+            "style": {
+              "palette": "warm",
+              "line_type": "solid",
+              "line_width": "normal"
+            }
+          },
+          {
+            "q": "sum:taskly.task_inline_edit.count{event:task_inline_edit_saved}.as_count().rollup(sum, 3600)",
+            "display_type": "line",
+            "style": {
+              "palette": "cool",
+              "line_type": "solid",
+              "line_width": "normal"
+            }
+          }
+        ],
+        "yaxis": {
+          "label": "Count per hour",
+          "scale": "linear",
+          "min": "auto",
+          "max": "auto",
+          "include_zero": true
+        }
+      },
+      "layout": {
+        "x": 9,
+        "y": 0,
+        "width": 3,
+        "height": 3
+      }
+    },
+    {
+      "id": 4,
+      "definition": {
+        "title": "Inline Edit Events by Field",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "toplist",
+        "requests": [
+          {
+            "q": "top(sum:taskly.task_inline_edit.count{event:task_inline_edit_saved} by {field}.as_count(), 10, 'sum', 'desc')"
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 3,
+        "width": 4,
+        "height": 3
+      }
+    },
+    {
+      "id": 5,
+      "definition": {
+        "title": "Failure Outcomes Distribution",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "sunburst",
+        "requests": [
+          {
+            "q": "sum:taskly.task_inline_edit.count{event:task_inline_edit_failed} by {outcome}.as_count()"
+          }
+        ],
+        "legend": {
+          "type": "automatic"
+        }
+      },
+      "layout": {
+        "x": 4,
+        "y": 3,
+        "width": 4,
+        "height": 3
+      }
+    },
+    {
+      "id": 6,
+      "definition": {
+        "title": "Average Latency by Field",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:taskly.task_inline_edit.duration_ms{event:task_inline_edit_saved,outcome:success} by {field}",
+            "display_type": "line"
+          }
+        ],
+        "markers": [
+          {
+            "value": "y = 1000",
+            "display_type": "warning dashed",
+            "label": "Target: 1s"
+          }
+        ],
+        "yaxis": {
+          "label": "Milliseconds",
+          "scale": "linear",
+          "min": "auto",
+          "max": "auto",
+          "include_zero": true
+        }
+      },
+      "layout": {
+        "x": 8,
+        "y": 3,
+        "width": 4,
+        "height": 3
+      }
+    },
+    {
+      "id": 7,
+      "definition": {
+        "title": "Conflict Rate (409 responses)",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "sum:taskly.task_inline_edit.count{event:task_inline_edit_failed,outcome:conflict}.as_count().rollup(sum, 300)",
+            "display_type": "bars",
+            "style": {
+              "palette": "orange"
+            }
+          }
+        ],
+        "yaxis": {
+          "label": "Conflicts per 5 min",
+          "scale": "linear",
+          "min": "auto",
+          "max": "auto",
+          "include_zero": true
+        }
+      },
+      "layout": {
+        "x": 0,
+        "y": 6,
+        "width": 4,
+        "height": 3
+      }
+    },
+    {
+      "id": 8,
+      "definition": {
+        "title": "Network Error Rate",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "sum:taskly.task_inline_edit.count{event:task_inline_edit_failed,outcome:network_error}.as_count().rollup(sum, 300)",
+            "display_type": "bars",
+            "style": {
+              "palette": "red"
+            }
+          },
+          {
+            "q": "sum:taskly.task_inline_edit.count{event:task_inline_edit_failed,outcome:offline}.as_count().rollup(sum, 300)",
+            "display_type": "bars",
+            "style": {
+              "palette": "purple"
+            }
+          }
+        ],
+        "yaxis": {
+          "label": "Errors per 5 min",
+          "scale": "linear",
+          "min": "auto",
+          "max": "auto",
+          "include_zero": true
+        }
+      },
+      "layout": {
+        "x": 4,
+        "y": 6,
+        "width": 4,
+        "height": 3
+      }
+    },
+    {
+      "id": 9,
+      "definition": {
+        "title": "Retry Count Distribution",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "distribution",
+        "requests": [
+          {
+            "q": "avg:taskly.task_inline_edit.retry_count{event:task_inline_edit_saved} by {field}"
+          }
+        ],
+        "xaxis": {
+          "label": "Retry Count",
+          "scale": "linear",
+          "min": "auto",
+          "max": "auto",
+          "include_zero": true
+        },
+        "yaxis": {
+          "label": "Frequency",
+          "scale": "linear"
+        }
+      },
+      "layout": {
+        "x": 8,
+        "y": 6,
+        "width": 4,
+        "height": 3
+      }
+    },
+    {
+      "id": 10,
+      "definition": {
+        "title": "Active Users Editing Inline (Last Hour)",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_value",
+        "requests": [
+          {
+            "q": "count_nonzero(sum:taskly.task_inline_edit.count{event:task_inline_edit_started} by {userId}.as_count().rollup(sum, 3600))",
+            "aggregator": "last"
+          }
+        ],
+        "autoscale": true,
+        "precision": 0
+      },
+      "layout": {
+        "x": 0,
+        "y": 9,
+        "width": 3,
+        "height": 2
+      }
+    },
+    {
+      "id": 11,
+      "definition": {
+        "title": "Total Inline Saves (Last Hour)",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_value",
+        "requests": [
+          {
+            "q": "sum:taskly.task_inline_edit.count{event:task_inline_edit_saved}.as_count().rollup(sum, 3600)",
+            "aggregator": "last"
+          }
+        ],
+        "autoscale": true,
+        "precision": 0
+      },
+      "layout": {
+        "x": 3,
+        "y": 9,
+        "width": 3,
+        "height": 2
+      }
+    },
+    {
+      "id": 12,
+      "definition": {
+        "title": "Current Failure Rate (Last 5 min)",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_value",
+        "requests": [
+          {
+            "q": "(sum:taskly.task_inline_edit.count{event:task_inline_edit_failed}.as_count().rollup(sum, 300) / sum:taskly.task_inline_edit.count{event:task_inline_edit_started}.as_count().rollup(sum, 300)) * 100",
+            "aggregator": "last",
+            "conditional_formats": [
+              {
+                "comparator": "<",
+                "value": 5,
+                "palette": "white_on_green"
+              },
+              {
+                "comparator": ">=",
+                "value": 5,
+                "palette": "white_on_red"
+              }
+            ]
+          }
+        ],
+        "autoscale": false,
+        "precision": 2,
+        "custom_unit": "%"
+      },
+      "layout": {
+        "x": 6,
+        "y": 9,
+        "width": 3,
+        "height": 2
+      }
+    },
+    {
+      "id": 13,
+      "definition": {
+        "title": "Average Save Duration (Last Hour)",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_value",
+        "requests": [
+          {
+            "q": "avg:taskly.task_inline_edit.duration_ms{event:task_inline_edit_saved,outcome:success}.rollup(avg, 3600)",
+            "aggregator": "last",
+            "conditional_formats": [
+              {
+                "comparator": "<",
+                "value": 500,
+                "palette": "white_on_green"
+              },
+              {
+                "comparator": ">=",
+                "value": 1000,
+                "palette": "white_on_red"
+              },
+              {
+                "comparator": ">=",
+                "value": 500,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ],
+        "autoscale": false,
+        "precision": 0,
+        "custom_unit": "ms"
+      },
+      "layout": {
+        "x": 9,
+        "y": 9,
+        "width": 3,
+        "height": 2
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "workspace",
+      "default": "*",
+      "prefix": "workspaceId"
+    },
+    {
+      "name": "field",
+      "default": "*",
+      "prefix": "field"
+    },
+    {
+      "name": "env",
+      "default": "production",
+      "prefix": "env"
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "reflow_type": "fixed"
+}

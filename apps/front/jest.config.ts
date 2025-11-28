@@ -24,6 +24,15 @@ const config: Config = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/apps/front',
   passWithNoTests: true,
+  testMatch: [
+    '**/__tests__/**/*.[jt]s?(x)',
+    '**/?(*.)+(spec|test).[jt]s?(x)',
+  ],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/dist/',
+    '/tests/e2e/', // Exclude e2e tests from Jest (run with Playwright)
+  ],
 };
 
 export default config;

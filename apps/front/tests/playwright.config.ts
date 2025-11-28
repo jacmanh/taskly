@@ -1,4 +1,5 @@
 import { defineConfig } from '@playwright/test';
+import path from 'path';
 
 const INLINE_EDIT_ENV_KEY = 'NEXT_PUBLIC_FEATURE_TASK_INLINE_EDIT';
 const INLINE_EDIT_HEADER = 'x-taskly-inline-edit';
@@ -14,15 +15,17 @@ export default defineConfig({
   timeout: 90_000,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? [['html', { open: 'never' }], ['list']] : 'list',
+  globalSetup: './global-setup.ts',
   expect: {
     timeout: 5_000,
   },
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:4200',
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:4200',
     headless: !!process.env.CI,
     trace: process.env.CI ? 'retain-on-failure' : 'on-first-retry',
     video: 'retain-on-failure',
     screenshot: 'only-on-failure',
+    storageState: 'apps/front/.auth/user.json', // Reuse authenticated state across all tests
     extraHTTPHeaders: {
       [INLINE_EDIT_HEADER]: inlineEditEnabled ? 'enabled' : 'disabled',
     },

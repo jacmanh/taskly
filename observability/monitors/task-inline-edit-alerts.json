@@ -1,0 +1,180 @@
+{
+  "monitors": [
+    {
+      "name": "[Task Inline Edit] SC-001: p95 Save Latency Exceeds 1s",
+      "type": "metric alert",
+      "query": "percentile(last_5m):p95:taskly.task_inline_edit.duration_ms{event:task_inline_edit_saved,outcome:success,env:production} > 1000",
+      "message": "## SC-001 Violation: Inline Edit Latency Too High\n\n**p95 save latency has exceeded 1 second target.**\n\nCurrent value: {{value}}ms\nThreshold: 1000ms\n\n**Impact**: Users experiencing slow inline save operations, degrading UX.\n\n**Troubleshooting**:\n1. Check API response times for PATCH /tasks/:id endpoint\n2. Review database query performance (indexes, slow queries)\n3. Check for increased network latency or CDN issues\n4. Review recent deployments for performance regressions\n\n**Dashboard**: [Task Inline Edit Metrics](https://app.datadoghq.com/dashboard/task-inline-edit)\n\n**Runbook**: https://docs.taskly.com/runbooks/inline-edit-latency\n\n@slack-eng-alerts @pagerduty-on-call",
+      "tags": [
+        "feature:task-inline-edit",
+        "severity:high",
+        "success-criteria:SC-001",
+        "team:product-experience"
+      ],
+      "options": {
+        "thresholds": {
+          "critical": 1000,
+          "warning": 800
+        },
+        "notify_audit": false,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 60,
+        "include_tags": true,
+        "evaluation_delay": 60,
+        "new_group_delay": 60
+      },
+      "priority": 2
+    },
+    {
+      "name": "[Task Inline Edit] SC-002: Failure Rate Exceeds 5%",
+      "type": "metric alert",
+      "query": "avg(last_10m):( sum:taskly.task_inline_edit.count{event:task_inline_edit_failed,env:production}.as_count() / sum:taskly.task_inline_edit.count{event:task_inline_edit_started,env:production}.as_count() ) * 100 > 5",
+      "message": "## SC-002 Violation: High Inline Edit Failure Rate\n\n**Inline edit failure rate has exceeded 5% target.**\n\nCurrent rate: {{value}}%\nThreshold: 5%\n\n**Impact**: Users unable to save inline edits, forcing navigation to full edit page.\n\n**Troubleshooting**:\n1. Check failure outcome distribution:\n   - `outcome:validation_error` - Check validation logic changes\n   - `outcome:conflict` - High concurrent edit rate or stale client data\n   - `outcome:network_error` - API availability or network issues\n   - `outcome:permission_error` - Authorization logic regression\n   - `outcome:offline` - Client connectivity issues\n2. Review recent API deployments for bugs\n3. Check error logs for specific failure patterns\n4. Verify database connection pool health\n\n**Query**: `event:task_inline_edit_failed outcome:*`\n\n**Dashboard**: [Task Inline Edit Metrics](https://app.datadoghq.com/dashboard/task-inline-edit)\n\n**Runbook**: https://docs.taskly.com/runbooks/inline-edit-failures\n\n@slack-eng-alerts @pagerduty-on-call",
+      "tags": [
+        "feature:task-inline-edit",
+        "severity:critical",
+        "success-criteria:SC-002",
+        "team:product-experience"
+      ],
+      "options": {
+        "thresholds": {
+          "critical": 5,
+          "warning": 3
+        },
+        "notify_audit": false,
+        "require_full_window": true,
+        "notify_no_data": false,
+        "renotify_interval": 30,
+        "include_tags": true,
+        "evaluation_delay": 60
+      },
+      "priority": 1
+    },
+    {
+      "name": "[Task Inline Edit] SC-003: Edit Page Navigations Not Declining",
+      "type": "metric alert",
+      "query": "pct_change(avg(last_1w),last_1w):sum:taskly.task_viewer.edit_page_navigation.count{env:production}.as_count() > -50",
+      "message": "## SC-003 Goal Not Met: Edit Page Navigations Not Declining\n\n**Week-over-week edit page navigations have not decreased by 50%.**\n\nCurrent change: {{value}}%\nTarget: -50% reduction\n\n**Impact**: Inline edit feature not achieving adoption goals, users still navigating to full edit page.\n\n**Possible Causes**:\n1. Feature flag not fully rolled out\n2. UX issues causing users to prefer full edit page\n3. Inline edit fields not discoverable\n4. Performance issues causing users to abandon inline edit\n5. Missing inline edit support for key fields\n\n**Actions**:\n1. Review feature flag rollout percentage\n2. Check inline edit field usage distribution\n3. Gather user feedback on inline edit UX\n4. Review A/B test results if applicable\n5. Check for related user complaints or support tickets\n\n**Dashboard**: [Task Inline Edit Metrics](https://app.datadoghq.com/dashboard/task-inline-edit)\n\n**Runbook**: https://docs.taskly.com/runbooks/inline-edit-adoption\n\n@slack-product-alerts @product-manager",
+      "tags": [
+        "feature:task-inline-edit",
+        "severity:medium",
+        "success-criteria:SC-003",
+        "team:product-experience"
+      ],
+      "options": {
+        "thresholds": {
+          "critical": -50,
+          "warning": -30
+        },
+        "notify_audit": false,
+        "require_full_window": true,
+        "notify_no_data": false,
+        "renotify_interval": 10080,
+        "include_tags": true,
+        "evaluation_delay": 900
+      },
+      "priority": 3
+    },
+    {
+      "name": "[Task Inline Edit] High Conflict Rate (409 Responses)",
+      "type": "metric alert",
+      "query": "sum(last_15m):sum:taskly.task_inline_edit.count{event:task_inline_edit_failed,outcome:conflict,env:production}.as_count() > 100",
+      "message": "## High Concurrent Edit Conflict Rate\n\n**Excessive 409 conflict responses detected.**\n\nConflicts in last 15 min: {{value}}\nThreshold: 100\n\n**Impact**: Users experiencing frequent \"someone else edited this\" errors.\n\n**Possible Causes**:\n1. Multiple users editing same tasks simultaneously (expected behavior)\n2. Client sending stale `updatedAt` timestamps\n3. Clock synchronization issues\n4. Aggressive auto-refresh causing false conflicts\n\n**Actions**:\n1. Review conflict resolution UX - are users retrying successfully?\n2. Check if conflicts clustered by specific tasks/projects\n3. Verify client-side timestamp handling\n4. Consider implementing operational transform or CRDT for high-conflict fields\n\n**Dashboard**: [Task Inline Edit Metrics](https://app.datadoghq.com/dashboard/task-inline-edit)\n\n@slack-eng-alerts",
+      "tags": [
+        "feature:task-inline-edit",
+        "severity:medium",
+        "alert-type:operational",
+        "team:product-experience"
+      ],
+      "options": {
+        "thresholds": {
+          "critical": 100,
+          "warning": 50
+        },
+        "notify_audit": false,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 120,
+        "include_tags": true,
+        "evaluation_delay": 60
+      },
+      "priority": 3
+    },
+    {
+      "name": "[Task Inline Edit] Network Error Spike",
+      "type": "metric alert",
+      "query": "avg(last_10m):sum:taskly.task_inline_edit.count{event:task_inline_edit_failed,outcome:network_error,env:production}.as_count().rollup(sum, 60) > 50",
+      "message": "## Network Error Spike Detected\n\n**Unusual number of network errors for inline edit saves.**\n\nErrors per minute: {{value}}\nThreshold: 50\n\n**Impact**: Users unable to save inline edits due to API connectivity issues.\n\n**Troubleshooting**:\n1. Check API service health and availability\n2. Review load balancer and CDN status\n3. Check for DNS resolution issues\n4. Review recent infrastructure changes\n5. Verify CORS configuration if cross-origin\n\n**Related Metrics**:\n- API error rate: Check overall API health dashboard\n- Client-side errors: Check browser console error logs\n\n**Dashboard**: [Task Inline Edit Metrics](https://app.datadoghq.com/dashboard/task-inline-edit)\n\n@slack-eng-alerts @sre-oncall",
+      "tags": [
+        "feature:task-inline-edit",
+        "severity:high",
+        "alert-type:operational",
+        "team:product-experience"
+      ],
+      "options": {
+        "thresholds": {
+          "critical": 50,
+          "warning": 25
+        },
+        "notify_audit": false,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 30,
+        "include_tags": true,
+        "evaluation_delay": 60
+      },
+      "priority": 2
+    },
+    {
+      "name": "[Task Inline Edit] Permission Errors Elevated",
+      "type": "metric alert",
+      "query": "avg(last_15m):( sum:taskly.task_inline_edit.count{event:task_inline_edit_failed,outcome:permission_error,env:production}.as_count() / sum:taskly.task_inline_edit.count{event:task_inline_edit_started,env:production}.as_count() ) * 100 > 2",
+      "message": "## Elevated Permission Errors\n\n**Higher than expected 403 permission errors on inline edits.**\n\nPermission error rate: {{value}}%\nThreshold: 2%\n\n**Impact**: Users with proper access being incorrectly denied inline edit capability.\n\n**Possible Causes**:\n1. Recent authorization logic change introduced bug\n2. Permission checks not aligned between UI and API\n3. Stale client-side permission cache\n4. Workspace membership synchronization issue\n\n**Actions**:\n1. Review recent auth/permission code changes\n2. Check for specific users/workspaces affected\n3. Verify permission checks in PATCH /tasks/:id endpoint\n4. Test with affected user credentials if possible\n\n**Dashboard**: [Task Inline Edit Metrics](https://app.datadoghq.com/dashboard/task-inline-edit)\n\n@slack-eng-alerts",
+      "tags": [
+        "feature:task-inline-edit",
+        "severity:high",
+        "alert-type:operational",
+        "team:product-experience"
+      ],
+      "options": {
+        "thresholds": {
+          "critical": 2,
+          "warning": 1
+        },
+        "notify_audit": false,
+        "require_full_window": true,
+        "notify_no_data": false,
+        "renotify_interval": 60,
+        "include_tags": true,
+        "evaluation_delay": 60
+      },
+      "priority": 2
+    },
+    {
+      "name": "[Task Inline Edit] No Events Received (Data Loss)",
+      "type": "metric alert",
+      "query": "sum(last_30m):sum:taskly.task_inline_edit.count{event:task_inline_edit_started,env:production}.as_count() < 1",
+      "message": "## Telemetry Data Loss Detected\n\n**No inline edit events received in last 30 minutes.**\n\n**Impact**: Unable to monitor inline edit feature health. Possible data pipeline issue.\n\n**Troubleshooting**:\n1. Verify telemetry ingestion pipeline is operational\n2. Check client-side event tracking integration\n3. Review API telemetry emission code\n4. Check for feature flag disabled globally\n5. Verify no widespread service outage\n\n**Note**: This could be legitimate if:\n- Feature flag disabled\n- Off-peak hours with zero usage\n- Planned maintenance window\n\n**Dashboard**: [Task Inline Edit Metrics](https://app.datadoghq.com/dashboard/task-inline-edit)\n\n@slack-eng-alerts @observability-team",
+      "tags": [
+        "feature:task-inline-edit",
+        "severity:medium",
+        "alert-type:monitoring",
+        "team:product-experience"
+      ],
+      "options": {
+        "thresholds": {
+          "critical": 1
+        },
+        "notify_audit": false,
+        "require_full_window": true,
+        "notify_no_data": true,
+        "no_data_timeframe": 60,
+        "renotify_interval": 60,
+        "include_tags": true,
+        "evaluation_delay": 300
+      },
+      "priority": 3
+    }
+  ]
+}

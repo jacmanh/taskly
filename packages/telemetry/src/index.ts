@@ -59,3 +59,12 @@ export async function trackEvent<T extends TelemetryAttributes>(
 ): Promise<void> {
   return defaultTelemetryHub.emit(event);
 }
+
+// Export inline edit telemetry events
+export {
+  TASK_INLINE_EDIT_EVENTS,
+  buildInlineEditEvent,
+  type TaskInlineEditAttributes,
+  type TaskInlineEditEventName,
+  type InlineEditOutcome,
+} from './events';

@@ -57,9 +57,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // This will trigger useCurrentUser to fetch the user
         await refetch();
       } catch (error) {
-        void error;
         // No valid session - middleware will handle redirect
-        console.error('No valid session');
+        console.error('Failed to initialize auth:', error);
       } finally {
         setIsInitializing(false);
       }

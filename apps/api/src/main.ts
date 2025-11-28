@@ -32,7 +32,7 @@ async function bootstrap() {
     origin: process.env.FRONTEND_URL ?? 'http://localhost:4200',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-taskly-inline-edit'],
     exposedHeaders: ['Content-Range', 'X-Content-Range'],
     maxAge: 3600, // Cache preflight responses for 1 hour
   });

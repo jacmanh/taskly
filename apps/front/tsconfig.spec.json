@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": ["jest", "node"],
-    "allowJs": true
+    "allowJs": true,
+    "jsx": "react-jsx"
   },
   "include": [
     "**/*.test.ts",

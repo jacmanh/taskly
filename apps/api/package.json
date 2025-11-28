@@ -1,6 +1,9 @@
 {
   "name": "api",
   "version": "0.0.1",
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@taskly/types": "workspace:*",
     "@nestjs/jwt": "^11.0.1",

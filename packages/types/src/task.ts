@@ -70,3 +70,56 @@ export interface UpdateTaskInput {
   assignedId?: string;
   sprintId?: string;
 }
+
+// Inline Edit Types
+export type InlineEditableField =
+  | 'title'
+  | 'description'
+  | 'status'
+  | 'dueDate'
+  | 'priority'
+  | 'assignedId'
+  | 'sprintId';
+
+export interface InlineEditPayload {
+  taskId: string;
+  field: InlineEditableField;
+  previousValue: string | null;
+  newValue: string | null;
+  updatedAt?: string; // ISO timestamp for optimistic concurrency
+}
+
+export interface InlineEditValidationError {
+  field: InlineEditableField;
+  message: string;
+}
+
+export interface InlineEditConflictResponse {
+  message: string;
+  latest: Task;
+  conflictingFields: InlineEditableField[];
+}
+
+// Telemetry event types
+export type InlineEditOutcome =
+  | 'success'
+  | 'validation_error'
+  | 'permission_error'
+  | 'conflict'
+  | 'network_error'
+  | 'cancelled';
+
+export interface InlineEditEvent {
+  eventName:
+    | 'task_inline_edit_started'
+    | 'task_inline_edit_saved'
+    | 'task_inline_edit_cancelled'
+    | 'task_inline_edit_failed';
+  taskId: string;
+  field: InlineEditableField;
+  outcome?: InlineEditOutcome;
+  durationMs?: number;
+  userId?: string;
+  timestamp: string; // ISO timestamp
+  metadata?: Record<string, unknown>;
+}

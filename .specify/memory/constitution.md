@@ -1,23 +1,19 @@
 <!--
 Sync Impact Report
-Version change: 0.0.0 -> 1.0.0
+Version change: 1.0.0 -> 1.0.1
 Modified principles:
-- Template Principle 1 -> I. Shared Contract Authority
-- Template Principle 2 -> II. Feature Libraries First
-- Template Principle 3 -> III. Contract-Driven Testing
-- Template Principle 4 -> IV. Observable Task Lifecycles
-- Template Principle 5 -> V. Progressive UX Delivery
+- III. Contract-Driven Testing (Added: Test Selector Priority rule)
 Added sections:
-- Architecture Constraints
-- Development Workflow & Quality Gates
+- Amendment History
 Removed sections:
 - None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md
-- ✅ .specify/templates/spec-template.md
-- ✅ .specify/templates/tasks-template.md
+- No template changes required (PATCH version - clarification only)
 Follow-up TODOs:
 - None
+Previous Sync (0.0.0 -> 1.0.0):
+- Established 5 core principles, Architecture Constraints, Development Workflow
+- Updated all templates (.specify/templates/*.md)
 -->
 
 # Taskly Constitution
@@ -40,7 +36,8 @@ Follow-up TODOs:
 - Each user story begins by defining failing contract/integration tests (Playwright, Pact, or Jest) that cover acceptance scenarios before implementation starts.
 - Tests run per story and per library; no feature is "done" until CI proves API + UI contracts and fixtures succeed independently.
 - Mock data MUST mirror the shared types package and be version pinned to surface incompatible changes immediately.
-**Rationale**: Contract-first tests guarantee Taskly's distributed surfaces stay reliable and document the behavior better than prose.
+- **Test Selector Priority**: All frontend tests MUST use semantic queries in this order: (1) role + accessible name (`getByRole('button', { name: /save/i })`), (2) ARIA attributes (`getByLabelText`, `aria-label`), (3) form values (`getByDisplayValue`), (4) container queries only when necessary. Tests MUST NOT use `data-testid`, text content queries (`getByText`), CSS classes (`toHaveClass`), or HTML structure checks (`tagName`, `type`). Every interactive element requires proper `aria-label` or accessible name for test queries.
+**Rationale**: Contract-first tests guarantee Taskly's distributed surfaces stay reliable and document the behavior better than prose. Accessibility-first test selectors ensure components are usable by assistive technologies and prevent implementation detail coupling.
 
 ### IV. Observable Task Lifecycles
 - All API endpoints, background jobs, and cron flows emit structured logs with correlation IDs plus success/failure metrics via the shared logging utility.
@@ -78,4 +75,13 @@ Follow-up TODOs:
 - A weekly governance review audits at least one merged feature for compliance; findings feed into the shared `docs/sprint-artifacts` space.
 - Runtime guidance (README, docs/*) must reference this constitution when onboarding contributors; deviations require recorded waivers that expire after the release.
 
-**Version**: 1.0.0 | **Ratified**: 2025-11-26 | **Last Amended**: 2025-11-26
+**Version**: 1.0.1 | **Ratified**: 2025-11-26 | **Last Amended**: 2025-11-26
+
+## Amendment History
+
+### v1.0.1 (2025-11-26) - PATCH
+**Added**: Test Selector Priority rule to Principle III (Contract-Driven Testing)
+- Mandates accessibility-first test selectors (role, aria) over implementation details
+- Prohibits `data-testid`, `getByText`, CSS class checks, and HTML structure queries
+- Requires proper `aria-label` on interactive elements for semantic test queries
+**Impact**: Improves test maintainability and enforces WCAG compliance in all UI components

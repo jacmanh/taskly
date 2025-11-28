@@ -21,7 +21,13 @@
       "Bash(npx tsc:*)",
       "Bash(pnpm nx build:*)",
       "Bash(pnpm next build:*)",
-      "Bash(pnpm lint:front:*)"
+      "Bash(pnpm lint:front:*)",
+      "Bash(.specify/scripts/bash/check-prerequisites.sh:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(pnpm test:*)",
+      "Bash(nx test:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []

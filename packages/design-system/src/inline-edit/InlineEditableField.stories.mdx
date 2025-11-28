@@ -1,0 +1,460 @@
+import { Canvas, Meta, Story, ArgsTable, Description } from '@storybook/addon-docs';
+import { InlineEditableField } from './InlineEditableField';
+import { useState } from 'react';
+
+<Meta
+  title="Components/InlineEditableField"
+  component={InlineEditableField}
+  parameters={{
+    docs: {
+      description: {
+        component: `
+# InlineEditableField
+
+Reusable inline editing component that supports text, textarea, select, and date inputs.
+Features optimistic updates, validation, keyboard shortcuts, and full accessibility support.
+
+## Features
+
+- **Dual Modes**: Seamless toggle between read and edit modes
+- **Keyboard Shortcuts**: Enter to save, Escape to cancel
+- **Validation**: Client-side validation with error messaging
+- **Accessibility**: WCAG compliant with proper ARIA labels and keyboard navigation
+- **Loading States**: Visual feedback during async save operations
+- **Flexible**: Supports text, textarea, select, and date input types
+- **Customizable**: Custom render functions for read and edit modes
+
+## Usage
+
+\`\`\`tsx
+import { InlineEditableField } from '@taskly/design-system';
+
+function TaskTitle() {
+  const handleSave = async (newValue: string) => {
+    await updateTask({ title: newValue });
+  };
+
+  return (
+    <InlineEditableField
+      value="My Task Title"
+      onSave={handleSave}
+      label="Task Title"
+      ariaLabel="Edit task title"
+      validate={(value) => value.trim() === '' ? 'Title is required' : undefined}
+    />
+  );
+}
+\`\`\`
+        `,
+      },
+    },
+  }}
+/>
+
+export const Template = (args) => {
+  const [value, setValue] = useState(args.value);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async (newValue) => {
+    setIsSaving(true);
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+    setValue(newValue);
+    setIsSaving(false);
+  };
+
+  return (
+    <div style={{ padding: '2rem', maxWidth: '600px' }}>
+      <InlineEditableField
+        {...args}
+        value={value}
+        onSave={handleSave}
+        isSaving={isSaving}
+      />
+    </div>
+  );
+};
+
+## Basic Text Input
+
+<Canvas>
+  <Story
+    name="Text Input"
+    args={{
+      value: 'Click to edit this text',
+      label: 'Task Title',
+      ariaLabel: 'Edit task title',
+      inputType: 'text',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Textarea Input
+
+For multi-line text like descriptions. Note: Enter key adds newline instead of saving.
+
+<Canvas>
+  <Story
+    name="Textarea"
+    args={{
+      value: 'This is a longer description that supports multiple lines.\nPress Enter to add newlines.',
+      label: 'Task Description',
+      ariaLabel: 'Edit task description',
+      inputType: 'textarea',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Select Dropdown
+
+<Canvas>
+  <Story
+    name="Select"
+    args={{
+      value: 'IN_PROGRESS',
+      label: 'Status',
+      ariaLabel: 'Edit task status',
+      inputType: 'select',
+      selectOptions: [
+        { value: 'TODO', label: 'To Do' },
+        { value: 'IN_PROGRESS', label: 'In Progress' },
+        { value: 'DONE', label: 'Done' },
+        { value: 'BLOCKED', label: 'Blocked' },
+      ],
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Date Picker
+
+<Canvas>
+  <Story
+    name="Date"
+    args={{
+      value: '2025-12-31',
+      label: 'Due Date',
+      ariaLabel: 'Edit due date',
+      inputType: 'date',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## With Validation
+
+<Canvas>
+  <Story
+    name="With Validation"
+    args={{
+      value: 'Valid text',
+      label: 'Required Field',
+      ariaLabel: 'Edit required field',
+      inputType: 'text',
+      validate: (value) => {
+        if (value.trim() === '') return 'This field is required';
+        if (value.length < 3) return 'Must be at least 3 characters';
+        return undefined;
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Empty State with Placeholder
+
+<Canvas>
+  <Story
+    name="Empty with Placeholder"
+    args={{
+      value: '',
+      label: 'Optional Field',
+      ariaLabel: 'Edit optional field',
+      placeholder: 'Click to add text...',
+      inputType: 'text',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Read-Only (Cannot Edit)
+
+<Canvas>
+  <Story
+    name="Read-Only"
+    args={{
+      value: 'This field is read-only',
+      label: 'Read-Only Field',
+      ariaLabel: 'Read-only field',
+      canEdit: false,
+      readOnlyTooltip: 'You do not have permission to edit this field',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## With External Error
+
+Simulates server-side validation error.
+
+<Canvas>
+  <Story
+    name="With Error"
+    args={{
+      value: 'This value caused an error',
+      label: 'Field with Error',
+      ariaLabel: 'Edit field with error',
+      error: 'Server validation failed: This value already exists',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Loading State
+
+Shows the component during an async save operation.
+
+<Canvas>
+  <Story
+    name="Loading"
+    args={{
+      value: 'Saving...',
+      label: 'Saving Field',
+      ariaLabel: 'Edit field',
+      isSaving: true,
+    }}
+  >
+    {(args) => {
+      const [value, setValue] = useState(args.value);
+      const [isEditing, setIsEditing] = useState(true);
+
+      return (
+        <div style={{ padding: '2rem', maxWidth: '600px' }}>
+          <InlineEditableField
+            {...args}
+            value={value}
+            onSave={async (newValue) => {
+              setValue(newValue);
+            }}
+          />
+        </div>
+      );
+    }}
+  </Story>
+</Canvas>
+
+## Custom Read Mode Renderer
+
+Use custom rendering for read mode display (e.g., formatting, icons).
+
+<Canvas>
+  <Story
+    name="Custom Read Mode"
+    args={{
+      value: 'HIGH',
+      label: 'Priority',
+      ariaLabel: 'Edit priority',
+      inputType: 'select',
+      selectOptions: [
+        { value: 'LOW', label: 'Low' },
+        { value: 'MEDIUM', label: 'Medium' },
+        { value: 'HIGH', label: 'High' },
+        { value: 'URGENT', label: 'Urgent' },
+      ],
+      renderReadMode: (value) => {
+        const colors = {
+          LOW: '#6B7280',
+          MEDIUM: '#3B82F6',
+          HIGH: '#F59E0B',
+          URGENT: '#EF4444',
+        };
+        const color = colors[value as keyof typeof colors] || colors.MEDIUM;
+        return (
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              color,
+              fontWeight: 600,
+            }}
+          >
+            <span
+              style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: color,
+              }}
+            />
+            {value}
+          </span>
+        );
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Dark Theme
+
+Visual regression test for dark mode.
+
+<Canvas>
+  <Story
+    name="Dark Theme"
+    args={{
+      value: 'Dark mode text',
+      label: 'Dark Theme Field',
+      ariaLabel: 'Edit in dark mode',
+      inputType: 'text',
+    }}
+    parameters={{
+      backgrounds: { default: 'dark' },
+    }}
+  >
+    {(args) => (
+      <div
+        style={{
+          padding: '2rem',
+          maxWidth: '600px',
+          backgroundColor: '#1F2937',
+          color: '#F9FAFB',
+          borderRadius: '8px',
+        }}
+        data-theme="dark"
+      >
+        {Template(args)}
+      </div>
+    )}
+  </Story>
+</Canvas>
+
+## Responsive - Tablet Breakpoint
+
+Visual regression test for tablet viewport (768px).
+
+<Canvas>
+  <Story
+    name="Tablet (768px)"
+    args={{
+      value: 'Responsive text on tablet',
+      label: 'Tablet Field',
+      ariaLabel: 'Edit on tablet',
+      inputType: 'text',
+    }}
+    parameters={{
+      viewport: {
+        defaultViewport: 'tablet',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Responsive - Mobile Breakpoint
+
+Visual regression test for mobile viewport (375px).
+
+<Canvas>
+  <Story
+    name="Mobile (375px)"
+    args={{
+      value: 'Responsive text on mobile',
+      label: 'Mobile Field',
+      ariaLabel: 'Edit on mobile',
+      inputType: 'text',
+    }}
+    parameters={{
+      viewport: {
+        defaultViewport: 'mobile1',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Accessibility Test
+
+Story for testing keyboard navigation and screen reader support.
+
+<Canvas>
+  <Story
+    name="Accessibility"
+    args={{
+      value: 'Test with keyboard navigation',
+      label: 'Accessible Field',
+      ariaLabel: 'Edit accessible field',
+      inputType: 'text',
+      validate: (value) => (value.trim() === '' ? 'Field is required' : undefined),
+    }}
+  >
+    {(args) => (
+      <div style={{ padding: '2rem', maxWidth: '600px' }}>
+        <p style={{ marginBottom: '1rem', color: '#6B7280', fontSize: '0.875rem' }}>
+          <strong>Keyboard Test Instructions:</strong>
+        </p>
+        <ul style={{ marginBottom: '1rem', color: '#6B7280', fontSize: '0.875rem' }}>
+          <li>Tab to focus the edit button</li>
+          <li>Press Enter or Space to activate edit mode</li>
+          <li>Input should receive focus automatically</li>
+          <li>Tab to navigate to Save/Cancel buttons</li>
+          <li>Press Enter in input to save (not textarea)</li>
+          <li>Press Escape to cancel</li>
+        </ul>
+        {Template(args)}
+      </div>
+    )}
+  </Story>
+</Canvas>
+
+## Props
+
+<ArgsTable of={InlineEditableField} />
+
+## Visual Regression Tests
+
+This Storybook file serves as visual regression tests for:
+
+1. **Light Theme** - Default stories validate light mode styling
+2. **Dark Theme** - "Dark Theme" story validates dark mode styling
+3. **Desktop Breakpoint** - Default stories at full width (>1024px)
+4. **Tablet Breakpoint** - "Tablet (768px)" story validates tablet layout
+5. **Mobile Breakpoint** - "Mobile (375px)" story validates mobile layout
+6. **Interactive States** - Edit mode, loading, error, validation states
+7. **Accessibility** - Keyboard navigation, ARIA labels, focus management
+
+### Running Visual Tests
+
+```bash
+# Start Storybook
+pnpm nx storybook design-system
+
+# Run visual regression tests (if configured with Chromatic or Percy)
+pnpm chromatic --project-token=<token>
+```
+
+### Test Checklist
+
+- [ ] All input types render correctly (text, textarea, select, date)
+- [ ] Edit mode activates and input receives focus
+- [ ] Save and Cancel buttons are accessible
+- [ ] Validation errors display properly
+- [ ] Loading states show during save
+- [ ] Dark theme renders with correct contrast
+- [ ] Tablet layout is usable (768px viewport)
+- [ ] Mobile layout is usable (375px viewport)
+- [ ] Keyboard navigation works (Tab, Enter, Escape)
+- [ ] Screen readers announce state changes

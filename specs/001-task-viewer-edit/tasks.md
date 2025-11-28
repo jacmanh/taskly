@@ -17,10 +17,10 @@
 
 **Purpose**: Shared libraries and contracts required by all user stories.
 
-- [ ] T004 Create generic `InlineEditableField` scaffold with read/edit states plus label/ARIA slots in `packages/design-system/src/inline-edit/InlineEditableField.tsx`
-- [ ] T005 [P] Implement shared hook `useInlineEditableField` handling focus + keyboard in `packages/design-system/src/inline-edit/useInlineEditableField.ts`
-- [ ] T006 Extend shared payload + telemetry types (`InlineEditPayload`, `InlineEditEvent`) in `packages/types/src/task.ts`
-- [ ] T007 [P] Add telemetry constants (`task_inline_edit_*`) and docstrings in `packages/telemetry/src/events.ts`
+- [X] T004 Create generic `InlineEditableField` scaffold with read/edit states plus label/ARIA slots in `packages/design-system/src/inline-edit/InlineEditableField.tsx`
+- [X] T005 [P] Implement shared hook `useInlineEditableField` handling focus + keyboard in `packages/design-system/src/inline-edit/useInlineEditableField.ts`
+- [X] T006 Extend shared payload + telemetry types (`InlineEditPayload`, `InlineEditEvent`) in `packages/types/src/task.ts`
+- [X] T007 [P] Add telemetry constants (`task_inline_edit_*`) and docstrings in `packages/telemetry/src/events.ts`
 
 **Checkpoint**: Generic inline-edit primitives + shared types ready for consumption.
 
@@ -34,8 +34,8 @@
 
 ### Tests (write before implementation)
 
-- [ ] T008 [P] [US1] Add Jest/RTL coverage for `InlineEditableField` read→edit transitions, focus order, and `aria-*` labels in `apps/front/tests/unit/task-viewer-inline-edit.test.tsx`
-- [ ] T009 [P] [US1] Add Jest/RTL tests for inline validation/error states (blank title, past due date) in `apps/front/tests/unit/task-viewer-inline-edit.test.tsx`
+- [X] T008 [P] [US1] Add Jest/RTL coverage for `InlineEditableField` read→edit transitions, focus order, and `aria-*` labels in `apps/front/tests/unit/task-viewer-inline-edit.test.tsx`
+- [X] T009 [P] [US1] Add Jest/RTL tests for inline validation/error states (blank title, past due date) in `apps/front/tests/unit/task-viewer-inline-edit.test.tsx`
 - [ ] T010 [US1] Add Playwright scenario `@inline-edit-core` covering title/description/status/dueDate edits with optimistic save + conflict handling in `apps/front/tests/e2e/inline-edit.spec.ts`
 - [ ] T011 [US1] Add Playwright scenario `@inline-edit-offline` verifying offline/API failure retry flow in `apps/front/tests/e2e/inline-edit.spec.ts`
 - [ ] T012 [P] [US1] Add visual/Storybook regression tests validating light/dark themes and desktop/tablet breakpoints in `packages/design-system/src/inline-edit/InlineEditableField.stories.mdx`

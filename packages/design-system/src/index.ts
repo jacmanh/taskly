@@ -75,3 +75,12 @@ export {
 
 export { RadioGroup, RadioGroupItem } from './lib/radix/radio-group';
 export { Label } from './lib/radix/label';
+
+// Inline Edit System - Complete export
+export {
+  InlineEditableField,
+  useInlineEditableField,
+  type InlineEditableFieldProps,
+  type UseInlineEditableFieldOptions,
+  type UseInlineEditableFieldReturn,
+} from './inline-edit';
