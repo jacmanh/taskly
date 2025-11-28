@@ -1,10 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type {
   CreateProjectInput,
   Project,
   UpdateProjectInput,
 } from '@taskly/types';
-import { useProtectedQuery, useProtectedSuspenseQuery } from '@features/auth/hooks/useProtectedQuery';
 import { projectsQueryKeys } from '../constants/query-keys';
 import { projectsService } from '../services/projects.service';
 
@@ -28,7 +27,7 @@ export interface DeleteProjectMutationParams {
  * Fetch projects that belong to the provided workspace id
  */
 export function useWorkspaceProjects(workspaceId?: string) {
-  return useProtectedQuery<Project[]>({
+  return useQuery<Project[]>({
     queryKey: workspaceId
       ? projectsQueryKeys.workspace(workspaceId)
       : projectsQueryKeys.list(),
@@ -38,7 +37,7 @@ export function useWorkspaceProjects(workspaceId?: string) {
 }
 
 export function useSuspenseWorkspaceProjects(workspaceId: string) {
-  return useProtectedSuspenseQuery<Project[]>({
+  return useSuspenseQuery<Project[]>({
     queryKey: projectsQueryKeys.workspace(workspaceId),
     queryFn: () => projectsService.getByWorkspace(workspaceId),
     staleTime: 5 * 60 * 1000, // 5 minutes

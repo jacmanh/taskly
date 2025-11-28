@@ -1,21 +1,25 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useQuery,
+  useSuspenseQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import type { CreateWorkspaceInput, UpdateWorkspaceInput } from '@taskly/types';
 import { workspacesService } from '../services/workspaces.service';
 import { workspacesQueryKeys } from '../constants/query-keys';
-import { useProtectedQuery, useProtectedSuspenseQuery } from '@features/auth/hooks/useProtectedQuery';
 
 /**
  * Hook to fetch all workspaces for the current user
  */
 export function useWorkspaces() {
-  return useProtectedQuery({
+  return useQuery({
     queryKey: workspacesQueryKeys.list(),
     queryFn: () => workspacesService.getMyWorkspaces(),
   });
 }
 
 export function useSuspenseWorkspaces() {
-  return useProtectedSuspenseQuery({
+  return useSuspenseQuery({
     queryKey: workspacesQueryKeys.list(),
     queryFn: () => workspacesService.getMyWorkspaces(),
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -44,13 +48,8 @@ export function useUpdateWorkspace() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      id,
-      input,
-    }: {
-      id: string;
-      input: UpdateWorkspaceInput;
-    }) => workspacesService.updateWorkspace(id, input),
+    mutationFn: ({ id, input }: { id: string; input: UpdateWorkspaceInput }) =>
+      workspacesService.updateWorkspace(id, input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: workspacesQueryKeys.all });
     },

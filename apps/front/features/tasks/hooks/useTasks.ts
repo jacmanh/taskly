@@ -1,5 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useProtectedQuery, useProtectedSuspenseQuery } from '@features/auth/hooks/useProtectedQuery';
+import {
+  useQuery,
+  useSuspenseQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import type { Task, CreateTaskInput, UpdateTaskInput } from '@taskly/types';
 import { tasksService } from '../services/tasks.service';
 import { tasksQueryKeys } from '../constants/query-keys';
@@ -14,17 +18,21 @@ interface GetTasksFilters {
 }
 
 export function useProjectTasks(workspaceId?: string, projectId?: string) {
-  return useProtectedQuery<Task[]>({
+  return useQuery<Task[]>({
     queryKey: projectId
       ? tasksQueryKeys.project(projectId)
-      : tasksQueryKeys.workspace(workspaceId!),
-    queryFn: () => tasksService.getByWorkspace(workspaceId!, { projectId }),
+      : tasksQueryKeys.workspace(workspaceId ?? ''),
+    queryFn: () =>
+      tasksService.getByWorkspace(workspaceId ?? '', { projectId }),
     enabled: !!workspaceId && !!projectId,
   });
 }
 
-export function useSuspenseProjectTasks(workspaceId: string, projectId: string) {
-  return useProtectedSuspenseQuery<Task[]>({
+export function useSuspenseProjectTasks(
+  workspaceId: string,
+  projectId: string
+) {
+  return useSuspenseQuery<Task[]>({
     queryKey: tasksQueryKeys.project(projectId),
     queryFn: () => tasksService.getByWorkspace(workspaceId, { projectId }),
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -35,19 +43,19 @@ export function useWorkspaceTasks(
   workspaceId?: string,
   filters?: GetTasksFilters
 ) {
-  return useProtectedQuery<Task[]>({
+  return useQuery<Task[]>({
     queryKey: filters?.projectId
       ? tasksQueryKeys.project(filters.projectId)
-      : tasksQueryKeys.workspace(workspaceId!),
-    queryFn: () => tasksService.getByWorkspace(workspaceId!, filters),
+      : tasksQueryKeys.workspace(workspaceId),
+    queryFn: () => tasksService.getByWorkspace(workspaceId ?? '', filters),
     enabled: !!workspaceId,
   });
 }
 
 export function useTask(workspaceId?: string, taskId?: string) {
-  return useProtectedQuery<Task>({
+  return useQuery<Task>({
     queryKey: taskId ? tasksQueryKeys.detail(taskId) : ['tasks', 'none'],
-    queryFn: () => tasksService.getById(workspaceId!, taskId!),
+    queryFn: () => tasksService.getById(workspaceId ?? '', taskId ?? ''),
     enabled: !!workspaceId && !!taskId,
   });
 }
