@@ -1,6 +1,16 @@
 import { z } from 'zod';
 import { TaskStatus, TaskPriority } from '@taskly/types';
 
+/**
+ * Creates a validation function from a Zod schema for use with EditableInput
+ */
+export const zodFieldValidator = <T extends z.ZodType>(schema: T) => {
+  return (value: string | number): string | undefined => {
+    const result = schema.safeParse(value);
+    return result.success ? undefined : result.error.issues[0].message;
+  };
+};
+
 export const taskFormSchema = z.object({
   title: z
     .string()

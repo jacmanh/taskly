@@ -10,8 +10,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '../../lib/radix/alert-dialog';
-import { buttonVariants } from '../button';
+} from '../../lib/radix/AlertDialog';
+import { buttonVariants } from '../Button';
 import { cn } from '../../lib/utils';
 
 export interface ConfirmationModalProps {

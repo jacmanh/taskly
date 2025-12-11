@@ -1,12 +1,26 @@
 'use client';
 
-import { Drawer, Button, useConfirmationModal } from '@taskly/design-system';
+import {
+  Drawer,
+  Button,
+  useConfirmationModal,
+  EditableInput,
+  EditableTextarea,
+  EditableSelect,
+  DatePicker,
+} from '@taskly/design-system';
 import type { Task, Workspace } from '@taskly/types';
 import { TaskStatus, TaskPriority } from '@taskly/types';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Calendar, User, Flag, CheckCircle2, Clock } from 'lucide-react';
-import { useDeleteTask } from '../hooks/useTasks';
+import { User, Clock } from 'lucide-react';
+import { useDeleteTask, useUpdateTask, useTask } from '../hooks/useTasks';
+import {
+  TaskFormData,
+  taskFormSchema,
+  zodFieldValidator,
+} from '../schemas/taskFormSchema';
+import Image from 'next/image';
 
 interface TaskDrawerProps {
   task: Task;
@@ -40,35 +54,37 @@ function getPriorityLabel(priority: TaskPriority): string {
   }
 }
 
-function getStatusBadgeColor(status: TaskStatus): string {
-  switch (status) {
-    case TaskStatus.TODO:
-      return 'bg-neutral-100 text-neutral-700';
-    case TaskStatus.IN_PROGRESS:
-      return 'bg-accent-100 text-accent-700';
-    case TaskStatus.DONE:
-      return 'bg-green-100 text-green-700';
-    default:
-      return 'bg-neutral-100 text-neutral-700';
-  }
-}
+export function TaskDrawer({
+  task: initialTask,
+  workspace,
+  onClose,
+}: TaskDrawerProps) {
+  // Fetch fresh task data to stay in sync after mutations
+  const { data: task = initialTask } = useTask(workspace.id, initialTask.id);
 
-function getPriorityBadgeColor(priority: TaskPriority): string {
-  switch (priority) {
-    case TaskPriority.LOW:
-      return 'bg-blue-100 text-blue-700';
-    case TaskPriority.MEDIUM:
-      return 'bg-yellow-100 text-yellow-700';
-    case TaskPriority.HIGH:
-      return 'bg-red-100 text-red-700';
-    default:
-      return 'bg-neutral-100 text-neutral-700';
-  }
-}
-
-export function TaskDrawer({ task, workspace, onClose }: TaskDrawerProps) {
   const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
   const { show: showConfirmationModal } = useConfirmationModal();
+
+  const { mutate: updateTask } = useUpdateTask();
+
+  const handleUpdateTask = (
+    field: keyof TaskFormData,
+    value?: string | Date
+  ) => {
+    let processedValue: string | null = null;
+
+    if (value instanceof Date) {
+      processedValue = value.toISOString();
+    } else if (value !== undefined) {
+      processedValue = value;
+    }
+
+    updateTask({
+      workspaceId: workspace.id,
+      taskId: task.id,
+      input: { [field]: processedValue },
+    });
+  };
 
   const handleDelete = async () => {
     const confirmed = await showConfirmationModal({
@@ -99,137 +115,134 @@ export function TaskDrawer({ task, workspace, onClose }: TaskDrawerProps) {
       />
 
       <div className="space-y-6">
+        <EditableInput
+          label="Titre"
+          value={task.title}
+          validate={zodFieldValidator(taskFormSchema.shape.title)}
+          onSave={(value) => {
+            handleUpdateTask('title', value as string);
+          }}
+        />
+
         {/* Description */}
-        {task.description && (
-          <div>
-            <h3 className="text-sm font-medium text-neutral-700 mb-2">
-              Description
-            </h3>
-            <p className="text-sm text-neutral-600 whitespace-pre-wrap">
-              {task.description}
-            </p>
-          </div>
-        )}
+        <EditableTextarea
+          label="Description"
+          value={task.description || ''}
+          validate={zodFieldValidator(taskFormSchema.shape.description)}
+          onSave={(value) => {
+            handleUpdateTask('description', value as string);
+          }}
+        />
 
         {/* Status & Priority */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <div className="flex items-center gap-2 text-sm font-medium text-neutral-700 mb-2">
-              <CheckCircle2 className="w-4 h-4" />
-              Statut
-            </div>
-            <span
-              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(task.status)}`}
-            >
-              {getStatusLabel(task.status)}
-            </span>
-          </div>
+        <EditableSelect
+          label="Statut"
+          value={task.status}
+          options={Object.values(TaskStatus).map((status) => ({
+            value: status,
+            label: getStatusLabel(status),
+          }))}
+          onSave={(value) => {
+            handleUpdateTask('status', value as TaskStatus);
+          }}
+        />
+        <EditableSelect
+          label="Priorité"
+          value={task.priority}
+          options={Object.values(TaskPriority).map((priority) => ({
+            value: priority,
+            label: getPriorityLabel(priority),
+          }))}
+          onSave={(value) => {
+            handleUpdateTask('priority', value as TaskPriority);
+          }}
+        />
+      </div>
 
-          <div>
-            <div className="flex items-center gap-2 text-sm font-medium text-neutral-700 mb-2">
-              <Flag className="w-4 h-4" />
-              Priorité
-            </div>
-            <span
-              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getPriorityBadgeColor(task.priority)}`}
-            >
-              {getPriorityLabel(task.priority)}
-            </span>
-          </div>
+      {/* Assigned To */}
+      <div>
+        <div className="flex items-center gap-2 text-sm font-medium text-neutral-700 mb-2">
+          <User className="w-4 h-4" />
+          Assigné à
         </div>
-
-        {/* Assigned To */}
-        <div>
-          <div className="flex items-center gap-2 text-sm font-medium text-neutral-700 mb-2">
-            <User className="w-4 h-4" />
-            Assigné à
-          </div>
-          {task.assignedTo ? (
-            <div className="flex items-center gap-2">
-              {task.assignedTo.avatar && (
-                <img
-                  src={task.assignedTo.avatar}
-                  alt={task.assignedTo.name || task.assignedTo.email}
-                  className="w-8 h-8 rounded-full"
-                />
-              )}
-              <div>
-                <p className="text-sm font-medium text-neutral-900">
-                  {task.assignedTo.name || 'Sans nom'}
-                </p>
-                <p className="text-xs text-neutral-500">
-                  {task.assignedTo.email}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <p className="text-sm text-neutral-500 italic">Non assigné</p>
-          )}
-        </div>
-
-        {/* Due Date */}
-        <div>
-          <div className="flex items-center gap-2 text-sm font-medium text-neutral-700 mb-2">
-            <Calendar className="w-4 h-4" />
-            Date d&apos;échéance
-          </div>
-          {task.dueDate ? (
-            <p className="text-sm text-neutral-900">
-              {format(new Date(task.dueDate), 'dd MMMM yyyy', { locale: fr })}
-            </p>
-          ) : (
-            <p className="text-sm text-neutral-500 italic">
-              Aucune date d&apos;échéance
-            </p>
-          )}
-        </div>
-
-        {/* Sprint */}
-        {task.sprint && (
-          <div>
-            <div className="flex items-center gap-2 text-sm font-medium text-neutral-700 mb-2">
-              <Clock className="w-4 h-4" />
-              Sprint
-            </div>
-            <p className="text-sm text-neutral-900">{task.sprint.name}</p>
-          </div>
-        )}
-
-        {/* Created By */}
-        <div>
-          <div className="text-sm font-medium text-neutral-700 mb-2">
-            Créé par
-          </div>
+        {task.assignedTo ? (
           <div className="flex items-center gap-2">
-            {task.createdBy.avatar && (
-              <img
-                src={task.createdBy.avatar}
-                alt={task.createdBy.name || task.createdBy.email}
-                className="w-6 h-6 rounded-full"
+            {task.assignedTo.avatar && (
+              <Image
+                src={task.assignedTo.avatar}
+                alt={task.assignedTo.name || task.assignedTo.email}
+                className="w-8 h-8 rounded-full"
               />
             )}
-            <span className="text-sm text-neutral-700">
-              {task.createdBy.name || task.createdBy.email}
-            </span>
+            <div>
+              <p className="text-sm font-medium text-neutral-900">
+                {task.assignedTo.name || 'Sans nom'}
+              </p>
+              <p className="text-xs text-neutral-500">
+                {task.assignedTo.email}
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <p className="text-sm text-neutral-500 italic">Non assigné</p>
+        )}
+      </div>
 
-        {/* Metadata */}
-        <div className="pt-4 border-t border-neutral-200">
-          <div className="text-xs text-neutral-500 space-y-1">
-            <p>
-              Créé le{' '}
-              {format(new Date(task.createdAt), 'dd MMMM yyyy à HH:mm', {
-                locale: fr,
-              })}
-            </p>
-            <p>
-              Modifié le{' '}
-              {format(new Date(task.updatedAt), 'dd MMMM yyyy à HH:mm', {
-                locale: fr,
-              })}
-            </p>
+      {/* Due Date */}
+      <DatePicker
+        mode="single"
+        label="Date d'échéance"
+        value={task.dueDate ? new Date(task.dueDate) : undefined}
+        onChange={(date) => {
+          handleUpdateTask('dueDate', date as Date);
+        }}
+      />
+
+      {/* Sprint */}
+      {task.sprint && (
+        <div>
+          <div className="flex items-center gap-2 text-sm font-medium text-neutral-700 mb-2">
+            <Clock className="w-4 h-4" />
+            Sprint
           </div>
+          <p className="text-sm text-neutral-900">{task.sprint.name}</p>
+        </div>
+      )}
+
+      {/* Created By */}
+      <div>
+        <div className="text-sm font-medium text-neutral-700 mb-2">
+          Créé par
+        </div>
+        <div className="flex items-center gap-2">
+          {task.createdBy.avatar && (
+            <img
+              src={task.createdBy.avatar}
+              alt={task.createdBy.name || task.createdBy.email}
+              className="w-6 h-6 rounded-full"
+            />
+          )}
+          <span className="text-sm text-neutral-700">
+            {task.createdBy.name || task.createdBy.email}
+          </span>
+        </div>
+      </div>
+
+      {/* Metadata */}
+      <div className="pt-4 border-t border-neutral-200">
+        <div className="text-xs text-neutral-500 space-y-1">
+          <p>
+            Créé le{' '}
+            {format(new Date(task.createdAt), 'dd MMMM yyyy à HH:mm', {
+              locale: fr,
+            })}
+          </p>
+          <p>
+            Modifié le{' '}
+            {format(new Date(task.updatedAt), 'dd MMMM yyyy à HH:mm', {
+              locale: fr,
+            })}
+          </p>
         </div>
       </div>
 

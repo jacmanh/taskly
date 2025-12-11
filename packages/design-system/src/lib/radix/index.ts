@@ -22,7 +22,7 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
-} from './sheet';
+} from './Sheet';
 
 export {
   AlertDialog,
@@ -36,4 +36,4 @@ export {
   AlertDialogDescription,
   AlertDialogAction,
   AlertDialogCancel,
-} from './alert-dialog';
+} from './AlertDialog';

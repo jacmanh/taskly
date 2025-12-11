@@ -1,8 +1,15 @@
-export * from './lib/design-system';
-export { Button, buttonVariants, type ButtonProps } from './components/button';
-export { Input, type InputProps } from './components/input';
-export { Textarea, type TextareaProps } from './components/textarea';
-export { Spinner, type SpinnerProps } from './components/spinner';
+export { Button, buttonVariants, type ButtonProps } from './components/Button';
+export { Input, type InputProps } from './components/Input';
+export {
+  EditableInput,
+  type EditableInputProps,
+} from './components/Editable/EditableInput';
+export { Textarea, type TextareaProps } from './components/Textarea';
+export {
+  EditableTextarea,
+  type EditableTextareaProps,
+} from './components/Editable/EditableTextarea';
+export { Spinner, type SpinnerProps } from './components/Spinner';
 export { cn } from './lib/utils';
 export {
   Select,
@@ -15,7 +22,12 @@ export {
   SelectSeparator,
   SelectScrollUpButton,
   SelectScrollDownButton,
-} from './components/select';
+} from './components/Select';
+export {
+  EditableSelect,
+  type EditableSelectProps,
+  type SelectOption,
+} from './components/Editable/EditableSelect';
 
 // Drawer System - Complete export
 export {
@@ -49,7 +61,7 @@ export {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
-} from './components/dropdown-menu';
+} from './components/DropdownMenu';
 
 // Confirmation Modal System - Complete export
 export {
@@ -58,7 +70,7 @@ export {
   useConfirmationModal,
   type ConfirmationModalProps,
   type ConfirmationModalOptions,
-} from './components/confirmation-modal';
+} from './components/confirmationModal';
 
 export {
   Dialog,
@@ -71,7 +83,11 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-} from './lib/radix/dialog';
+} from './lib/radix/Dialog';
 
-export { RadioGroup, RadioGroupItem } from './lib/radix/radio-group';
-export { Label } from './lib/radix/label';
+export { RadioGroup, RadioGroupItem } from './lib/radix/RadioGroup';
+export { Label } from './lib/radix/Label';
+
+// Calendar Components
+export { Calendar, type CalendarProps } from './components/calendar/Calendar';
+export { DatePicker, type DatePickerProps } from './components/DatePicker';

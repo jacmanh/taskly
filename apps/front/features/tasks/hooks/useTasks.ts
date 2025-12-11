@@ -94,13 +94,47 @@ export function useUpdateTask() {
   return useMutation({
     mutationFn: ({ workspaceId, taskId, input }: UpdateTaskMutationParams) =>
       tasksService.update(workspaceId, taskId, input),
-    onSuccess: (task) => {
-      queryClient.invalidateQueries({
-        queryKey: tasksQueryKeys.project(task.projectId),
+    onMutate: async ({ taskId, input }) => {
+      // Cancel outgoing refetches to avoid overwriting optimistic update
+      await queryClient.cancelQueries({
+        queryKey: tasksQueryKeys.detail(taskId),
       });
-      queryClient.invalidateQueries({
-        queryKey: tasksQueryKeys.detail(task.id),
-      });
+
+      // Snapshot previous value for rollback
+      const previousTask = queryClient.getQueryData<Task>(
+        tasksQueryKeys.detail(taskId)
+      );
+
+      // Optimistically update the task detail cache
+      if (previousTask) {
+        queryClient.setQueryData<Task>(tasksQueryKeys.detail(taskId), {
+          ...previousTask,
+          ...input,
+          updatedAt: new Date(),
+        });
+      }
+
+      return { previousTask };
+    },
+    onError: (_err, { taskId }, context) => {
+      // Rollback to previous value on error
+      if (context?.previousTask) {
+        queryClient.setQueryData(
+          tasksQueryKeys.detail(taskId),
+          context.previousTask
+        );
+      }
+    },
+    onSettled: (task) => {
+      // Always refetch after mutation to ensure server state
+      if (task) {
+        queryClient.invalidateQueries({
+          queryKey: tasksQueryKeys.detail(task.id),
+        });
+        queryClient.invalidateQueries({
+          queryKey: tasksQueryKeys.project(task.projectId),
+        });
+      }
     },
   });
 }

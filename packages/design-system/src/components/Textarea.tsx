@@ -9,7 +9,7 @@ export interface TextareaProps
 }
 
 const baseClasses =
-  'w-full px-4 py-2 rounded-lg border-2 border-neutral-200 text-neutral-900 transition-all focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-200 disabled:bg-neutral-100 disabled:cursor-not-allowed disabled:text-neutral-500 placeholder-neutral-400';
+  'text-sm w-full px-4 py-2 rounded-lg border-2 border-neutral-200 text-neutral-900 transition-all focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-200 disabled:bg-neutral-100 disabled:cursor-not-allowed disabled:text-neutral-500 placeholder-neutral-400';
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   (

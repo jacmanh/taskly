@@ -10,14 +10,22 @@ export interface InputProps
   label?: ReactNode;
   icon?: ReactNode;
   iconPosition?: 'left' | 'right';
+  /**
+   * If true, no border is shown until focus
+   */
+  borderless?: boolean;
   onChange?:
     | ((value: string | number) => void)
     | ((event: React.ChangeEvent<HTMLInputElement>) => void);
 }
 
-// Base input classes
+// Base input classes (with borders)
 const baseClasses =
   'w-full px-4 py-2 rounded-lg border-2 border-neutral-200 text-neutral-900 transition-all focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-200 disabled:bg-neutral-100 disabled:cursor-not-allowed disabled:text-neutral-500';
+
+// Borderless input classes (no border until focus)
+const borderlessClasses =
+  'w-full px-4 py-2 rounded-lg border-2 border-transparent text-neutral-900 transition-all focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-200 disabled:bg-neutral-100 disabled:cursor-not-allowed disabled:text-neutral-500';
 
 // Error state classes
 const errorClasses =
@@ -41,6 +49,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       name,
       icon,
       iconPosition = 'left',
+      borderless = false,
       onChange,
       onBlur,
       onFocus,
@@ -109,7 +118,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     // Build className string, filtering out empty strings
     const classNames = [
-      baseClasses,
+      borderless ? borderlessClasses : baseClasses,
       placeholderClasses,
       error ? errorClasses : '',
       className,
@@ -150,7 +159,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             disabled={disabled}
             required={required}
             readOnly={readOnly}
-            className={`${classNames} ${icon && iconPosition === 'left' ? 'pl-10' : ''} ${icon && iconPosition === 'right' ? 'pr-10' : ''}`}
+            className={`${classNames} text-sm ${icon && iconPosition === 'left' ? 'pl-10' : ''} ${icon && iconPosition === 'right' ? 'pr-10' : ''}`}
             {...rest}
           />
           {icon && iconPosition === 'right' && (
