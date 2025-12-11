@@ -20,6 +20,7 @@
     "paths": {
       "@taskly/design-system": ["packages/design-system/src/index.ts"],
       "@taskly/types": ["packages/types/src/index.ts"],
+      "@i18n/*": ["apps/front/i18n/*"],
       "@features/*": ["apps/front/features/*"]
     }
   },

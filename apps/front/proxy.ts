@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { defaultLocale } from './i18n/config';
 
 // Define public routes that don't require authentication
 const publicRoutes = ['/login', '/register'];
@@ -7,8 +8,11 @@ const publicRoutes = ['/login', '/register'];
 // Define routes that should redirect to dashboard if already authenticated
 const authRoutes = ['/login', '/register'];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Get locale from cookie for next-intl
+  const locale = request.cookies.get('NEXT_LOCALE')?.value || defaultLocale;
 
   // Check if the route is public (exact match or starts with for nested routes)
   const isPublicRoute = publicRoutes.includes(pathname);
@@ -17,24 +21,30 @@ export function middleware(request: NextRequest) {
   // Get the refresh token from cookies
   const hasRefreshToken = request.cookies.has('refreshToken');
 
+  // Create response
+  let response: NextResponse;
+
   // If on home page and authenticated, redirect to workspaces
   if (pathname === '/' && hasRefreshToken) {
-    return NextResponse.redirect(new URL('/workspaces', request.url));
+    response = NextResponse.redirect(new URL('/workspaces', request.url));
   }
-
   // If trying to access auth routes (login/register) while authenticated, redirect to workspaces
-  if (isAuthRoute && hasRefreshToken) {
-    return NextResponse.redirect(new URL('/workspaces', request.url));
+  else if (isAuthRoute && hasRefreshToken) {
+    response = NextResponse.redirect(new URL('/workspaces', request.url));
   }
-
   // If trying to access protected route without authentication, redirect to login
-  if (!isPublicRoute && pathname !== '/' && !hasRefreshToken) {
+  else if (!isPublicRoute && pathname !== '/' && !hasRefreshToken) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('from', pathname);
-    return NextResponse.redirect(loginUrl);
+    response = NextResponse.redirect(loginUrl);
+  } else {
+    response = NextResponse.next();
   }
 
-  return NextResponse.next();
+  // Set locale header for next-intl
+  response.headers.set('x-next-intl-locale', locale);
+
+  return response;
 }
 
 // Configure which routes the middleware should run on

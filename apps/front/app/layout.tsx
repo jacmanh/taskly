@@ -7,30 +7,37 @@ import {
   DrawerContainer,
   ConfirmationModalProvider,
 } from '@taskly/design-system';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, getLocale } from 'next-intl/server';
 
 export const metadata: Metadata = {
   title: 'Taskly',
   description: 'Task management application',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body>
-        <QueryProvider>
-          <AuthProvider>
-            <DrawerProvider>
-              <ConfirmationModalProvider>
-                {children}
-                <DrawerContainer />
-              </ConfirmationModalProvider>
-            </DrawerProvider>
-          </AuthProvider>
-        </QueryProvider>
+        <NextIntlClientProvider messages={messages}>
+          <QueryProvider>
+            <AuthProvider>
+              <DrawerProvider>
+                <ConfirmationModalProvider>
+                  {children}
+                  <DrawerContainer />
+                </ConfirmationModalProvider>
+              </DrawerProvider>
+            </AuthProvider>
+          </QueryProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

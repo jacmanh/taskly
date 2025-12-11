@@ -1,0 +1,16 @@
+{
+  "title": "Projects",
+  "project": "Project",
+  "createProject": "Create Project",
+  "editProject": "Edit Project",
+  "deleteProject": "Delete Project",
+  "projectName": "Project Name",
+  "projectTitle": "Project Title",
+  "description": "Description",
+  "noProjects": "No projects found",
+  "projectCreated": "Project created successfully",
+  "projectUpdated": "Project updated successfully",
+  "projectDeleted": "Project deleted successfully",
+  "viewProject": "View Project",
+  "allProjects": "All Projects"
+}

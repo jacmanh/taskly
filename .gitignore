@@ -36,6 +36,7 @@ lerna-debug.log*
 # next.js
 .next/
 out/
+apps/front/messages/**/*.d.json.ts
 
 # nx
 .nx/cache

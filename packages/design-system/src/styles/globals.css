@@ -1,3 +1,6 @@
+/* Calendar component styles - must be before @tailwind */
+@import '../components/calendar/calendar.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

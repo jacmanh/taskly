@@ -8,10 +8,12 @@
     "@taskly/types": "workspace:*",
     "axios": "^1.13.2",
     "date-fns": "^4.1.0",
-    "lucide-react": "^0.553.0"
+    "lucide-react": "^0.553.0",
+    "next-intl": "^4.5.8"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^5.90.2",
+    "baseline-browser-mapping": "^2.9.6",
     "tailwindcss-animate": "^1.0.7"
   }
 }

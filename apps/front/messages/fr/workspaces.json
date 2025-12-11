@@ -1,0 +1,19 @@
+{
+  "title": "Espaces de travail",
+  "workspace": "Espace de travail",
+  "createWorkspace": "Créer un espace de travail",
+  "editWorkspace": "Modifier l'espace de travail",
+  "deleteWorkspace": "Supprimer l'espace de travail",
+  "workspaceName": "Nom de l'espace de travail",
+  "workspaceTitle": "Titre de l'espace de travail",
+  "description": "Description",
+  "settings": "Paramètres",
+  "members": "Membres",
+  "noWorkspaces": "Aucun espace de travail trouvé",
+  "workspaceCreated": "Espace de travail créé avec succès",
+  "workspaceUpdated": "Espace de travail mis à jour avec succès",
+  "workspaceDeleted": "Espace de travail supprimé avec succès",
+  "viewWorkspace": "Voir l'espace de travail",
+  "allWorkspaces": "Tous les espaces de travail",
+  "switchWorkspace": "Changer d'espace de travail"
+}

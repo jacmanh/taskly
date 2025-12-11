@@ -1,0 +1,28 @@
+{
+  "title": "Tâches",
+  "task": "Tâche",
+  "createTask": "Créer une tâche",
+  "editTask": "Modifier la tâche",
+  "deleteTask": "Supprimer la tâche",
+  "taskName": "Nom de la tâche",
+  "taskTitle": "Titre de la tâche",
+  "description": "Description",
+  "status": "Statut",
+  "priority": "Priorité",
+  "dueDate": "Date d'échéance",
+  "assignee": "Assigné à",
+  "noTasks": "Aucune tâche trouvée",
+  "taskCreated": "Tâche créée avec succès",
+  "taskUpdated": "Tâche mise à jour avec succès",
+  "taskDeleted": "Tâche supprimée avec succès",
+  "statusOptions": {
+    "todo": "À faire",
+    "inProgress": "En cours",
+    "done": "Terminé"
+  },
+  "priorityOptions": {
+    "low": "Basse",
+    "medium": "Moyenne",
+    "high": "Haute"
+  }
+}

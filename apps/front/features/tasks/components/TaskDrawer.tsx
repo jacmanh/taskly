@@ -21,6 +21,8 @@ import {
   zodFieldValidator,
 } from '../schemas/taskFormSchema';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+import { getTaskPriorityLabel, getTaskStatusLabel } from '../utils/task-labels';
 
 interface TaskDrawerProps {
   task: Task;
@@ -28,38 +30,12 @@ interface TaskDrawerProps {
   onClose: () => void;
 }
 
-function getStatusLabel(status: TaskStatus): string {
-  switch (status) {
-    case TaskStatus.TODO:
-      return 'À faire';
-    case TaskStatus.IN_PROGRESS:
-      return 'En cours';
-    case TaskStatus.DONE:
-      return 'Terminé';
-    default:
-      return status;
-  }
-}
-
-function getPriorityLabel(priority: TaskPriority): string {
-  switch (priority) {
-    case TaskPriority.LOW:
-      return 'Basse';
-    case TaskPriority.MEDIUM:
-      return 'Moyenne';
-    case TaskPriority.HIGH:
-      return 'Haute';
-    default:
-      return priority;
-  }
-}
-
 export function TaskDrawer({
   task: initialTask,
   workspace,
   onClose,
 }: TaskDrawerProps) {
-  // Fetch fresh task data to stay in sync after mutations
+  const t = useTranslations('tasks');
   const { data: task = initialTask } = useTask(workspace.id, initialTask.id);
 
   const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
@@ -140,7 +116,7 @@ export function TaskDrawer({
           value={task.status}
           options={Object.values(TaskStatus).map((status) => ({
             value: status,
-            label: getStatusLabel(status),
+            label: getTaskStatusLabel(status, t),
           }))}
           onSave={(value) => {
             handleUpdateTask('status', value as TaskStatus);
@@ -151,7 +127,7 @@ export function TaskDrawer({
           value={task.priority}
           options={Object.values(TaskPriority).map((priority) => ({
             value: priority,
-            label: getPriorityLabel(priority),
+            label: getTaskPriorityLabel(priority, t),
           }))}
           onSave={(value) => {
             handleUpdateTask('priority', value as TaskPriority);
@@ -216,7 +192,7 @@ export function TaskDrawer({
         </div>
         <div className="flex items-center gap-2">
           {task.createdBy.avatar && (
-            <img
+            <Image
               src={task.createdBy.avatar}
               alt={task.createdBy.name || task.createdBy.email}
               className="w-6 h-6 rounded-full"

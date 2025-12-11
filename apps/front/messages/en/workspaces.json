@@ -1,0 +1,19 @@
+{
+  "title": "Workspaces",
+  "workspace": "Workspace",
+  "createWorkspace": "Create Workspace",
+  "editWorkspace": "Edit Workspace",
+  "deleteWorkspace": "Delete Workspace",
+  "workspaceName": "Workspace Name",
+  "workspaceTitle": "Workspace Title",
+  "description": "Description",
+  "settings": "Settings",
+  "members": "Members",
+  "noWorkspaces": "No workspaces found",
+  "workspaceCreated": "Workspace created successfully",
+  "workspaceUpdated": "Workspace updated successfully",
+  "workspaceDeleted": "Workspace deleted successfully",
+  "viewWorkspace": "View Workspace",
+  "allWorkspaces": "All Workspaces",
+  "switchWorkspace": "Switch Workspace"
+}

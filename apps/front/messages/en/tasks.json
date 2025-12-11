@@ -1,0 +1,28 @@
+{
+  "title": "Tasks",
+  "task": "Task",
+  "createTask": "Create Task",
+  "editTask": "Edit Task",
+  "deleteTask": "Delete Task",
+  "taskName": "Task Name",
+  "taskTitle": "Task Title",
+  "description": "Description",
+  "status": "Status",
+  "priority": "Priority",
+  "dueDate": "Due Date",
+  "assignee": "Assignee",
+  "noTasks": "No tasks found",
+  "taskCreated": "Task created successfully",
+  "taskUpdated": "Task updated successfully",
+  "taskDeleted": "Task deleted successfully",
+  "statusOptions": {
+    "todo": "To Do",
+    "inProgress": "In Progress",
+    "done": "Done"
+  },
+  "priorityOptions": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  }
+}
