@@ -91,3 +91,39 @@ export { Label } from './lib/radix/Label';
 // Calendar Components
 export { Calendar, type CalendarProps } from './components/calendar/Calendar';
 export { DatePicker, type DatePickerProps } from './components/DatePicker';
+
+// Autocomplete Components
+export {
+  Autocomplete,
+  AutocompleteTrigger,
+  AutocompleteContent,
+  AutocompleteItem,
+  AutocompleteList,
+  AutocompleteGroup,
+  AutocompleteGroupLabel,
+  AutocompleteSeparator,
+  AutocompleteEmpty,
+  AutocompleteCreateItem,
+  EditableAutocomplete,
+  useAutocompleteContext,
+  type AutocompleteOption,
+  type AutocompleteGroup as AutocompleteGroupType,
+  type AutocompleteValue,
+  type AutocompleteFilterFn,
+  type AutocompleteAsyncSearchFn,
+  type AutocompleteRenderOption,
+  type AutocompleteRenderValue,
+  type AutocompleteOnCreateFn,
+  type AutocompleteFilterOptions,
+  type AutocompleteProps,
+  type AutocompleteTriggerProps,
+  type AutocompleteContentProps,
+  type AutocompleteItemProps,
+  type AutocompleteGroupProps,
+  type AutocompleteGroupLabelProps,
+  type AutocompleteEmptyProps,
+  type AutocompleteCreateItemProps,
+  type AutocompleteListProps,
+  type AutocompleteSeparatorProps,
+  type EditableAutocompleteProps,
+} from './components/Autocomplete';

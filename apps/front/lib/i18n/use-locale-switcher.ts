@@ -1,19 +1,18 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import { useTransition } from 'react';
+import { useState } from 'react';
 import { setUserLocale } from './locale-actions';
 import type { Locale } from '../../i18n/config';
 
 export function useLocaleSwitcher() {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
   const locale = useLocale();
 
-  const switchLocale = (newLocale: Locale) => {
-    startTransition(async () => {
-      await setUserLocale(newLocale);
-      window.location.reload();
-    });
+  const switchLocale = async (newLocale: Locale) => {
+    setIsPending(true);
+    await setUserLocale(newLocale);
+    window.location.reload();
   };
 
   return { locale, switchLocale, isPending };

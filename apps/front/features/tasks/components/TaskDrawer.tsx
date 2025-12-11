@@ -8,6 +8,7 @@ import {
   EditableTextarea,
   EditableSelect,
   DatePicker,
+  EditableAutocomplete,
 } from '@taskly/design-system';
 import type { Task, Workspace } from '@taskly/types';
 import { TaskStatus, TaskPriority } from '@taskly/types';
@@ -140,33 +141,19 @@ export function TaskDrawer({
       </div>
 
       {/* Assigned To */}
-      <div>
-        <div className="flex items-center gap-2 text-sm font-medium text-neutral-700 mb-2">
-          <User className="w-4 h-4" />
-          Assigné à
-        </div>
-        {task.assignedTo ? (
-          <div className="flex items-center gap-2">
-            {task.assignedTo.avatar && (
-              <Image
-                src={task.assignedTo.avatar}
-                alt={task.assignedTo.name || task.assignedTo.email}
-                className="w-8 h-8 rounded-full"
-              />
-            )}
-            <div>
-              <p className="text-sm font-medium text-neutral-900">
-                {task.assignedTo.name || 'Sans nom'}
-              </p>
-              <p className="text-xs text-neutral-500">
-                {task.assignedTo.email}
-              </p>
-            </div>
-          </div>
-        ) : (
-          <p className="text-sm text-neutral-500 italic">Non assigné</p>
-        )}
-      </div>
+
+      <EditableAutocomplete
+        label="Assigné à"
+        value={task.assignedTo?.id}
+        inline
+        options={Array.from({ length: 10 }, (_, i) => ({
+          value: `test-user-${i + 1}`,
+          label: `Test User ${i + 1}`,
+        }))}
+        onSave={(value) => {
+          handleUpdateTask('assignedToId', value as string);
+        }}
+      />
 
       {/* Due Date */}
       <DatePicker

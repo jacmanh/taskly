@@ -107,9 +107,18 @@ export function useUpdateTask() {
 
       // Optimistically update the task detail cache
       if (previousTask) {
+        // Convert date strings back to Date objects to maintain cache type integrity
+        const processedInput = { ...input };
+        if (
+          processedInput.dueDate &&
+          typeof processedInput.dueDate === 'string'
+        ) {
+          processedInput.dueDate = new Date(processedInput.dueDate) as any;
+        }
+
         queryClient.setQueryData<Task>(tasksQueryKeys.detail(taskId), {
           ...previousTask,
-          ...input,
+          ...processedInput,
           updatedAt: new Date(),
         });
       }

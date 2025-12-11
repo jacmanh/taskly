@@ -17,6 +17,12 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p packages/design-system/tsconfig.lib.json --noEmit"
+      }
     }
   }
 }

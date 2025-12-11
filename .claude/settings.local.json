@@ -21,7 +21,8 @@
       "Bash(npx tsc:*)",
       "Bash(pnpm nx build:*)",
       "Bash(pnpm next build:*)",
-      "Bash(pnpm lint:front:*)"
+      "Bash(pnpm lint:front:*)",
+      "Bash(pnpm lint:ts:*)"
     ],
     "deny": [],
     "ask": []

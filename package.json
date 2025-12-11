@@ -15,7 +15,7 @@
     "lint": "nx run-many --target=lint --all",
     "lint:front": "nx lint front",
     "lint:api": "nx lint api",
-    "lint:ts": "tsc -p tsconfig.base.json --noEmit",
+    "lint:ts": "nx run-many --target=type-check --all",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "docker:up": "docker compose up -d",
