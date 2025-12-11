@@ -11,8 +11,14 @@ export function useLocaleSwitcher() {
 
   const switchLocale = async (newLocale: Locale) => {
     setIsPending(true);
-    await setUserLocale(newLocale);
-    window.location.reload();
+    try {
+      await setUserLocale(newLocale);
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to switch locale:', error);
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return { locale, switchLocale, isPending };
