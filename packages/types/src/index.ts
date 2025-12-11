@@ -17,6 +17,8 @@ export type {
   Workspace,
   CreateWorkspaceInput,
   UpdateWorkspaceInput,
+  WorkspaceMember,
+  WorkspaceUser,
 } from './workspace';
 export { DeleteStrategy } from './workspace';
 

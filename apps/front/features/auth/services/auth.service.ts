@@ -4,7 +4,11 @@ import type {
   AuthResponse,
   User,
 } from '@taskly/types';
-import { axiosInstance, setAccessToken, clearAccessToken } from './axios';
+import {
+  axiosInstance,
+  setAccessToken,
+  clearAccessToken,
+} from '@taskly/data-access';
 
 export const authService = {
   /**

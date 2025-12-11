@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import type { User } from '@taskly/types';
 import { authService } from '../services/auth.service';
-import { getAccessToken } from '../services/axios';
+import { getAccessToken } from '@taskly/data-access';
 import { authQueryKeys } from '../constants/query-keys';
 
 interface UseCurrentUserOptions {

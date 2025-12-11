@@ -93,4 +93,28 @@ export class WorkspacesService {
 
     return this.repo.delete(id);
   }
+
+  async findUsers(workspaceId: string, userId: string, search?: string) {
+    // Check if workspace exists
+    await this.findOne(workspaceId);
+
+    // Check if current user is a member
+    const member = await this.repo.findMemberByUserAndWorkspace(
+      workspaceId,
+      userId
+    );
+
+    if (!member) {
+      throw new ForbiddenException(
+        createApiError(
+          HttpStatus.FORBIDDEN,
+          'WORKSPACE_ACCESS_DENIED',
+          'You do not have permission to access this workspace.'
+        )
+      );
+    }
+
+    // Return list of workspace users (optionally filtered by search term)
+    return this.repo.findWorkspaceUsers(workspaceId, search);
+  }
 }

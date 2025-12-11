@@ -75,9 +75,9 @@ export class TasksService {
       createdBy: {
         connect: { id: userId },
       },
-      ...(createTaskDto.assignedId && {
+      ...(createTaskDto.assignedToId && {
         assignedTo: {
-          connect: { id: createTaskDto.assignedId },
+          connect: { id: createTaskDto.assignedToId },
         },
       }),
       ...(createTaskDto.sprintId && {
@@ -135,9 +135,9 @@ export class TasksService {
           connect: { id: updateTaskDto.projectId },
         },
       }),
-      ...(updateTaskDto.assignedId !== undefined && {
-        assignedTo: updateTaskDto.assignedId
-          ? { connect: { id: updateTaskDto.assignedId } }
+      ...(updateTaskDto.assignedToId !== undefined && {
+        assignedTo: updateTaskDto.assignedToId
+          ? { connect: { id: updateTaskDto.assignedToId } }
           : { disconnect: true },
       }),
       ...(updateTaskDto.sprintId !== undefined && {

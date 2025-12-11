@@ -19,6 +19,7 @@ export interface EditableTextareaProps extends Omit<TextareaProps, 'label'> {
   onCancel?: () => void;
   validate?: (value: string) => string | undefined;
   viewClassName?: string;
+  labelClassName?: string;
   emptyPlaceholder?: string;
   minRows?: number;
   maxRows?: number;
@@ -36,6 +37,7 @@ export const EditableTextarea = forwardRef<
       onCancel,
       validate,
       viewClassName,
+      labelClassName,
       emptyPlaceholder = 'Click to edit',
       minRows = 3,
       maxRows = 10,
@@ -185,9 +187,11 @@ export const EditableTextarea = forwardRef<
           {label && (
             <label
               htmlFor={textareaProps.id}
-              className={`text-lg font-bold ${
-                error ? 'text-error-600' : 'text-neutral-700'
-              }`}
+              className={cn(
+                'text-lg font-bold',
+                error ? 'text-error-600' : 'text-neutral-700',
+                labelClassName
+              )}
             >
               {label}
             </label>
@@ -231,9 +235,11 @@ export const EditableTextarea = forwardRef<
         {label && (
           <label
             htmlFor={textareaProps.id}
-            className={`text-lg font-bold ${
-              error ? 'text-error-600' : 'text-neutral-700'
-            }`}
+            className={cn(
+              'text-lg font-bold',
+              error ? 'text-error-600' : 'text-neutral-700',
+              labelClassName
+            )}
           >
             {label}
           </label>

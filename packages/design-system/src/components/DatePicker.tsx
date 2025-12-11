@@ -18,6 +18,7 @@ export type DatePickerProps = CalendarProps & {
   disabled?: boolean;
   error?: string;
   className?: string;
+  labelClassName?: string;
   inline?: boolean;
   inputProps?: Omit<InputProps, 'value' | 'onChange' | 'disabled' | 'error'>;
 };
@@ -32,6 +33,7 @@ function DatePickerInternal(
     disabled = false,
     error,
     className,
+    labelClassName,
     inline = false,
     inputProps,
     ...calendarProps
@@ -94,7 +96,7 @@ function DatePickerInternal(
     <div
       className={cn(
         'flex flex-col gap-2',
-        inline && 'inline-flex flex-row items-center'
+        inline && 'w-full inline-flex flex-row items-center'
       )}
     >
       {label && (
@@ -103,7 +105,8 @@ function DatePickerInternal(
           className={cn(
             'text-lg font-bold',
             inline && 'text-sm',
-            error ? 'text-error-600' : 'text-neutral-700'
+            error ? 'text-error-600' : 'text-neutral-700',
+            labelClassName
           )}
         >
           {label}
@@ -111,7 +114,7 @@ function DatePickerInternal(
       )}
       <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
         <PopoverPrimitive.Trigger asChild>
-          <div className="relative group hover:bg-neutral-100 rounded-xs">
+          <div className="relative group hover:bg-neutral-100 rounded-xs w-full">
             <Input
               ref={ref}
               value={getDisplayValue()}
@@ -121,8 +124,7 @@ function DatePickerInternal(
               readOnly
               borderless
               className={cn(
-                'cursor-pointer group-hover:bg-neutral-100',
-                hasValue ? 'pr-16' : 'pr-10',
+                'cursor-pointer group-hover:bg-neutral-100 pl-2',
                 className
               )}
               {...inputProps}

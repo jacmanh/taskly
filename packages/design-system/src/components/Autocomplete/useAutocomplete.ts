@@ -24,7 +24,7 @@ import {
 
 export interface UseAutocompleteReturn<
   TValue = string,
-  TMultiple extends boolean = false
+  TMultiple extends boolean = false,
 > {
   // State
   state: {
@@ -79,7 +79,7 @@ export interface UseAutocompleteReturn<
  */
 export function useAutocomplete<
   TValue = string,
-  TMultiple extends boolean = false
+  TMultiple extends boolean = false,
 >(
   props: AutocompleteProps<TValue, TMultiple>
 ): UseAutocompleteReturn<TValue, TMultiple> {
@@ -99,6 +99,7 @@ export function useAutocomplete<
     open: controlledOpen,
     defaultOpen = false,
     onOpenChange,
+    initialQuery,
   } = props;
 
   // Determine if we're using async search
@@ -107,11 +108,20 @@ export function useAutocomplete<
   // Value state (controlled/uncontrolled)
   const [internalValue, setInternalValue] = useState<
     AutocompleteValue<TValue, TMultiple>
-  >(defaultValue ?? (multiple ? ([] as TValue[]) : undefined) as AutocompleteValue<TValue, TMultiple>);
+  >(
+    defaultValue ??
+      ((multiple ? ([] as TValue[]) : undefined) as AutocompleteValue<
+        TValue,
+        TMultiple
+      >)
+  );
   const value = controlledValue !== undefined ? controlledValue : internalValue;
 
   // Query state
   const [query, setQuery] = useState('');
+
+  // Track if we should skip async search (when initialQuery is set on open)
+  const skipAsyncSearchRef = useRef(false);
 
   // Open state (controlled/uncontrolled)
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
@@ -125,14 +135,15 @@ export function useAutocomplete<
   const contentRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  // Async search hook
-  const { options: asyncOptions, loading: asyncLoading } =
-    useAutocompleteAsync({
+  // Async search hook - pass the skip flag
+  const { options: asyncOptions, loading: asyncLoading } = useAutocompleteAsync(
+    {
       onSearch,
       query,
       debounceMs,
-      enabled: isAsync,
-    });
+      enabled: isAsync && !skipAsyncSearchRef.current,
+    }
+  );
 
   // Determine which options to use
   const sourceOptions = isAsync ? asyncOptions : options;
@@ -165,13 +176,37 @@ export function useAutocomplete<
       }
       onOpenChange?.(newOpen);
 
-      // Reset focused index when opening/closing
-      if (!newOpen) {
+      if (newOpen) {
+        // When opening, populate query with initialQuery if provided, or current value's label
+        // Skip async search for this initial query
+        skipAsyncSearchRef.current = true;
+
+        if (initialQuery) {
+          setQuery(initialQuery);
+        } else if (!multiple && value !== undefined) {
+          const allOptions = flattenOptions(sourceOptions, groups);
+          const currentOption = findOptionByValue(value as TValue, allOptions);
+          if (currentOption) {
+            setQuery(currentOption.label);
+          }
+        }
+      } else {
+        // Reset when closing
         setFocusedIndex(-1);
         setQuery('');
+        skipAsyncSearchRef.current = false;
       }
     },
-    [controlledOpen, onOpenChange, disabled]
+    [
+      controlledOpen,
+      onOpenChange,
+      disabled,
+      multiple,
+      value,
+      sourceOptions,
+      groups,
+      initialQuery,
+    ]
   );
 
   // Select option
@@ -180,20 +215,44 @@ export function useAutocomplete<
       if (option.disabled) return;
 
       let newValue: AutocompleteValue<TValue, TMultiple>;
+      let selectedOption: TMultiple extends true
+        ? AutocompleteOption<TValue>[]
+        : AutocompleteOption<TValue> | undefined;
 
       if (multiple) {
-        newValue = toggleSelection(
-          option,
-          value as TValue[] | undefined
-        ) as AutocompleteValue<TValue, TMultiple>;
+        const currentValues = (value as TValue[] | undefined) ?? [];
+        const allOptions = flattenOptions(sourceOptions, groups);
+        const currentOptions = currentValues
+          .map((v) => findOptionByValue(v, allOptions))
+          .filter(
+            (opt): opt is AutocompleteOption<TValue> => opt !== undefined
+          );
+
+        if (currentValues.includes(option.value)) {
+          // Remove from selection
+          newValue = currentValues.filter(
+            (v) => v !== option.value
+          ) as AutocompleteValue<TValue, TMultiple>;
+          selectedOption = currentOptions.filter(
+            (opt) => opt.value !== option.value
+          ) as any;
+        } else {
+          // Add to selection
+          newValue = [...currentValues, option.value] as AutocompleteValue<
+            TValue,
+            TMultiple
+          >;
+          selectedOption = [...currentOptions, option] as any;
+        }
       } else {
         newValue = option.value as AutocompleteValue<TValue, TMultiple>;
+        selectedOption = option as any;
       }
 
       if (controlledValue === undefined) {
         setInternalValue(newValue);
       }
-      onValueChange?.(newValue);
+      onValueChange?.(newValue, selectedOption);
 
       // Determine if we should close
       const shouldClose = closeOnSelect ?? !multiple;
@@ -208,6 +267,8 @@ export function useAutocomplete<
       onValueChange,
       closeOnSelect,
       setOpen,
+      sourceOptions,
+      groups,
     ]
   );
 
@@ -217,11 +278,12 @@ export function useAutocomplete<
       TValue,
       TMultiple
     >;
+    const emptyOption = (multiple ? [] : undefined) as any;
 
     if (controlledValue === undefined) {
       setInternalValue(newValue);
     }
-    onValueChange?.(newValue);
+    onValueChange?.(newValue, emptyOption);
   }, [multiple, controlledValue, onValueChange]);
 
   // Keyboard navigation actions
@@ -269,6 +331,8 @@ export function useAutocomplete<
 
   // Input change handler
   const onInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    // User is typing, enable async search again
+    skipAsyncSearchRef.current = false;
     setQuery(e.target.value);
     // Reset focused index when query changes
     setFocusedIndex(-1);
@@ -327,7 +391,8 @@ export function useAutocomplete<
     return undefined;
   }, [focusedIndex, allFlatOptions]);
 
-  const isEmpty = value === undefined || (Array.isArray(value) && value.length === 0);
+  const isEmpty =
+    value === undefined || (Array.isArray(value) && value.length === 0);
   const hasValue = !isEmpty;
 
   // Scroll focused option into view

@@ -13,7 +13,7 @@ import type { AuthContextType } from '../types/auth-context';
 import { useLogin, useRegister, useLogout } from '../hooks/useAuthMutations';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { authService } from '../services/auth.service';
-import { getAccessToken } from '../services/axios';
+import { getAccessToken } from '@taskly/data-access';
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined

@@ -1,4 +1,4 @@
-import { axiosInstance } from '@features/auth/services/axios';
+import { axiosInstance } from '@taskly/data-access';
 import type { Task, CreateTaskInput, UpdateTaskInput } from '@taskly/types';
 
 interface GetTasksFilters {

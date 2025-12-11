@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, TaskPriority, TaskStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
@@ -41,7 +41,7 @@ export class TasksRepository {
     filters?: {
       projectId?: string;
       sprintId?: string;
-      assignedId?: string;
+      assignedToId?: string;
       status?: string;
       priority?: string;
       includeArchived?: boolean;
@@ -65,16 +65,18 @@ export class TasksRepository {
       where.sprintId = filters.sprintId;
     }
 
-    if (filters?.assignedId) {
-      where.assignedId = filters.assignedId;
+    if (filters?.assignedToId) {
+      where.assignedTo = {
+        id: filters.assignedToId,
+      };
     }
 
     if (filters?.status) {
-      where.status = filters.status as any;
+      where.status = filters.status as TaskStatus;
     }
 
     if (filters?.priority) {
-      where.priority = filters.priority as any;
+      where.priority = filters.priority as TaskPriority;
     }
 
     return this.prisma.task.findMany({

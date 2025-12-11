@@ -3,8 +3,14 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Loader2 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { EditableAutocompleteProps } from '../Autocomplete/types';
-import { Autocomplete } from '../Autocomplete/Autocomplete';
+import {
+  EditableAutocompleteProps,
+  type AutocompleteOption,
+} from '../Autocomplete/types';
+import {
+  Autocomplete,
+  useAutocompleteContext,
+} from '../Autocomplete/Autocomplete';
 import { AutocompleteTrigger } from '../Autocomplete/AutocompleteTrigger';
 import { AutocompleteContent } from '../Autocomplete/AutocompleteContent';
 import { AutocompleteList } from '../Autocomplete/AutocompleteList';
@@ -14,6 +20,23 @@ import { AutocompleteGroupLabel } from '../Autocomplete/AutocompleteGroupLabel';
 import { AutocompleteEmpty } from '../Autocomplete/AutocompleteEmpty';
 import { AutocompleteCreateItem } from '../Autocomplete/AutocompleteCreateItem';
 import { findOptionByValue, flattenOptions } from '../Autocomplete/utils';
+
+/**
+ * Component to render async search results from context
+ */
+const AsyncAutocompleteItems = () => {
+  const { state } = useAutocompleteContext();
+
+  return (
+    <>
+      {state.displayOptions.map((option) => (
+        <AutocompleteItem key={String(option.value)} value={option.value}>
+          {option.label}
+        </AutocompleteItem>
+      ))}
+    </>
+  );
+};
 
 /**
  * Editable wrapper for Autocomplete component with view/edit modes
@@ -36,6 +59,7 @@ export const EditableAutocomplete = ({
   value,
   onSave,
   viewClassName,
+  labelClassName,
   emptyPlaceholder = 'Click to edit',
   inline = false,
   disabled,
@@ -47,32 +71,68 @@ export const EditableAutocomplete = ({
 }: EditableAutocompleteProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [initialQuery, setInitialQuery] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleViewClick = useCallback(() => {
     if (!disabled) {
+      // Get current display text to use as initial query
+      const allOptions = flattenOptions(options, groups);
+      const isEmpty =
+        value === undefined || (Array.isArray(value) && value.length === 0);
+
+      let displayText = '';
+      if (!isEmpty) {
+        if (renderValue) {
+          // Use renderValue to get display text
+          const rendered = renderValue(value, allOptions);
+          displayText = typeof rendered === 'string' ? rendered : '';
+        } else if (!multiple) {
+          // Find the option label
+          const option = findOptionByValue(value, allOptions);
+          displayText = option ? option.label : '';
+        }
+      }
+
+      setInitialQuery(displayText);
       setIsEditing(true);
     }
-  }, [disabled]);
+  }, [disabled, value, options, groups, renderValue, multiple]);
 
-  // Auto-focus input when entering edit mode
+  // Auto-focus and select input when entering edit mode
   useEffect(() => {
     if (isEditing && inputRef.current) {
-      // Use setTimeout to ensure the input is rendered and the popover is open
-      setTimeout(() => {
+      // Use requestAnimationFrame to wait for DOM updates
+      requestAnimationFrame(() => {
         inputRef.current?.focus();
-      }, 0);
+        // Wait one more frame for the value to be rendered
+        requestAnimationFrame(() => {
+          if (inputRef.current && inputRef.current.value) {
+            inputRef.current.setSelectionRange(
+              0,
+              inputRef.current.value.length
+            );
+          }
+        });
+      });
     }
-  }, [isEditing]);
+  }, [isEditing, initialQuery]);
 
   // Handle value change - save immediately like EditableSelect
   const handleValueChange = useCallback(
-    async (newValue: typeof value) => {
+    async (
+      newValue: typeof value,
+      option:
+        | AutocompleteOption<unknown>
+        | AutocompleteOption<unknown>[]
+        | undefined
+    ) => {
       if (isSaving) return;
 
       try {
         setIsSaving(true);
-        await onSave?.(newValue);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await onSave?.(newValue, option as any);
         setIsEditing(false);
       } catch (err) {
         console.error('EditableAutocomplete save error:', err);
@@ -92,6 +152,9 @@ export const EditableAutocomplete = ({
 
   // Get all flat options for display
   const allOptions = flattenOptions(options, groups);
+
+  // Check if we're using async search
+  const isAsyncMode = Boolean(autocompleteProps.onSearch);
 
   // View mode
   if (!isEditing) {
@@ -145,7 +208,8 @@ export const EditableAutocomplete = ({
           <label
             className={cn(
               'text-lg font-bold text-neutral-700',
-              inline && 'text-sm'
+              inline && 'text-sm',
+              labelClassName
             )}
           >
             {label}
@@ -199,7 +263,8 @@ export const EditableAutocomplete = ({
         <label
           className={cn(
             'text-lg font-bold text-neutral-700',
-            inline && 'text-sm'
+            inline && 'text-sm',
+            labelClassName
           )}
         >
           {label}
@@ -215,18 +280,35 @@ export const EditableAutocomplete = ({
         disabled={isSaving || disabled}
         open={isEditing}
         onOpenChange={handleOpenChange}
+        initialQuery={initialQuery}
       >
         <AutocompleteTrigger ref={inputRef} />
         <AutocompleteContent>
           <AutocompleteList>
-            {/* Render groups if provided */}
-            {groups && groups.length > 0
-              ? groups.map((group) => (
-                  <AutocompleteGroup key={group.label}>
-                    <AutocompleteGroupLabel>
-                      {group.label}
-                    </AutocompleteGroupLabel>
-                    {group.options.map((option) => (
+            {/* For async mode, render items dynamically from context */}
+            {isAsyncMode ? (
+              <AsyncAutocompleteItems />
+            ) : (
+              <>
+                {/* Render groups if provided */}
+                {groups && groups.length > 0
+                  ? groups.map((group) => (
+                      <AutocompleteGroup key={group.label}>
+                        <AutocompleteGroupLabel>
+                          {group.label}
+                        </AutocompleteGroupLabel>
+                        {group.options.map((option) => (
+                          <AutocompleteItem
+                            key={String(option.value)}
+                            value={option.value}
+                          >
+                            {option.label}
+                          </AutocompleteItem>
+                        ))}
+                      </AutocompleteGroup>
+                    ))
+                  : // Render flat options
+                    options.map((option) => (
                       <AutocompleteItem
                         key={String(option.value)}
                         value={option.value}
@@ -234,17 +316,8 @@ export const EditableAutocomplete = ({
                         {option.label}
                       </AutocompleteItem>
                     ))}
-                  </AutocompleteGroup>
-                ))
-              : // Render flat options
-                options.map((option) => (
-                  <AutocompleteItem
-                    key={String(option.value)}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </AutocompleteItem>
-                ))}
+              </>
+            )}
             <AutocompleteEmpty />
             <AutocompleteCreateItem />
           </AutocompleteList>

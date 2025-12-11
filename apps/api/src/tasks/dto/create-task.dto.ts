@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsOptional, IsEnum, IsDate } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsEnum,
+  IsDate,
+} from 'class-validator';
 import { TaskStatus, TaskPriority, type CreateTaskInput } from '@taskly/types';
 
 export class CreateTaskDto implements CreateTaskInput {
@@ -28,7 +34,7 @@ export class CreateTaskDto implements CreateTaskInput {
 
   @IsString()
   @IsOptional()
-  assignedId?: CreateTaskInput['assignedId'];
+  assignedToId?: CreateTaskInput['assignedToId'];
 
   @IsString()
   @IsOptional()

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
+import { WorkspaceUserMapper } from '../mappers/workspace-user.mapper';
 
 @Injectable()
 export class WorkspacesRepository {
@@ -30,5 +31,54 @@ export class WorkspacesRepository {
 
   delete(id: string) {
     return this.prisma.workspace.delete({ where: { id } });
+  }
+
+  findMemberByUserAndWorkspace(workspaceId: string, userId: string) {
+    return this.prisma.workspaceMember.findUnique({
+      where: {
+        workspaceId_userId: {
+          workspaceId,
+          userId,
+        },
+      },
+    });
+  }
+
+  async findWorkspaceUsers(workspaceId: string, search?: string) {
+    const members = await this.prisma.workspaceMember.findMany({
+      where: {
+        workspaceId,
+        ...(search && {
+          user: {
+            OR: [
+              {
+                name: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                email: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            ],
+          },
+        }),
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true,
+          },
+        },
+      },
+    });
+
+    return WorkspaceUserMapper.toUsers(members);
   }
 }

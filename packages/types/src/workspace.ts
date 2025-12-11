@@ -27,3 +27,19 @@ export interface UpdateWorkspaceInput {
   icon?: string;
   deleteStrategy?: DeleteStrategy;
 }
+
+export interface WorkspaceMember {
+  user: {
+    id: string;
+    name: string | null;
+    email: string;
+    avatar: string | null;
+  };
+}
+
+export interface WorkspaceUser {
+  id: string;
+  name: string | null;
+  email: string;
+  avatar: string | null;
+}

@@ -1,0 +1,28 @@
+{
+  "name": "data-access",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/data-access/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/data-access",
+        "main": "packages/data-access/src/index.ts",
+        "tsConfig": "packages/data-access/tsconfig.lib.json",
+        "assets": ["packages/data-access/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p packages/data-access/tsconfig.lib.json --noEmit"
+      }
+    }
+  }
+}

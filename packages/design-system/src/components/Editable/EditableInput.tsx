@@ -19,6 +19,7 @@ export interface EditableInputProps extends Omit<InputProps, 'label'> {
   onCancel?: () => void;
   validate?: (value: string | number) => string | undefined;
   viewClassName?: string;
+  labelClassName?: string;
   emptyPlaceholder?: string;
   inline?: boolean;
 }
@@ -32,6 +33,7 @@ export const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
       onCancel,
       validate,
       viewClassName,
+      labelClassName,
       emptyPlaceholder = 'Click to edit',
       type = 'text',
       className,
@@ -155,7 +157,8 @@ export const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
               className={cn(
                 'text-lg font-bold',
                 inline && 'text-sm',
-                error ? 'text-error-600' : 'text-neutral-700'
+                error ? 'text-error-600' : 'text-neutral-700',
+                labelClassName
               )}
             >
               {label}
@@ -209,7 +212,8 @@ export const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
             className={cn(
               'text-lg font-bold',
               inline && 'text-sm',
-              error ? 'text-error-600' : 'text-neutral-700'
+              error ? 'text-error-600' : 'text-neutral-700',
+              labelClassName
             )}
           >
             {label}

@@ -18,7 +18,7 @@ export interface Task {
   priority: TaskPriority;
   dueDate: Date | null;
   projectId: string;
-  assignedId: string | null;
+  assignedToId: string | null;
   sprintId: string | null;
   createdById: string;
   createdAt: Date;
@@ -56,7 +56,7 @@ export interface CreateTaskInput {
   priority?: TaskPriority;
   dueDate?: Date;
   projectId: string;
-  assignedId?: string;
+  assignedToId?: string;
   sprintId?: string;
 }
 
@@ -67,6 +67,6 @@ export interface UpdateTaskInput {
   priority?: TaskPriority;
   dueDate?: Date;
   projectId?: string;
-  assignedId?: string;
+  assignedToId?: string;
   sprintId?: string;
 }

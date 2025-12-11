@@ -14,7 +14,7 @@ import type { Task, Workspace } from '@taskly/types';
 import { TaskStatus, TaskPriority } from '@taskly/types';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { User, Clock } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { useDeleteTask, useUpdateTask, useTask } from '../hooks/useTasks';
 import {
   TaskFormData,
@@ -24,6 +24,7 @@ import {
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { getTaskPriorityLabel, getTaskStatusLabel } from '../utils/task-labels';
+import { workspacesService } from '@taskly/data-access';
 
 interface TaskDrawerProps {
   task: Task;
@@ -61,6 +62,21 @@ export function TaskDrawer({
       taskId: task.id,
       input: { [field]: processedValue },
     });
+  };
+
+  // Async search function for user autocomplete - calls API endpoint
+  const handleUserSearch = async (query: string, signal?: AbortSignal) => {
+    const users = await workspacesService.getWorkspaceUsers(
+      workspace.id,
+      query,
+      signal
+    );
+
+    // Map to AutocompleteOption format
+    return users.map((user) => ({
+      value: user.id,
+      label: user.name || user.email,
+    }));
   };
 
   const handleDelete = async () => {
@@ -117,6 +133,7 @@ export function TaskDrawer({
             label="Statut"
             inline
             value={task.status}
+            labelClassName="w-32"
             options={Object.values(TaskStatus).map((status) => ({
               value: status,
               label: getTaskStatusLabel(status, t),
@@ -129,6 +146,7 @@ export function TaskDrawer({
             label="Priorité"
             inline
             value={task.priority}
+            labelClassName="w-32"
             options={Object.values(TaskPriority).map((priority) => ({
               value: priority,
               label: getTaskPriorityLabel(priority, t),
@@ -144,15 +162,19 @@ export function TaskDrawer({
 
       <EditableAutocomplete
         label="Assigné à"
+        labelClassName="w-32"
         value={task.assignedTo?.id}
         inline
-        options={Array.from({ length: 10 }, (_, i) => ({
-          value: `test-user-${i + 1}`,
-          label: `Test User ${i + 1}`,
-        }))}
+        onSearch={handleUserSearch}
         onSave={(value) => {
-          handleUpdateTask('assignedToId', value as string);
+          handleUpdateTask('assignedToId', value);
         }}
+        renderValue={() => {
+          return (
+            task.assignedTo?.name || task.assignedTo?.email || 'Unassigned'
+          );
+        }}
+        emptyPlaceholder="Unassigned"
       />
 
       {/* Due Date */}
@@ -160,6 +182,7 @@ export function TaskDrawer({
         mode="single"
         label="Date d'échéance"
         inline
+        labelClassName="w-32"
         value={task.dueDate ? new Date(task.dueDate) : undefined}
         onChange={(date) => {
           handleUpdateTask('dueDate', date as Date);

@@ -22,6 +22,7 @@ export interface EditableSelectProps {
   options: SelectOption[];
   onSave?: (value: string) => void | Promise<void>;
   viewClassName?: string;
+  labelClassName?: string;
   emptyPlaceholder?: string;
   selectPlaceholder?: string;
   disabled?: boolean;
@@ -35,6 +36,7 @@ export const EditableSelect: React.FC<EditableSelectProps> = ({
   options,
   onSave,
   viewClassName,
+  labelClassName,
   emptyPlaceholder = 'Click to edit',
   selectPlaceholder = 'Select an option',
   disabled,
@@ -92,7 +94,8 @@ export const EditableSelect: React.FC<EditableSelectProps> = ({
           <label
             className={cn(
               'text-lg font-bold text-neutral-700',
-              inline && 'text-sm'
+              inline && 'text-sm',
+              labelClassName
             )}
           >
             {label}
@@ -150,7 +153,8 @@ export const EditableSelect: React.FC<EditableSelectProps> = ({
         <label
           className={cn(
             'text-lg font-bold text-neutral-700',
-            inline && 'text-sm'
+            inline && 'text-sm',
+            labelClassName
           )}
         >
           {label}

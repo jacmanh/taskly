@@ -24,7 +24,7 @@ export interface AutocompleteGroup<TValue = string> {
  */
 export type AutocompleteValue<
   TValue = string,
-  TMultiple extends boolean = false
+  TMultiple extends boolean = false,
 > = TMultiple extends true ? TValue[] : TValue | undefined;
 
 /**
@@ -81,7 +81,7 @@ export interface AutocompleteFilterOptions {
  */
 export interface AutocompleteState<
   TValue = string,
-  TMultiple extends boolean = false
+  TMultiple extends boolean = false,
 > {
   // Selection state
   value: AutocompleteValue<TValue, TMultiple>;
@@ -106,12 +106,17 @@ export interface AutocompleteState<
  */
 export interface AutocompleteProps<
   TValue = string,
-  TMultiple extends boolean = false
+  TMultiple extends boolean = false,
 > {
   // Value management
   value?: AutocompleteValue<TValue, TMultiple>;
   defaultValue?: AutocompleteValue<TValue, TMultiple>;
-  onValueChange?: (value: AutocompleteValue<TValue, TMultiple>) => void;
+  onValueChange?: (
+    value: AutocompleteValue<TValue, TMultiple>,
+    option: TMultiple extends true
+      ? AutocompleteOption<TValue>[]
+      : AutocompleteOption<TValue> | undefined
+  ) => void;
 
   // Multi-select mode
   multiple?: TMultiple;
@@ -138,6 +143,7 @@ export interface AutocompleteProps<
   loadingMessage?: string | ReactNode;
   renderOption?: AutocompleteRenderOption<TValue>;
   renderValue?: AutocompleteRenderValue<TValue>;
+  initialQuery?: string;
 
   // Virtual scrolling
   virtualizeOptions?: boolean;
@@ -250,17 +256,24 @@ export interface AutocompleteSeparatorProps {
  */
 export interface EditableAutocompleteProps<
   TValue = string,
-  TMultiple extends boolean = false
+  TMultiple extends boolean = false,
 > extends Omit<
     AutocompleteProps<TValue, TMultiple>,
     'open' | 'defaultOpen' | 'onOpenChange'
   > {
   // Editable-specific props
   label?: string;
-  onSave?: (value: AutocompleteValue<TValue, TMultiple>) => void | Promise<void>;
+  onSave?: (
+    value: AutocompleteValue<TValue, TMultiple>,
+    option: TMultiple extends true
+      ? AutocompleteOption<TValue>[]
+      : AutocompleteOption<TValue> | undefined
+  ) => void | Promise<void>;
   onCancel?: () => void;
-  validate?: (value: AutocompleteValue<TValue, TMultiple>) => string | undefined;
+  validate?: (value: AutocompleteOption<TValue>) => string | undefined;
   viewClassName?: string;
+  labelClassName?: string;
   emptyPlaceholder?: string;
   inline?: boolean;
+  value?: AutocompleteValue<TValue, TMultiple>;
 }

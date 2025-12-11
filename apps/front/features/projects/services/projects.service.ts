@@ -3,7 +3,7 @@ import type {
   Project,
   UpdateProjectInput,
 } from '@taskly/types';
-import { axiosInstance } from '@features/auth/services/axios';
+import { axiosInstance } from '@taskly/data-access';
 
 export const projectsService = {
   /**
