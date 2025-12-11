@@ -185,7 +185,7 @@ export const EditableTextarea = forwardRef<
           {label && (
             <label
               htmlFor={textareaProps.id}
-              className={`text-sm font-medium ${
+              className={`text-lg font-bold ${
                 error ? 'text-error-600' : 'text-neutral-700'
               }`}
             >
@@ -231,7 +231,7 @@ export const EditableTextarea = forwardRef<
         {label && (
           <label
             htmlFor={textareaProps.id}
-            className={`text-sm font-medium ${
+            className={`text-lg font-bold ${
               error ? 'text-error-600' : 'text-neutral-700'
             }`}
           >

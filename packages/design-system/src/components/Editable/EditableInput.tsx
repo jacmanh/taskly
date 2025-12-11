@@ -20,6 +20,7 @@ export interface EditableInputProps extends Omit<InputProps, 'label'> {
   validate?: (value: string | number) => string | undefined;
   viewClassName?: string;
   emptyPlaceholder?: string;
+  inline?: boolean;
 }
 
 export const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
@@ -35,6 +36,7 @@ export const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
       type = 'text',
       className,
       disabled,
+      inline = false,
       ...inputProps
     },
     ref
@@ -141,13 +143,20 @@ export const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
       const isEmpty = displayValue === '' || displayValue === null;
 
       return (
-        <div className="flex flex-col gap-2">
+        <div
+          className={cn(
+            'flex flex-col gap-2',
+            inline && 'w-full inline-flex flex-row items-center'
+          )}
+        >
           {label && (
             <label
               htmlFor={inputProps.id}
-              className={`text-sm font-medium ${
+              className={cn(
+                'text-lg font-bold',
+                inline && 'text-sm',
                 error ? 'text-error-600' : 'text-neutral-700'
-              }`}
+              )}
             >
               {label}
             </label>
@@ -155,10 +164,11 @@ export const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
           <div
             onClick={handleViewClick}
             className={cn(
-              'text-sm group cursor-pointer px-4 py-2 rounded-xs',
-              'border-transparent',
+              'text-sm group cursor-pointer px-3 py-2 rounded-xs',
+              'border-transparent flex items-center justify-between',
               'hover:bg-neutral-100',
               disabled && 'cursor-not-allowed opacity-50',
+              inline && 'w-full h-10',
               viewClassName
             )}
             role="button"
@@ -187,19 +197,31 @@ export const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
     const hasError = Boolean(error);
 
     return (
-      <div className="flex flex-col gap-2">
+      <div
+        className={cn(
+          'flex flex-col gap-2',
+          inline && 'w-full inline-flex flex-row items-center'
+        )}
+      >
         {label && (
           <label
             htmlFor={inputProps.id}
-            className={`text-sm font-medium ${
+            className={cn(
+              'text-lg font-bold',
+              inline && 'text-sm',
               error ? 'text-error-600' : 'text-neutral-700'
-            }`}
+            )}
           >
             {label}
           </label>
         )}
-        <div className="flex flex-col items-start gap-2">
-          <div className="w-full">
+        <div
+          className={cn(
+            'flex flex-col gap-2',
+            inline && 'flex-1 flex-row items-center'
+          )}
+        >
+          <div className={cn('w-full', inline && 'w-full h-10')}>
             <Input
               ref={inputRef}
               type={type}
@@ -208,11 +230,16 @@ export const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
               onKeyDown={handleKeyDown}
               disabled={isSaving || disabled}
               error={error}
-              className={cn('py-1.5', className)}
+              className={cn('py-1.5', inline && 'h-10', className)}
               {...inputProps}
             />
           </div>
-          <div className="flex w-full justify-end items-center gap-1">
+          <div
+            className={cn(
+              'flex justify-end items-center gap-1',
+              inline && 'justify-start'
+            )}
+          >
             <button
               type="button"
               onClick={handleCancel}

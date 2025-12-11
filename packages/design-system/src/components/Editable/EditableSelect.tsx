@@ -25,6 +25,7 @@ export interface EditableSelectProps {
   emptyPlaceholder?: string;
   selectPlaceholder?: string;
   disabled?: boolean;
+  inline?: boolean;
   renderValue?: (value: string, option?: SelectOption) => ReactNode;
 }
 
@@ -38,6 +39,7 @@ export const EditableSelect: React.FC<EditableSelectProps> = ({
   selectPlaceholder = 'Select an option',
   disabled,
   renderValue,
+  inline = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -80,9 +82,19 @@ export const EditableSelect: React.FC<EditableSelectProps> = ({
   // View mode
   if (!isEditing) {
     return (
-      <div className="flex flex-col gap-2">
+      <div
+        className={cn(
+          'flex flex-col gap-2',
+          inline && 'inline-flex flex-row items-center'
+        )}
+      >
         {label && (
-          <label className="text-sm font-medium text-neutral-700">
+          <label
+            className={cn(
+              'text-lg font-bold text-neutral-700',
+              inline && 'text-sm'
+            )}
+          >
             {label}
           </label>
         )}
@@ -128,9 +140,21 @@ export const EditableSelect: React.FC<EditableSelectProps> = ({
 
   // Edit mode
   return (
-    <div className="flex flex-col gap-2">
+    <div
+      className={cn(
+        'flex flex-col gap-2',
+        inline && 'inline-flex flex-row items-center'
+      )}
+    >
       {label && (
-        <label className="text-sm font-medium text-neutral-700">{label}</label>
+        <label
+          className={cn(
+            'text-lg font-bold text-neutral-700',
+            inline && 'text-sm'
+          )}
+        >
+          {label}
+        </label>
       )}
       <Select
         value={value}

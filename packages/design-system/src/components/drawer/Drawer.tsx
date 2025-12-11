@@ -181,7 +181,7 @@ const DrawerRoot = React.forwardRef<HTMLDivElement, DrawerProps>(
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">{resolvedHeaderContent}</div>
-                <SheetClose className="absolute top-4 right-4 h-6 w-6 rounded-md opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-neutral-100 flex-shrink-0">
+                <SheetClose className="absolute top-4 right-4 h-6 w-6 flex items-center justify-center rounded-md opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-neutral-100 flex-shrink-0">
                   <X className="h-4 w-4" />
                   <span className="sr-only">Close</span>
                 </SheetClose>

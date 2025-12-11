@@ -90,7 +90,7 @@ export function TaskDrawer({
         description={`Créé le ${format(new Date(task.createdAt), 'dd MMMM yyyy', { locale: fr })}`}
       />
 
-      <div className="space-y-6">
+      <div className="w-full space-y-6">
         <EditableInput
           label="Titre"
           value={task.title}
@@ -111,28 +111,32 @@ export function TaskDrawer({
         />
 
         {/* Status & Priority */}
-        <EditableSelect
-          label="Statut"
-          value={task.status}
-          options={Object.values(TaskStatus).map((status) => ({
-            value: status,
-            label: getTaskStatusLabel(status, t),
-          }))}
-          onSave={(value) => {
-            handleUpdateTask('status', value as TaskStatus);
-          }}
-        />
-        <EditableSelect
-          label="Priorité"
-          value={task.priority}
-          options={Object.values(TaskPriority).map((priority) => ({
-            value: priority,
-            label: getTaskPriorityLabel(priority, t),
-          }))}
-          onSave={(value) => {
-            handleUpdateTask('priority', value as TaskPriority);
-          }}
-        />
+        <div className="flex flex-col gap-2">
+          <EditableSelect
+            label="Statut"
+            inline
+            value={task.status}
+            options={Object.values(TaskStatus).map((status) => ({
+              value: status,
+              label: getTaskStatusLabel(status, t),
+            }))}
+            onSave={(value) => {
+              handleUpdateTask('status', value as TaskStatus);
+            }}
+          />
+          <EditableSelect
+            label="Priorité"
+            inline
+            value={task.priority}
+            options={Object.values(TaskPriority).map((priority) => ({
+              value: priority,
+              label: getTaskPriorityLabel(priority, t),
+            }))}
+            onSave={(value) => {
+              handleUpdateTask('priority', value as TaskPriority);
+            }}
+          />
+        </div>
       </div>
 
       {/* Assigned To */}
@@ -168,6 +172,7 @@ export function TaskDrawer({
       <DatePicker
         mode="single"
         label="Date d'échéance"
+        inline
         value={task.dueDate ? new Date(task.dueDate) : undefined}
         onChange={(date) => {
           handleUpdateTask('dueDate', date as Date);

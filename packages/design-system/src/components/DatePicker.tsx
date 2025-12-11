@@ -18,6 +18,7 @@ export type DatePickerProps = CalendarProps & {
   disabled?: boolean;
   error?: string;
   className?: string;
+  inline?: boolean;
   inputProps?: Omit<InputProps, 'value' | 'onChange' | 'disabled' | 'error'>;
 };
 
@@ -31,6 +32,7 @@ function DatePickerInternal(
     disabled = false,
     error,
     className,
+    inline = false,
     inputProps,
     ...calendarProps
   }: DatePickerProps,
@@ -89,12 +91,18 @@ function DatePickerInternal(
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div
+      className={cn(
+        'flex flex-col gap-2',
+        inline && 'inline-flex flex-row items-center'
+      )}
+    >
       {label && (
         <label
           htmlFor={inputProps?.id}
           className={cn(
-            'text-sm font-medium',
+            'text-lg font-bold',
+            inline && 'text-sm',
             error ? 'text-error-600' : 'text-neutral-700'
           )}
         >
