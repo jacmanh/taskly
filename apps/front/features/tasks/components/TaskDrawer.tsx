@@ -2,8 +2,6 @@
 
 import {
   Drawer,
-  Button,
-  useConfirmationModal,
   EditableInput,
   EditableTextarea,
   EditableSelect,
@@ -15,13 +13,12 @@ import { TaskStatus, TaskPriority } from '@taskly/types';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Clock } from 'lucide-react';
-import { useDeleteTask, useUpdateTask, useTask } from '../hooks/useTasks';
+import { useUpdateTask, useTask } from '../hooks/useTasks';
 import {
   TaskFormData,
   taskFormSchema,
   zodFieldValidator,
 } from '../schemas/taskFormSchema';
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { getTaskPriorityLabel, getTaskStatusLabel } from '../utils/task-labels';
 import { workspacesService } from '@taskly/data-access';
@@ -29,19 +26,11 @@ import { workspacesService } from '@taskly/data-access';
 interface TaskDrawerProps {
   task: Task;
   workspace: Workspace;
-  onClose: () => void;
 }
 
-export function TaskDrawer({
-  task: initialTask,
-  workspace,
-  onClose,
-}: TaskDrawerProps) {
+export function TaskDrawer({ task: initialTask, workspace }: TaskDrawerProps) {
   const t = useTranslations('tasks');
   const { data: task = initialTask } = useTask(workspace.id, initialTask.id);
-
-  const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
-  const { show: showConfirmationModal } = useConfirmationModal();
 
   const { mutate: updateTask } = useUpdateTask();
 
@@ -77,27 +66,6 @@ export function TaskDrawer({
       value: user.id,
       label: user.name || user.email,
     }));
-  };
-
-  const handleDelete = async () => {
-    const confirmed = await showConfirmationModal({
-      title: `Supprimer "${task.title}" ?`,
-      description: 'Cette action ne peut pas être annulée.',
-      confirmText: 'Supprimer',
-      cancelText: 'Annuler',
-      variant: 'destructive',
-    });
-
-    if (!confirmed) return;
-
-    deleteTask(
-      { workspaceId: workspace.id, taskId: task.id, projectId: task.projectId },
-      {
-        onSuccess: () => {
-          onClose();
-        },
-      }
-    );
   };
 
   return (
@@ -200,30 +168,14 @@ export function TaskDrawer({
         </div>
       )}
 
-      {/* Created By */}
-      <div>
-        <div className="text-sm font-medium text-neutral-700 mb-2">
-          Créé par
-        </div>
-        <div className="flex items-center gap-2">
-          {task.createdBy.avatar && (
-            <Image
-              src={task.createdBy.avatar}
-              alt={task.createdBy.name || task.createdBy.email}
-              className="w-6 h-6 rounded-full"
-            />
-          )}
-          <span className="text-sm text-neutral-700">
-            {task.createdBy.name || task.createdBy.email}
-          </span>
-        </div>
-      </div>
-
-      {/* Metadata */}
-      <div className="pt-4 border-t border-neutral-200">
+      <Drawer.Footer>
         <div className="text-xs text-neutral-500 space-y-1">
           <p>
-            Créé le{' '}
+            Créé par{' '}
+            <span className="font-bold text-neutral-900">
+              {task.createdBy.name || task.createdBy.email}
+            </span>{' '}
+            le{' '}
             {format(new Date(task.createdAt), 'dd MMMM yyyy à HH:mm', {
               locale: fr,
             })}
@@ -234,29 +186,6 @@ export function TaskDrawer({
               locale: fr,
             })}
           </p>
-        </div>
-      </div>
-
-      <Drawer.Footer>
-        <div className="flex w-full flex-col gap-2 sm:flex-row">
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={onClose}
-            disabled={isDeleting}
-          >
-            Fermer
-          </Button>
-          <Button
-            type="button"
-            variant="destructive"
-            className="w-full"
-            onClick={handleDelete}
-            loading={isDeleting}
-          >
-            Supprimer la tâche
-          </Button>
         </div>
       </Drawer.Footer>
     </>

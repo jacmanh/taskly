@@ -1,0 +1,33 @@
+/* Priority badges */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-low {
+  @apply bg-blue-100 text-blue-700;
+}
+
+.badge-medium {
+  @apply bg-yellow-100 text-yellow-700;
+}
+
+.badge-high {
+  @apply bg-red-100 text-red-700;
+}
+
+.badge-neutral {
+  @apply bg-neutral-100 text-neutral-700;
+}
+
+/* Status badges */
+.status-badge-todo {
+  @apply bg-neutral-100 text-neutral-700;
+}
+
+.status-badge-in-progress {
+  @apply bg-accent-100 text-accent-700;
+}
+
+.status-badge-done {
+  @apply bg-success-100 text-success-700;
+}

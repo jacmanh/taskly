@@ -12,26 +12,30 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import type { Task } from '@taskly/types';
-import { tasksTableColumns } from './TasksTableColumns';
 import { ChevronUp, ChevronDown } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { getTasksTableColumns } from './TasksTableColumns';
 
 interface TasksTableProps {
   tasks: Task[];
   onRowClick?: (task: Task) => void;
   isLoading?: boolean;
+  deleteTask?: (task: Task, e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export function TasksTable({
   tasks,
   onRowClick,
   isLoading = false,
+  deleteTask,
 }: TasksTableProps) {
+  const t = useTranslations('tasks');
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
     data: tasks,
-    columns: tasksTableColumns,
+    columns: getTasksTableColumns(t),
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -46,6 +50,9 @@ export function TasksTable({
       pagination: {
         pageSize: 20,
       },
+    },
+    meta: {
+      deleteTask,
     },
   });
 
@@ -111,7 +118,7 @@ export function TasksTable({
             {table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className="hover:bg-neutral-50 cursor-pointer transition-colors"
+                className="hover:bg-neutral-50 cursor-pointer group transition-colors"
                 onClick={() => onRowClick?.(row.original)}
               >
                 {row.getVisibleCells().map((cell) => (
