@@ -70,3 +70,7 @@ export interface UpdateTaskInput {
   assignedToId?: string;
   sprintId?: string;
 }
+
+export interface CreateManyTasksInput {
+  tasks: CreateTaskInput[];
+}

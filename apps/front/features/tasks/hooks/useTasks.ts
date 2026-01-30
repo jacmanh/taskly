@@ -82,6 +82,31 @@ export function useCreateTask() {
   });
 }
 
+interface CreateManyTasksMutationParams {
+  workspaceId: string;
+  inputs: CreateTaskInput[];
+}
+
+export function useCreateManyTasks() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ workspaceId, inputs }: CreateManyTasksMutationParams) =>
+      tasksService.createMany(workspaceId, inputs),
+    onSuccess: (tasks) => {
+      if (tasks.length > 0) {
+        // Invalidate project and workspace queries
+        queryClient.invalidateQueries({
+          queryKey: tasksQueryKeys.project(tasks[0].projectId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: tasksQueryKeys.workspace(tasks[0].project.workspaceId),
+        });
+      }
+    },
+  });
+}
+
 interface UpdateTaskMutationParams {
   workspaceId: string;
   taskId: string;

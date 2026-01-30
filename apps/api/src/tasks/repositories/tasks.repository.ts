@@ -224,4 +224,51 @@ export class TasksRepository {
       },
     });
   }
+
+  createManyAndReturn(data: Prisma.TaskCreateManyInput[]) {
+    return this.prisma.task.createManyAndReturn({
+      data,
+    });
+  }
+
+  findByIds(ids: string[]) {
+    return this.prisma.task.findMany({
+      where: {
+        id: { in: ids },
+        deletedAt: null,
+      },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        assignedTo: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true,
+          },
+        },
+        sprint: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 }

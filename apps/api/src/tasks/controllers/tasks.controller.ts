@@ -12,6 +12,7 @@ import {
 import { TasksService } from '../services/tasks.service';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
+import { CreateManyTasksDto } from '../dto/create-many-tasks.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { AuthenticatedUser } from '@taskly/types';
@@ -58,6 +59,19 @@ export class TasksController {
     @CurrentUser() user: AuthenticatedUser
   ) {
     return this.tasksService.create(workspaceId, createTaskDto, user.id);
+  }
+
+  @Post('batch')
+  createMany(
+    @Param('workspaceId') workspaceId: string,
+    @Body() createManyTasksDto: CreateManyTasksDto,
+    @CurrentUser() user: AuthenticatedUser
+  ) {
+    return this.tasksService.createMany(
+      workspaceId,
+      createManyTasksDto,
+      user.id
+    );
   }
 
   @Patch(':id')

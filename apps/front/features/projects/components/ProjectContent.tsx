@@ -1,12 +1,13 @@
 import { useSuspenseWorkspaceProjects } from '../hooks/useProjects';
 import { Button } from '@taskly/design-system';
-import { Plus } from 'lucide-react';
+import { Plus, Sparkles } from 'lucide-react';
 import { ReactNode } from 'react';
 
 interface ProjectContentProps {
   workspaceId: string;
   projectSlug: string;
   onCreateTask?: () => void;
+  onGenerateTasks?: () => void;
   children?: ReactNode; // Slot for tasks
 }
 
@@ -14,6 +15,7 @@ export const ProjectContent = ({
   workspaceId,
   projectSlug,
   onCreateTask,
+  onGenerateTasks,
   children,
 }: ProjectContentProps) => {
   const { data: projects = [] } = useSuspenseWorkspaceProjects(workspaceId);
@@ -54,12 +56,20 @@ export const ProjectContent = ({
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-neutral-900">Tâches</h2>
-            {onCreateTask && (
-              <Button variant="primary" onClick={onCreateTask}>
-                <Plus className="w-4 h-4" />
-                Nouvelle tâche
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              {onGenerateTasks && (
+                <Button variant="outline" onClick={onGenerateTasks}>
+                  <Sparkles className="w-4 h-4" />
+                  Générer des tâches
+                </Button>
+              )}
+              {onCreateTask && (
+                <Button variant="primary" onClick={onCreateTask}>
+                  <Plus className="w-4 h-4" />
+                  Nouvelle tâche
+                </Button>
+              )}
+            </div>
           </div>
           {children}
         </div>

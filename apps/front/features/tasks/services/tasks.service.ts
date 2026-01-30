@@ -73,4 +73,15 @@ export const tasksService = {
   async delete(workspaceId: string, taskId: string): Promise<void> {
     await axiosInstance.delete(`/workspaces/${workspaceId}/tasks/${taskId}`);
   },
+
+  async createMany(
+    workspaceId: string,
+    inputs: CreateTaskInput[]
+  ): Promise<Task[]> {
+    const { data } = await axiosInstance.post<Task[]>(
+      `/workspaces/${workspaceId}/tasks/batch`,
+      { tasks: inputs }
+    );
+    return data;
+  },
 };

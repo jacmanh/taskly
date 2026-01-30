@@ -10,6 +10,7 @@ import { ProjectContent } from '@features/projects/components/ProjectContent';
 import { useSuspenseWorkspaceProjects } from '@features/projects/hooks/useProjects';
 import { TasksTableView } from '@features/tasks/components/TasksTableView';
 import { useCreateTaskDrawer } from '@features/tasks/hooks/useCreateTaskDrawer';
+import { useGenerateTasksDrawer } from '@features/ai/hooks/useGenerateTasksDrawer';
 import { Workspace } from '@taskly/types';
 import { Spinner } from '@taskly/design-system';
 
@@ -49,10 +50,17 @@ function ProjectPageContent({
   const { data: projects = [] } = useSuspenseWorkspaceProjects(workspaceId);
   const project = projects.find((p) => p.slug === projectSlug);
   const { openCreateTaskDrawer } = useCreateTaskDrawer();
+  const { openGenerateTasksDrawer } = useGenerateTasksDrawer();
 
   const handleCreateTask = () => {
     if (project) {
       openCreateTaskDrawer(workspaceId, project.id);
+    }
+  };
+
+  const handleGenerateTasks = () => {
+    if (project) {
+      openGenerateTasksDrawer(workspaceId, project.id);
     }
   };
 
@@ -61,6 +69,7 @@ function ProjectPageContent({
       workspaceId={workspaceId}
       projectSlug={projectSlug}
       onCreateTask={handleCreateTask}
+      onGenerateTasks={handleGenerateTasks}
     >
       {project && (
         <Suspense fallback={<Spinner size="lg" />}>

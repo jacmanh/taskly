@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException, HttpStatus } from '@nestjs/common';
 import { TasksRepository } from '../repositories/tasks.repository';
 import { AuthorizationService } from '../../authorization/authorization.service';
 import { WorkspacesRepository } from '../../workspaces/repositories/workspaces.repository';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
+import { CreateManyTasksDto } from '../dto/create-many-tasks.dto';
+import { createApiError } from '../../common/errors/api-error.util';
 
 @Injectable()
 export class TasksService {
@@ -163,5 +165,57 @@ export class TasksService {
     }
 
     return this.tasksRepo.archive(taskId);
+  }
+
+  async createMany(
+    workspaceId: string,
+    createManyDto: CreateManyTasksDto,
+    userId: string
+  ) {
+    // Verify user has access to the workspace
+    await this.authorizationService.verifyWorkspaceAccess(workspaceId, userId);
+
+    // Verify all tasks belong to the same project for simplicity
+    const projectIds = new Set(
+      createManyDto.tasks.map((task) => task.projectId)
+    );
+    if (projectIds.size !== 1) {
+      throw new BadRequestException(
+        createApiError(
+          HttpStatus.BAD_REQUEST,
+          'MULTIPLE_PROJECTS_NOT_ALLOWED',
+          'All tasks must belong to the same project'
+        )
+      );
+    }
+
+    const projectId = createManyDto.tasks[0].projectId;
+
+    // Verify the project exists and belongs to this workspace
+    await this.authorizationService.verifyProjectInWorkspace(
+      projectId,
+      workspaceId,
+      userId
+    );
+
+    // Transform DTOs to Prisma input format
+    const tasksData = createManyDto.tasks.map((task) => ({
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
+      dueDate: task.dueDate,
+      projectId: task.projectId,
+      createdById: userId,
+      ...(task.assignedToId && { assignedToId: task.assignedToId }),
+      ...(task.sprintId && { sprintId: task.sprintId }),
+    }));
+
+    // Create tasks and get IDs
+    const createdTasks = await this.tasksRepo.createManyAndReturn(tasksData);
+
+    // Extract IDs and fetch complete tasks with relations
+    const taskIds = createdTasks.map((task) => task.id);
+    return this.tasksRepo.findByIds(taskIds);
   }
 }
