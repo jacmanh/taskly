@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsEnum, MaxLength } from 'class-validator';
 import { UpdateWorkspaceInput, DeleteStrategy } from '@taskly/types';
 
 export class UpdateWorkspaceDto implements UpdateWorkspaceInput {
@@ -17,6 +17,11 @@ export class UpdateWorkspaceDto implements UpdateWorkspaceInput {
   @IsString()
   @IsOptional()
   icon?: UpdateWorkspaceInput['icon'];
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(500)
+  context?: UpdateWorkspaceInput['context'];
 
   @IsEnum(DeleteStrategy)
   @IsOptional()

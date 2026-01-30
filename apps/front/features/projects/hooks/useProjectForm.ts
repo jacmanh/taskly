@@ -13,6 +13,7 @@ import {
 const DEFAULT_VALUES: ProjectFormData = {
   name: '',
   description: '',
+  context: '',
 };
 
 export function useProjectForm({
@@ -37,6 +38,7 @@ export function useProjectForm({
       form.reset({
         name: project.name,
         description: project.description || '',
+        context: project.context || '',
       });
     }
   }, [project, form]);
@@ -51,7 +53,8 @@ export function useProjectForm({
               projectId: project.id,
               input: {
                 name: data.name,
-                description: data.description || undefined,
+                description: data.description || null,
+                context: data.context || null,
               },
             },
             {
@@ -67,7 +70,8 @@ export function useProjectForm({
               workspaceId,
               input: {
                 name: data.name,
-                description: data.description || undefined,
+                description: data.description || null,
+                context: data.context || null,
               },
             },
             {

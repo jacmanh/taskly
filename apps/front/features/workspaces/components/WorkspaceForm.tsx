@@ -1,6 +1,6 @@
 'use client';
 
-import { Input, Drawer, Button } from '@taskly/design-system';
+import { Input, Drawer, Button, Textarea } from '@taskly/design-system';
 import { useWorkspaceForm } from '../hooks/useWorkspaceForm';
 
 interface WorkspaceFormProps {
@@ -44,6 +44,16 @@ export function WorkspaceForm({ onSuccess, onCancel }: WorkspaceFormProps) {
             </p>
           )}
         </div>
+
+        <Textarea
+          id="workspace-context"
+          label="Contexte"
+          placeholder="Décrivez votre workspace pour améliorer la génération de tâches par l'IA"
+          disabled={isPending}
+          rows={10}
+          error={errors.context?.message}
+          {...register('context')}
+        />
       </div>
 
       <Drawer.Footer>

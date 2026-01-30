@@ -14,6 +14,11 @@ export const projectFormSchema = z.object({
     .max(200, 'La description ne peut pas dépasser 200 caractères')
     .optional()
     .or(z.literal('')),
+  context: z
+    .string()
+    .max(500, 'Le contexte ne peut pas dépasser 500 caractères')
+    .optional()
+    .or(z.literal('')),
 });
 
 export type ProjectFormData = z.infer<typeof projectFormSchema>;

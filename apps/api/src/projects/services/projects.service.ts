@@ -53,6 +53,7 @@ export class ProjectsService {
       name: dto.name,
       slug,
       description: dto.description || null,
+      context: dto.context || null,
       workspace: {
         connect: { id: workspaceId },
       },

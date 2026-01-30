@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, MaxLength } from 'class-validator';
 import type { UpdateProjectInput } from '@taskly/types';
 
 export class UpdateProjectDto implements UpdateProjectInput {
@@ -17,4 +17,9 @@ export class UpdateProjectDto implements UpdateProjectInput {
   @IsString()
   @IsOptional()
   icon?: UpdateProjectInput['icon'];
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(500)
+  context?: UpdateProjectInput['context'];
 }

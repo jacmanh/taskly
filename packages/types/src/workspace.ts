@@ -9,6 +9,7 @@ export interface Workspace {
   slug: string;
   color?: string;
   icon?: string;
+  context?: string | null;
   ownerId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -18,6 +19,7 @@ export interface Workspace {
 
 export interface CreateWorkspaceInput {
   name: string;
+  context?: string;
 }
 
 export interface UpdateWorkspaceInput {
@@ -25,6 +27,7 @@ export interface UpdateWorkspaceInput {
   slug?: string;
   color?: string;
   icon?: string;
+  context?: string;
   deleteStrategy?: DeleteStrategy;
 }
 

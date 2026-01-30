@@ -42,6 +42,7 @@ export class WorkspacesService {
     return this.repo.create({
       name: dto.name,
       slug,
+      context: dto.context || null,
       owner: {
         connect: { id: ownerId },
       },

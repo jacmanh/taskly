@@ -11,6 +11,7 @@ import {
 
 const DEFAULT_VALUES: WorkspaceFormData = {
   name: '',
+  context: '',
 };
 
 export function useWorkspaceForm() {

@@ -61,6 +61,16 @@ export function ProjectForm({
             error={errors.description?.message}
             {...register('description')}
           />
+
+          <Textarea
+            id="project-context"
+            label="Contexte IA"
+            placeholder="Décrivez le contexte de votre projet pour améliorer la génération de tâches par l'IA"
+            disabled={isPending}
+            rows={10}
+            error={errors.context?.message}
+            {...register('context')}
+          />
         </div>
       </div>
 
