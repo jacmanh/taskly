@@ -17,10 +17,7 @@ export const taskFormSchema = z.object({
     .min(1, 'Le titre est requis')
     .min(3, 'Le titre doit contenir au moins 3 caractères')
     .max(100, 'Le titre ne peut pas dépasser 100 caractères'),
-  description: z
-    .string()
-    .optional()
-    .or(z.literal('')),
+  description: z.string().optional().or(z.literal('')),
   status: z.nativeEnum(TaskStatus),
   priority: z.nativeEnum(TaskPriority),
   dueDate: z.string().optional().or(z.literal('')),

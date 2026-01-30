@@ -24,12 +24,12 @@ export class TaskDraftsController {
   findBatches(
     @Param('workspaceId') workspaceId: string,
     @CurrentUser() user: AuthenticatedUser,
-    @Query('projectId') projectId: string,
+    @Query('projectId') projectId: string
   ) {
     return this.taskDraftsService.findBatchesByProject(
       workspaceId,
       projectId,
-      user.id,
+      user.id
     );
   }
 
@@ -37,7 +37,7 @@ export class TaskDraftsController {
   findBatch(
     @Param('workspaceId') workspaceId: string,
     @Param('batchId') batchId: string,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
     return this.taskDraftsService.findBatchById(workspaceId, batchId, user.id);
   }
@@ -47,21 +47,16 @@ export class TaskDraftsController {
     @Param('workspaceId') workspaceId: string,
     @Param('itemId') itemId: string,
     @Body() dto: UpdateDraftItemDto,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
-    return this.taskDraftsService.updateItem(
-      workspaceId,
-      itemId,
-      dto,
-      user.id,
-    );
+    return this.taskDraftsService.updateItem(workspaceId, itemId, dto, user.id);
   }
 
   @Post(':batchId/accept')
   acceptBatch(
     @Param('workspaceId') workspaceId: string,
     @Param('batchId') batchId: string,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
     return this.taskDraftsService.acceptBatch(workspaceId, batchId, user.id);
   }
@@ -70,7 +65,7 @@ export class TaskDraftsController {
   cancelBatch(
     @Param('workspaceId') workspaceId: string,
     @Param('batchId') batchId: string,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
     return this.taskDraftsService.cancelBatch(workspaceId, batchId, user.id);
   }
@@ -79,12 +74,12 @@ export class TaskDraftsController {
   deleteBatch(
     @Param('workspaceId') workspaceId: string,
     @Param('batchId') batchId: string,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
     return this.taskDraftsService.softDeleteBatch(
       workspaceId,
       batchId,
-      user.id,
+      user.id
     );
   }
 }

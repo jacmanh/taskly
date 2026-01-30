@@ -33,7 +33,12 @@ export class TaskDraftsRepository {
     prompt: string;
     projectId: string;
     creatorId: string;
-    items: { title: string; description?: string; priority: TaskPriority; status: TaskStatus }[];
+    items: {
+      title: string;
+      description?: string;
+      priority: TaskPriority;
+      status: TaskStatus;
+    }[];
   }) {
     return this.prisma.taskDraftBatch.create({
       data: {
@@ -101,7 +106,12 @@ export class TaskDraftsRepository {
 
   createItems(
     batchId: string,
-    items: { title: string; description?: string; priority: TaskPriority; status: TaskStatus }[],
+    items: {
+      title: string;
+      description?: string;
+      priority: TaskPriority;
+      status: TaskStatus;
+    }[]
   ) {
     return this.prisma.taskDraftItem.createMany({
       data: items.map((item) => ({

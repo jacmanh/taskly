@@ -16,7 +16,7 @@ export function DraftBatchesTableView({
 }: DraftBatchesTableViewProps) {
   const { data: batches = [] } = useSuspenseProjectDraftBatches(
     workspaceId,
-    projectId,
+    projectId
   );
   const router = useRouter();
   const params = useParams<{
@@ -26,7 +26,7 @@ export function DraftBatchesTableView({
 
   const handleRowClick = (batch: TaskDraftBatch) => {
     router.push(
-      `/${params?.workspaceSlug}/${params?.projectSlug}/drafts/${batch.id}`,
+      `/${params?.workspaceSlug}/${params?.projectSlug}/drafts/${batch.id}`
     );
   };
 

@@ -28,9 +28,7 @@ export function WorkspaceSettingsModal({
 }: WorkspaceSettingsModalProps) {
   const { currentWorkspace: workspace } = useCurrentWorkspace();
   const { mutate: updateWorkspace, isPending } = useUpdateWorkspace();
-  const [strategy, setStrategy] = useState<DeleteStrategy>(
-    DeleteStrategy.SOFT
-  );
+  const [strategy, setStrategy] = useState<DeleteStrategy>(DeleteStrategy.SOFT);
 
   useEffect(() => {
     if (workspace) {
@@ -79,7 +77,8 @@ export function WorkspaceSettingsModal({
                     Soft Delete (Par défaut)
                   </Label>
                   <p className="text-sm text-neutral-500">
-                    La description est supprimée, mais la tâche reste visible avec ses métadonnées.
+                    La description est supprimée, mais la tâche reste visible
+                    avec ses métadonnées.
                   </p>
                 </div>
               </div>

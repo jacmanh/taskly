@@ -9,10 +9,7 @@ export function useCreateWorkspaceDrawer() {
   const openCreateDrawer = () => {
     openDrawer({
       children: (
-        <WorkspaceForm
-          onSuccess={closeDrawer}
-          onCancel={closeDrawer}
-        />
+        <WorkspaceForm onSuccess={closeDrawer} onCancel={closeDrawer} />
       ),
     });
   };

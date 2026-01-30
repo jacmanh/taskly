@@ -1,8 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  AI_PROVIDER_TOKEN,
-  AIProvider,
-} from '../providers/ai.provider';
+import { AI_PROVIDER_TOKEN, AIProvider } from '../providers/ai.provider';
 import { AuthorizationService } from '../../authorization/authorization.service';
 import { TaskDraftsRepository } from '../../task-drafts/repositories/task-drafts.repository';
 import { GenerateTasksDto } from '../dto/generate-tasks.dto';
@@ -13,13 +10,13 @@ export class AiService {
     @Inject(AI_PROVIDER_TOKEN)
     private readonly aiProvider: AIProvider,
     private readonly authorizationService: AuthorizationService,
-    private readonly taskDraftsRepo: TaskDraftsRepository,
+    private readonly taskDraftsRepo: TaskDraftsRepository
   ) {}
 
   async generateTasks(
     workspaceId: string,
     dto: GenerateTasksDto,
-    userId: string,
+    userId: string
   ) {
     const result = await this.generate(workspaceId, dto, userId);
 
@@ -38,7 +35,7 @@ export class AiService {
     workspaceId: string,
     batchId: string,
     dto: GenerateTasksDto,
-    userId: string,
+    userId: string
   ) {
     const result = await this.generate(workspaceId, dto, userId);
 
@@ -56,17 +53,18 @@ export class AiService {
   private async generate(
     workspaceId: string,
     dto: GenerateTasksDto,
-    userId: string,
+    userId: string
   ) {
-    const workspace =
-      await this.authorizationService.verifyWorkspaceAccess(workspaceId, userId);
+    const workspace = await this.authorizationService.verifyWorkspaceAccess(
+      workspaceId,
+      userId
+    );
 
-    const project =
-      await this.authorizationService.verifyProjectInWorkspace(
-        dto.projectId,
-        workspaceId,
-        userId,
-      );
+    const project = await this.authorizationService.verifyProjectInWorkspace(
+      dto.projectId,
+      workspaceId,
+      userId
+    );
 
     return this.aiProvider.generateTasks({
       prompt: dto.prompt,

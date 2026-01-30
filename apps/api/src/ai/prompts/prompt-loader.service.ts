@@ -53,7 +53,7 @@ export class PromptLoader {
   /**
    * Simple template interpolation without external dependencies
    * Supports {{variable}} syntax and conditional blocks
-   * 
+   *
    * IMPORTANT: Processing order matters!
    * 1. Else-conditionals must be processed before non-else conditionals
    * 2. Conditionals must be processed before simple variables
@@ -61,7 +61,7 @@ export class PromptLoader {
    */
   private interpolateTemplate(
     template: string,
-    variables: PromptTemplateVariables,
+    variables: PromptTemplateVariables
   ): string {
     let result = template;
 
@@ -74,7 +74,7 @@ export class PromptLoader {
         return value !== undefined && value !== null && value !== ''
           ? ifContent
           : elseContent;
-      },
+      }
     );
 
     // 2. Handle conditional blocks {{#if variable}}...{{/if}} without else
@@ -85,7 +85,7 @@ export class PromptLoader {
         return value !== undefined && value !== null && value !== ''
           ? content
           : '';
-      },
+      }
     );
 
     // 3. Replace simple variables {{variableName}} LAST

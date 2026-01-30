@@ -54,9 +54,7 @@ export const ProjectContent = ({
   }
 
   const handleGenerateTasks = () => {
-    router.push(
-      `/${params?.workspaceSlug}/${params?.projectSlug}/drafts/new`
-    );
+    router.push(`/${params?.workspaceSlug}/${params?.projectSlug}/drafts/new`);
   };
 
   const handleTabChange = (value: string) => {

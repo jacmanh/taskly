@@ -31,9 +31,7 @@ export const draftItemsTableColumns: ColumnDef<TaskDraftItem>[] = [
     accessorKey: 'title',
     header: 'Titre',
     cell: ({ row }) => (
-      <span className="font-medium text-neutral-900">
-        {row.original.title}
-      </span>
+      <span className="font-medium text-neutral-900">{row.original.title}</span>
     ),
   },
   {

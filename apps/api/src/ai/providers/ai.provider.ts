@@ -29,15 +29,18 @@ export abstract class AIProvider {
   constructor(protected readonly promptLoader: PromptLoader) {}
 
   async generateTasks(
-    context: GenerateTasksContext,
+    context: GenerateTasksContext
   ): Promise<GeneratedTaskBatch> {
     const systemPrompt = this.promptLoader.getSystemPrompt('task-generation');
-    const userPrompt = this.promptLoader.getUserPrompt('task-generation', context);
+    const userPrompt = this.promptLoader.getUserPrompt(
+      'task-generation',
+      context
+    );
     return this.generate(systemPrompt, userPrompt);
   }
 
   protected abstract generate(
     systemPrompt: string,
-    userPrompt: string,
+    userPrompt: string
   ): Promise<GeneratedTaskBatch>;
 }

@@ -21,18 +21,18 @@ export const AutocompleteItem = forwardRef<
 
   // Find the option data
   const option = state.displayOptions.find((opt) => opt.value === value);
-  const optionIndex = state.displayOptions.findIndex((opt) => opt.value === value);
+  const optionIndex = state.displayOptions.findIndex(
+    (opt) => opt.value === value
+  );
 
   if (!option) {
-    console.warn(`AutocompleteItem: Option with value "${String(value)}" not found`);
+    console.warn(
+      `AutocompleteItem: Option with value "${String(value)}" not found`
+    );
     return null;
   }
 
-  const isSelected = isOptionSelected(
-    option,
-    state.value,
-    multiple
-  );
+  const isSelected = isOptionSelected(option, state.value, multiple);
   const isFocused = optionIndex === focusedIndex;
   const isDisabled = Boolean(disabled || option.disabled);
 

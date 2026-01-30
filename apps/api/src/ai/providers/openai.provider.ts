@@ -14,7 +14,7 @@ const TaskSuggestionSchema = z.object({
       description: z.string(),
       priority: z.enum(['LOW', 'MEDIUM', 'HIGH']),
       status: z.enum(['TODO', 'IN_PROGRESS', 'DONE']),
-    }),
+    })
   ),
 });
 
@@ -25,7 +25,7 @@ export class OpenAiProvider extends AIProvider {
 
   constructor(
     promptLoader: PromptLoader,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {
     super(promptLoader);
     this.client = new OpenAI({
@@ -35,7 +35,7 @@ export class OpenAiProvider extends AIProvider {
 
   protected async generate(
     systemPrompt: string,
-    userPrompt: string,
+    userPrompt: string
   ): Promise<GeneratedTaskBatch> {
     try {
       const completion = await this.client.chat.completions.parse({
@@ -44,13 +44,18 @@ export class OpenAiProvider extends AIProvider {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
         ],
-        response_format: zodResponseFormat(TaskSuggestionSchema, 'task_suggestions'),
+        response_format: zodResponseFormat(
+          TaskSuggestionSchema,
+          'task_suggestions'
+        ),
       });
 
       const parsed = completion.choices[0]?.message?.parsed;
 
       if (!parsed) {
-        this.logger.warn('OpenAI returned no parsed output, returning empty batch');
+        this.logger.warn(
+          'OpenAI returned no parsed output, returning empty batch'
+        );
         return { batchTitle: 'Generated Tasks', tasks: [] };
       }
 

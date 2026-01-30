@@ -12,11 +12,7 @@ export const AutocompleteGroup = forwardRef<
   AutocompleteGroupProps
 >(({ children, className }, ref) => {
   return (
-    <div
-      ref={ref}
-      role="group"
-      className={cn('py-1', className)}
-    >
+    <div ref={ref} role="group" className={cn('py-1', className)}>
       {children}
     </div>
   );

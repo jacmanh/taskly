@@ -45,9 +45,7 @@ export function DraftItemsTable({
   if (items.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-neutral-500 text-sm">
-          Aucune tâche générée.
-        </p>
+        <p className="text-neutral-500 text-sm">Aucune tâche générée.</p>
       </div>
     );
   }
@@ -75,13 +73,14 @@ export function DraftItemsTable({
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                         {header.column.getCanSort() &&
                           ({
                             asc: <ChevronUp className="w-4 h-4" />,
                             desc: <ChevronDown className="w-4 h-4" />,
-                          }[header.column.getIsSorted() as string] ?? null)}
+                          }[header.column.getIsSorted() as string] ??
+                            null)}
                       </div>
                     )}
                   </th>
@@ -103,10 +102,7 @@ export function DraftItemsTable({
                     key={cell.id}
                     className="px-6 py-4 whitespace-nowrap text-sm"
                   >
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext(),
-                    )}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
               </tr>

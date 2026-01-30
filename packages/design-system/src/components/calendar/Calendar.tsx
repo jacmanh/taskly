@@ -33,7 +33,7 @@ function CalendarInternal<T extends DayPickerProps = DayPickerProps>(
 }
 
 export const Calendar = React.forwardRef(CalendarInternal) as (<
-  T extends DayPickerProps = DayPickerProps
+  T extends DayPickerProps = DayPickerProps,
 >(
   props: CalendarProps<T> & { ref?: React.Ref<HTMLDivElement> }
 ) => React.ReactElement) & { displayName?: string };

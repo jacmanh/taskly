@@ -14,13 +14,9 @@ export class AiController {
   generateTasks(
     @Param('workspaceId') workspaceId: string,
     @Body() generateTasksDto: GenerateTasksDto,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
-    return this.aiService.generateTasks(
-      workspaceId,
-      generateTasksDto,
-      user.id,
-    );
+    return this.aiService.generateTasks(workspaceId, generateTasksDto, user.id);
   }
 
   @Post('generate-tasks/:batchId/regenerate')
@@ -28,13 +24,13 @@ export class AiController {
     @Param('workspaceId') workspaceId: string,
     @Param('batchId') batchId: string,
     @Body() generateTasksDto: GenerateTasksDto,
-    @CurrentUser() user: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser
   ) {
     return this.aiService.regenerateBatch(
       workspaceId,
       batchId,
       generateTasksDto,
-      user.id,
+      user.id
     );
   }
 }

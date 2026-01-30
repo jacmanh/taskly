@@ -16,28 +16,24 @@ export class TaskDraftsService {
   constructor(
     private readonly taskDraftsRepo: TaskDraftsRepository,
     private readonly tasksRepo: TasksRepository,
-    private readonly authorizationService: AuthorizationService,
+    private readonly authorizationService: AuthorizationService
   ) {}
 
   async findBatchesByProject(
     workspaceId: string,
     projectId: string,
-    userId: string,
+    userId: string
   ) {
     await this.authorizationService.verifyProjectInWorkspace(
       projectId,
       workspaceId,
-      userId,
+      userId
     );
 
     return this.taskDraftsRepo.findBatchesByProjectId(projectId);
   }
 
-  async findBatchById(
-    workspaceId: string,
-    batchId: string,
-    userId: string,
-  ) {
+  async findBatchById(workspaceId: string, batchId: string, userId: string) {
     await this.authorizationService.verifyWorkspaceAccess(workspaceId, userId);
 
     const batch = await this.taskDraftsRepo.findBatchById(batchId);
@@ -46,8 +42,8 @@ export class TaskDraftsService {
         createApiError(
           HttpStatus.NOT_FOUND,
           'DRAFT_BATCH_NOT_FOUND',
-          'Draft batch not found',
-        ),
+          'Draft batch not found'
+        )
       );
     }
 
@@ -58,7 +54,7 @@ export class TaskDraftsService {
     workspaceId: string,
     itemId: string,
     dto: UpdateDraftItemDto,
-    userId: string,
+    userId: string
   ) {
     await this.authorizationService.verifyWorkspaceAccess(workspaceId, userId);
 
@@ -68,8 +64,8 @@ export class TaskDraftsService {
         createApiError(
           HttpStatus.NOT_FOUND,
           'DRAFT_ITEM_NOT_FOUND',
-          'Draft item not found',
-        ),
+          'Draft item not found'
+        )
       );
     }
 
@@ -82,11 +78,7 @@ export class TaskDraftsService {
     });
   }
 
-  async acceptBatch(
-    workspaceId: string,
-    batchId: string,
-    userId: string,
-  ) {
+  async acceptBatch(workspaceId: string, batchId: string, userId: string) {
     await this.authorizationService.verifyWorkspaceAccess(workspaceId, userId);
 
     const batch = await this.taskDraftsRepo.findBatchById(batchId);
@@ -95,8 +87,8 @@ export class TaskDraftsService {
         createApiError(
           HttpStatus.NOT_FOUND,
           'DRAFT_BATCH_NOT_FOUND',
-          'Draft batch not found',
-        ),
+          'Draft batch not found'
+        )
       );
     }
 
@@ -105,8 +97,8 @@ export class TaskDraftsService {
         createApiError(
           HttpStatus.BAD_REQUEST,
           'BATCH_NOT_PENDING',
-          'Only pending batches can be accepted',
-        ),
+          'Only pending batches can be accepted'
+        )
       );
     }
 
@@ -116,8 +108,8 @@ export class TaskDraftsService {
         createApiError(
           HttpStatus.BAD_REQUEST,
           'NO_ENABLED_ITEMS',
-          'At least one item must be enabled to accept the batch',
-        ),
+          'At least one item must be enabled to accept the batch'
+        )
       );
     }
 
@@ -131,16 +123,15 @@ export class TaskDraftsService {
     }));
 
     await this.tasksRepo.createManyAndReturn(tasksData);
-    await this.taskDraftsRepo.updateBatchStatus(batchId, TaskDraftBatchStatus.ACCEPTED);
+    await this.taskDraftsRepo.updateBatchStatus(
+      batchId,
+      TaskDraftBatchStatus.ACCEPTED
+    );
 
     return { accepted: true, tasksCreated: enabledItems.length };
   }
 
-  async cancelBatch(
-    workspaceId: string,
-    batchId: string,
-    userId: string,
-  ) {
+  async cancelBatch(workspaceId: string, batchId: string, userId: string) {
     await this.authorizationService.verifyWorkspaceAccess(workspaceId, userId);
 
     const batch = await this.taskDraftsRepo.findBatchById(batchId);
@@ -149,8 +140,8 @@ export class TaskDraftsService {
         createApiError(
           HttpStatus.NOT_FOUND,
           'DRAFT_BATCH_NOT_FOUND',
-          'Draft batch not found',
-        ),
+          'Draft batch not found'
+        )
       );
     }
 
@@ -159,21 +150,20 @@ export class TaskDraftsService {
         createApiError(
           HttpStatus.BAD_REQUEST,
           'BATCH_NOT_PENDING',
-          'Only pending batches can be cancelled',
-        ),
+          'Only pending batches can be cancelled'
+        )
       );
     }
 
-    await this.taskDraftsRepo.updateBatchStatus(batchId, TaskDraftBatchStatus.CANCELLED);
+    await this.taskDraftsRepo.updateBatchStatus(
+      batchId,
+      TaskDraftBatchStatus.CANCELLED
+    );
 
     return { cancelled: true };
   }
 
-  async softDeleteBatch(
-    workspaceId: string,
-    batchId: string,
-    userId: string,
-  ) {
+  async softDeleteBatch(workspaceId: string, batchId: string, userId: string) {
     await this.authorizationService.verifyWorkspaceAccess(workspaceId, userId);
 
     const batch = await this.taskDraftsRepo.findBatchById(batchId);
@@ -182,8 +172,8 @@ export class TaskDraftsService {
         createApiError(
           HttpStatus.NOT_FOUND,
           'DRAFT_BATCH_NOT_FOUND',
-          'Draft batch not found',
-        ),
+          'Draft batch not found'
+        )
       );
     }
 

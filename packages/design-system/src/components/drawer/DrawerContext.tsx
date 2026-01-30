@@ -65,8 +65,7 @@ export function DrawerProvider({ children }: { children: React.ReactNode }) {
 
   const closeDrawer = React.useCallback(
     (idOrEvent?: string | React.SyntheticEvent | Event | boolean) => {
-      const targetId =
-        typeof idOrEvent === 'string' ? idOrEvent : undefined;
+      const targetId = typeof idOrEvent === 'string' ? idOrEvent : undefined;
 
       const performClose = async () => {
         // Use a ref to get the current drawer to close

@@ -9,11 +9,11 @@ interface GenerateTasksInput {
 export const aiService = {
   async generateTasks(
     workspaceId: string,
-    input: GenerateTasksInput,
+    input: GenerateTasksInput
   ): Promise<TaskDraftBatch> {
     const { data } = await axiosInstance.post<TaskDraftBatch>(
       `/workspaces/${workspaceId}/ai/generate-tasks`,
-      input,
+      input
     );
     return data;
   },
@@ -21,11 +21,11 @@ export const aiService = {
   async regenerateBatch(
     workspaceId: string,
     batchId: string,
-    input: GenerateTasksInput,
+    input: GenerateTasksInput
   ): Promise<TaskDraftBatch> {
     const { data } = await axiosInstance.post<TaskDraftBatch>(
       `/workspaces/${workspaceId}/ai/generate-tasks/${batchId}/regenerate`,
-      input,
+      input
     );
     return data;
   },

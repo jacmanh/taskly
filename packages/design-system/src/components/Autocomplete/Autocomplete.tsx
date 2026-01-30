@@ -11,7 +11,7 @@ import { generateId } from './utils';
  */
 type AutocompleteContextValue<
   TValue = string,
-  TMultiple extends boolean = false
+  TMultiple extends boolean = false,
 > = UseAutocompleteReturn<TValue, TMultiple> & {
   props: AutocompleteProps<TValue, TMultiple>;
   ids: {
@@ -23,9 +23,10 @@ type AutocompleteContextValue<
 
 // Create context with unknown type since we can't know the generic types at context creation time
 // The context will be properly typed when accessed through the hook
-const AutocompleteContext = createContext<
-  AutocompleteContextValue<unknown, boolean> | null
->(null);
+const AutocompleteContext = createContext<AutocompleteContextValue<
+  unknown,
+  boolean
+> | null>(null);
 
 /**
  * Hook to access autocomplete context
@@ -33,7 +34,7 @@ const AutocompleteContext = createContext<
  */
 export function useAutocompleteContext<
   TValue = string,
-  TMultiple extends boolean = false
+  TMultiple extends boolean = false,
 >(): AutocompleteContextValue<TValue, TMultiple> {
   const context = useContext(AutocompleteContext);
   if (!context) {
@@ -81,7 +82,7 @@ export function useAutocompleteContext<
  */
 export function Autocomplete<
   TValue = string,
-  TMultiple extends boolean = false
+  TMultiple extends boolean = false,
 >(props: AutocompleteProps<TValue, TMultiple>) {
   const { children, id } = props;
 

@@ -4,10 +4,7 @@ import { GenerateTasksForm } from '../components/GenerateTasksForm';
 export function useGenerateTasksDrawer() {
   const { openDrawer, closeDrawer } = useDrawer();
 
-  const openGenerateTasksDrawer = (
-    workspaceId: string,
-    projectId: string
-  ) => {
+  const openGenerateTasksDrawer = (workspaceId: string, projectId: string) => {
     openDrawer({
       children: (
         <GenerateTasksForm

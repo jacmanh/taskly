@@ -20,7 +20,7 @@ export function MarkdownRenderer({
     code({ className, children, ...props }) {
       const match = /language-(\w+)/.exec(className || '');
       const isInline = !match;
-      
+
       if (isInline) {
         return (
           <code className={className} {...props}>
@@ -30,11 +30,7 @@ export function MarkdownRenderer({
       }
 
       return (
-        <SyntaxHighlighter
-          style={oneDark}
-          language={match[1]}
-          PreTag="div"
-        >
+        <SyntaxHighlighter style={oneDark} language={match[1]} PreTag="div">
           {String(children).replace(/\n$/, '')}
         </SyntaxHighlighter>
       );
