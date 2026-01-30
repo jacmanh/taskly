@@ -23,6 +23,7 @@ export interface EditableTextareaProps extends Omit<TextareaProps, 'label'> {
   emptyPlaceholder?: string;
   minRows?: number;
   maxRows?: number;
+  renderView?: (value: string) => React.ReactNode;
 }
 
 export const EditableTextarea = forwardRef<
@@ -43,6 +44,7 @@ export const EditableTextarea = forwardRef<
       maxRows = 10,
       className,
       disabled,
+      renderView,
       ...textareaProps
     },
     ref
@@ -214,14 +216,17 @@ export const EditableTextarea = forwardRef<
               }
             }}
           >
-            <span
-              className={cn(
-                'text-sm text-neutral-900 whitespace-pre-wrap',
-                isEmpty && 'text-neutral-400 italic'
-              )}
-            >
-              {isEmpty ? emptyPlaceholder : displayValue}
-            </span>
+            {isEmpty ? (
+              <span className="text-sm text-neutral-400 italic">
+                {emptyPlaceholder}
+              </span>
+            ) : renderView ? (
+              renderView(displayValue)
+            ) : (
+              <span className="text-sm text-neutral-900 whitespace-pre-wrap">
+                {displayValue}
+              </span>
+            )}
           </div>
         </div>
       );

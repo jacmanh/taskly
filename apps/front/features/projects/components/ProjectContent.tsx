@@ -1,25 +1,39 @@
+'use client';
+
+import { useRouter, useParams } from 'next/navigation';
 import { useSuspenseWorkspaceProjects } from '../hooks/useProjects';
-import { Button } from '@taskly/design-system';
+import {
+  Button,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from '@taskly/design-system';
 import { Plus, Sparkles } from 'lucide-react';
 import { ReactNode } from 'react';
 
 interface ProjectContentProps {
   workspaceId: string;
   projectSlug: string;
+  activeTab: 'backlog' | 'drafts';
   onCreateTask?: () => void;
-  onGenerateTasks?: () => void;
-  children?: ReactNode; // Slot for tasks
+  children?: ReactNode;
 }
 
 export const ProjectContent = ({
   workspaceId,
   projectSlug,
+  activeTab,
   onCreateTask,
-  onGenerateTasks,
   children,
 }: ProjectContentProps) => {
   const { data: projects = [] } = useSuspenseWorkspaceProjects(workspaceId);
   const project = projects.find((p) => p.slug === projectSlug);
+  const router = useRouter();
+  const params = useParams<{
+    workspaceSlug: string;
+    projectSlug: string;
+  }>();
 
   if (!project) {
     return (
@@ -39,6 +53,20 @@ export const ProjectContent = ({
     );
   }
 
+  const handleGenerateTasks = () => {
+    router.push(
+      `/${params?.workspaceSlug}/${params?.projectSlug}/drafts/new`
+    );
+  };
+
+  const handleTabChange = (value: string) => {
+    if (value === 'backlog') {
+      router.push(`/${params?.workspaceSlug}/${params?.projectSlug}`);
+    } else if (value === 'drafts') {
+      router.push(`/${params?.workspaceSlug}/${params?.projectSlug}/drafts`);
+    }
+  };
+
   return (
     <div className="p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -57,12 +85,10 @@ export const ProjectContent = ({
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-neutral-900">Tâches</h2>
             <div className="flex items-center gap-2">
-              {onGenerateTasks && (
-                <Button variant="outline" onClick={onGenerateTasks}>
-                  <Sparkles className="w-4 h-4" />
-                  Générer des tâches
-                </Button>
-              )}
+              <Button variant="outline" onClick={handleGenerateTasks}>
+                <Sparkles className="w-4 h-4" />
+                Générer des tâches
+              </Button>
               {onCreateTask && (
                 <Button variant="primary" onClick={onCreateTask}>
                   <Plus className="w-4 h-4" />
@@ -71,7 +97,14 @@ export const ProjectContent = ({
               )}
             </div>
           </div>
-          {children}
+
+          <Tabs value={activeTab} onValueChange={handleTabChange}>
+            <TabsList>
+              <TabsTrigger value="backlog">Backlog</TabsTrigger>
+              <TabsTrigger value="drafts">Brouillons IA</TabsTrigger>
+            </TabsList>
+            <TabsContent value={activeTab}>{children}</TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>

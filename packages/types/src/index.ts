@@ -40,3 +40,11 @@ export type {
   CreateManyTasksInput,
 } from './task';
 export { TaskStatus, TaskPriority } from './task';
+
+// Task Draft types
+export type {
+  TaskDraftBatch,
+  TaskDraftItem,
+  UpdateTaskDraftItemInput,
+} from './task-draft';
+export { TaskDraftBatchStatus } from './task-draft';

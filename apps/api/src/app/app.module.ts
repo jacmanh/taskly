@@ -11,6 +11,7 @@ import { WorkspacesModule } from '../workspaces/workspaces.module';
 import { ProjectsModule } from '../projects/projects.module';
 import { TasksModule } from '../tasks/tasks.module';
 import { AiModule } from '../ai/ai.module';
+import { TaskDraftsModule } from '../task-drafts/task-drafts.module';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Module({
@@ -32,6 +33,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
     ProjectsModule,
     TasksModule,
     AiModule,
+    TaskDraftsModule,
   ],
   controllers: [AppController],
   providers: [

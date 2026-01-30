@@ -3,6 +3,7 @@ import auth from '../messages/en/auth.json';
 import tasks from '../messages/en/tasks.json';
 import projects from '../messages/en/projects.json';
 import workspaces from '../messages/en/workspaces.json';
+import draftbatches from '../messages/en/draftbatches.json';
 import { I18nNamespaces } from './config';
 
 export const messages = {
@@ -11,4 +12,5 @@ export const messages = {
   tasks,
   projects,
   workspaces,
+  draftbatches,
 } satisfies { [ns in I18nNamespaces]: any };

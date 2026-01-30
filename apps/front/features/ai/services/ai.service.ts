@@ -1,11 +1,5 @@
 import { axiosInstance } from '@taskly/data-access';
-
-export interface GeneratedTask {
-  title: string;
-  description: string;
-  priority: 'LOW' | 'MEDIUM' | 'HIGH';
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE';
-}
+import type { TaskDraftBatch } from '@taskly/types';
 
 interface GenerateTasksInput {
   projectId: string;
@@ -15,11 +9,23 @@ interface GenerateTasksInput {
 export const aiService = {
   async generateTasks(
     workspaceId: string,
-    input: GenerateTasksInput
-  ): Promise<GeneratedTask[]> {
-    const { data } = await axiosInstance.post<GeneratedTask[]>(
+    input: GenerateTasksInput,
+  ): Promise<TaskDraftBatch> {
+    const { data } = await axiosInstance.post<TaskDraftBatch>(
       `/workspaces/${workspaceId}/ai/generate-tasks`,
-      input
+      input,
+    );
+    return data;
+  },
+
+  async regenerateBatch(
+    workspaceId: string,
+    batchId: string,
+    input: GenerateTasksInput,
+  ): Promise<TaskDraftBatch> {
+    const { data } = await axiosInstance.post<TaskDraftBatch>(
+      `/workspaces/${workspaceId}/ai/generate-tasks/${batchId}/regenerate`,
+      input,
     );
     return data;
   },

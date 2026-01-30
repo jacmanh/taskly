@@ -87,10 +87,14 @@ export {
 
 export { RadioGroup, RadioGroupItem } from './lib/radix/RadioGroup';
 export { Label } from './lib/radix/Label';
+export { Tabs, TabsList, TabsTrigger, TabsContent } from './lib/radix/Tabs';
 
 // Calendar Components
 export { Calendar, type CalendarProps } from './components/calendar/Calendar';
 export { DatePicker, type DatePickerProps } from './components/DatePicker';
+
+// Markdown Renderer
+export { MarkdownRenderer } from './components/MarkdownRenderer/MarkdownRenderer';
 
 // Autocomplete Components
 export {

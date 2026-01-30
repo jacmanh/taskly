@@ -1,0 +1,47 @@
+enum TaskDraftBatchStatus {
+  PENDING
+  ACCEPTED
+  CANCELLED
+}
+
+model TaskDraftBatch {
+  id     String               @id @default(cuid())
+  title  String
+  prompt String
+  status TaskDraftBatchStatus @default(PENDING)
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  creatorId String
+  creator   User @relation("DraftBatchCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+
+  items TaskDraftItem[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([projectId])
+  @@index([creatorId])
+  @@index([deletedAt])
+  @@map("task_draft_batches")
+}
+
+model TaskDraftItem {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  status      TaskStatus   @default(TODO)
+  priority    TaskPriority @default(MEDIUM)
+  enabled     Boolean      @default(true)
+
+  batchId String
+  batch   TaskDraftBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([batchId])
+  @@map("task_draft_items")
+}

@@ -4,13 +4,11 @@ import { useParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { FullPageLoading } from '../../../components/FullPageLoading';
 
-// Each feature is imported ONLY at the page level
 import { useWorkspaceContext } from '@features/workspaces/contexts/WorkspaceContext';
 import { ProjectContent } from '@features/projects/components/ProjectContent';
 import { useSuspenseWorkspaceProjects } from '@features/projects/hooks/useProjects';
 import { TasksTableView } from '@features/tasks/components/TasksTableView';
 import { useCreateTaskDrawer } from '@features/tasks/hooks/useCreateTaskDrawer';
-import { useGenerateTasksDrawer } from '@features/ai/hooks/useGenerateTasksDrawer';
 import { Workspace } from '@taskly/types';
 import { Spinner } from '@taskly/design-system';
 
@@ -37,7 +35,6 @@ export default function ProjectDetailPage() {
   );
 }
 
-// Inner component to use hooks after Suspense boundary
 function ProjectPageContent({
   workspaceId,
   projectSlug,
@@ -50,17 +47,10 @@ function ProjectPageContent({
   const { data: projects = [] } = useSuspenseWorkspaceProjects(workspaceId);
   const project = projects.find((p) => p.slug === projectSlug);
   const { openCreateTaskDrawer } = useCreateTaskDrawer();
-  const { openGenerateTasksDrawer } = useGenerateTasksDrawer();
 
   const handleCreateTask = () => {
     if (project) {
       openCreateTaskDrawer(workspaceId, project.id);
-    }
-  };
-
-  const handleGenerateTasks = () => {
-    if (project) {
-      openGenerateTasksDrawer(workspaceId, project.id);
     }
   };
 
@@ -69,7 +59,7 @@ function ProjectPageContent({
       workspaceId={workspaceId}
       projectSlug={projectSlug}
       onCreateTask={handleCreateTask}
-      onGenerateTasks={handleGenerateTasks}
+      activeTab="backlog"
     >
       {project && (
         <Suspense fallback={<Spinner size="lg" />}>

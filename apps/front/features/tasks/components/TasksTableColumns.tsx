@@ -34,7 +34,7 @@ const PRIORITY_BADGE_CLASSES = {
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData = Task> {
-    deleteTask: (task: Task, e: React.MouseEvent<HTMLDivElement>) => void;
+    deleteTask?: (task: Task, e: React.MouseEvent<HTMLDivElement>) => void;
   }
 }
 

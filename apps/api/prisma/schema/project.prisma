@@ -10,8 +10,9 @@ model Project {
   workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
-  tasks       Task[]
-  sprints     Sprint[]
+  tasks            Task[]
+  sprints          Sprint[]
+  taskDraftBatches TaskDraftBatch[]
 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

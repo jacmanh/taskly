@@ -22,4 +22,19 @@ export class AiController {
       user.id,
     );
   }
+
+  @Post('generate-tasks/:batchId/regenerate')
+  regenerateBatch(
+    @Param('workspaceId') workspaceId: string,
+    @Param('batchId') batchId: string,
+    @Body() generateTasksDto: GenerateTasksDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.aiService.regenerateBatch(
+      workspaceId,
+      batchId,
+      generateTasksDto,
+      user.id,
+    );
+  }
 }

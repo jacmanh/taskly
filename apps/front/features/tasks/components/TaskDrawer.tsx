@@ -7,6 +7,7 @@ import {
   EditableSelect,
   DatePicker,
   EditableAutocomplete,
+  MarkdownRenderer,
 } from '@taskly/design-system';
 import type { Task, Workspace } from '@taskly/types';
 import { TaskStatus, TaskPriority } from '@taskly/types';
@@ -90,6 +91,7 @@ export function TaskDrawer({ task: initialTask, workspace }: TaskDrawerProps) {
           label="Description"
           value={task.description || ''}
           validate={zodFieldValidator(taskFormSchema.shape.description)}
+          renderView={(value) => <MarkdownRenderer content={value} />}
           onSave={(value) => {
             handleUpdateTask('description', value as string);
           }}

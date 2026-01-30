@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Drawer, Button, Textarea, Spinner } from '@taskly/design-system';
+import type { TaskDraftItem } from '@taskly/types';
 import { TaskStatus, TaskPriority } from '@taskly/types';
 import { useGenerateTasks } from '../hooks/useGenerateTasks';
 import { useCreateManyTasks } from '@features/tasks/hooks/useTasks';
@@ -11,7 +12,6 @@ import {
   generateTasksSchema,
   GenerateTasksFormData,
 } from '../schemas/generateTasksSchema';
-import type { GeneratedTask } from '../services/ai.service';
 
 import '@features/tasks/styles/tasks.css';
 
@@ -34,7 +34,7 @@ export function GenerateTasksForm({
   onSuccess,
   onCancel,
 }: GenerateTasksFormProps) {
-  const [generatedTasks, setGeneratedTasks] = useState<GeneratedTask[]>([]);
+  const [generatedTasks, setGeneratedTasks] = useState<TaskDraftItem[]>([]);
   const { mutate: generateTasks, isPending: isGenerating } = useGenerateTasks();
   const { mutate: createManyTasks, isPending: isCreating } =
     useCreateManyTasks();
@@ -54,8 +54,8 @@ export function GenerateTasksForm({
       generateTasks(
         { workspaceId, projectId, prompt: data.prompt },
         {
-          onSuccess: (tasks) => {
-            setGeneratedTasks(tasks);
+          onSuccess: (batch) => {
+            setGeneratedTasks(batch.items ?? []);
           },
         }
       );

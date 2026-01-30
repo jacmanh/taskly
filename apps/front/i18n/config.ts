@@ -9,4 +9,5 @@ export const i18nNamespaces = [
   'tasks',
   'projects',
   'workspaces',
+  'draftbatches',
 ] as const;

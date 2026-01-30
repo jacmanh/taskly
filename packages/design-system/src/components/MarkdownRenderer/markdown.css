@@ -1,0 +1,68 @@
+.markdown-content {
+  @apply text-sm text-neutral-700;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+  @apply font-semibold text-neutral-900 mt-4 mb-2;
+}
+
+.markdown-content h1 {
+  @apply text-lg;
+}
+.markdown-content h2 {
+  @apply text-base;
+}
+.markdown-content h3 {
+  @apply text-sm;
+}
+
+.markdown-content p {
+  @apply mb-2;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  @apply ml-4 mb-2 space-y-1;
+}
+
+.markdown-content ul {
+  @apply list-disc;
+}
+.markdown-content ol {
+  @apply list-decimal;
+}
+
+.markdown-content li {
+  @apply text-neutral-700;
+}
+
+.markdown-content code {
+  @apply bg-neutral-100 text-neutral-800 px-1.5 py-0.5 rounded text-xs font-mono;
+}
+
+.markdown-content pre {
+  @apply bg-neutral-900 rounded-md p-4 overflow-x-auto mb-2;
+}
+
+.markdown-content pre code {
+  @apply bg-transparent text-neutral-100 p-0;
+}
+
+.markdown-content strong {
+  @apply font-semibold text-neutral-900;
+}
+
+.markdown-content em {
+  @apply italic;
+}
+
+.markdown-content blockquote {
+  @apply border-l-4 border-neutral-300 pl-4 italic text-neutral-600 my-2;
+}
+
+/* Task list checkboxes */
+.markdown-content input[type='checkbox'] {
+  @apply mr-2;
+}
