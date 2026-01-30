@@ -1,0 +1,66 @@
+---
+description: React/Next.js component patterns, design system usage, and DRY principles
+globs: **/*.tsx
+alwaysApply: false
+---
+
+# React Component Patterns
+
+## Component Structure
+- Use `'use client'` only for components requiring interactivity
+- Define `interface ComponentProps` for all props
+- Use `useCallback` for handlers passed as props or in dependencies
+
+## TypeScript
+- Always type props, state, function parameters, and return types
+- Use `import type` for type-only imports, separate from regular imports
+
+## Forms (React Hook Form + Zod)
+```typescript
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Input, Button } from '@taskly/design-system';
+import { formSchema, type FormData } from '../schemas/form.schema';
+
+const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
+  resolver: zodResolver(formSchema),
+});
+```
+
+## Import Conventions
+**NEVER export components from index.ts (except design-system). Always import directly.**
+```typescript
+// ✅ Correct
+import { ComponentName } from './components/ComponentName';
+import { Input, Button, Drawer } from '@taskly/design-system';
+
+// ❌ Wrong - barrel exports
+import { ComponentName } from './components';
+```
+
+## Design System - Drawer
+```tsx
+<Drawer isOpen={isOpen} onOpenChange={setIsOpen}>
+  <Drawer.Header title="Title" description="Optional description" />
+  <div className="space-y-4">{/* Content */}</div>
+  <Drawer.Footer>
+    <button onClick={() => setIsOpen(false)}>Cancel</button>
+    <button onClick={handleSubmit}>Submit</button>
+  </Drawer.Footer>
+</Drawer>
+```
+
+## DRY Patterns
+
+**Query Keys** - Use factory pattern, don't duplicate:
+```typescript
+// ✅ Use createQueryKeys factory
+export const featureKeys = createQueryKeys('feature');
+
+// ❌ Don't duplicate query key structures across features
+```
+
+**Refactoring Triggers:**
+- 2+ similar hooks → extract to shared hook
+- 2+ similar services → create service factory
+- Same form pattern → extract to generic form hook
