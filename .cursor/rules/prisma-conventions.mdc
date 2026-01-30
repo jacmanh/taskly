@@ -1,47 +1,52 @@
 ---
 description: Prisma schema naming conventions and patterns
-globs: "**/*.prisma"
+globs: '**/*.prisma'
 alwaysApply: false
 ---
 
 # Prisma Conventions
 
 ## Naming Summary
-| Element | ORM Side | DB Side | Example |
-|---------|----------|---------|---------|
-| Model | PascalCase, Singular | snake_case, Plural | `User` → `users` |
-| Field | camelCase | - | `createdAt` |
-| Foreign Key | camelCase + Id | - | `workspaceId` |
-| Enum | PascalCase | - | `WorkspaceRole` |
-| Enum Value | SCREAMING_SNAKE_CASE | - | `ADMIN` |
+
+| Element     | ORM Side             | DB Side            | Example          |
+| ----------- | -------------------- | ------------------ | ---------------- |
+| Model       | PascalCase, Singular | snake_case, Plural | `User` → `users` |
+| Field       | camelCase            | -                  | `createdAt`      |
+| Foreign Key | camelCase + Id       | -                  | `workspaceId`    |
+| Enum        | PascalCase           | -                  | `WorkspaceRole`  |
+| Enum Value  | SCREAMING_SNAKE_CASE | -                  | `ADMIN`          |
 
 ## Model Template
+
 ```prisma
 model WorkspaceMember {
   id          String   @id @default(cuid())
-  
+
   workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  
+
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+
   role        WorkspaceRole @default(MEMBER)
-  
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
+
   @@unique([workspaceId, userId])
   @@map("workspace_members")  // Always map to plural snake_case
 }
 ```
 
 ## Rules
+
 **✅ Always:**
+
 - Use `@@map()` on every model → plural snake_case table name
 - Add `createdAt` and `updatedAt` timestamps
 - Use CUID for IDs: `@id @default(cuid())`
 
 **❌ Never:**
+
 - Plural model names in schema
 - Skip `@@map()` even if names seem to match

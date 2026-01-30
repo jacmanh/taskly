@@ -7,17 +7,19 @@ alwaysApply: false
 # NestJS Backend Architecture
 
 ## 3-Layer Pattern
+
 ```
 Controller → Service → Repository → Prisma
 ```
 
-| Layer | Responsibility | Forbidden |
-|-------|---------------|-----------|
-| Controller | HTTP handling only | Business logic, Prisma |
-| Service | Business logic only | HTTP, Prisma |
-| Repository | Prisma queries only | Business logic |
+| Layer      | Responsibility      | Forbidden              |
+| ---------- | ------------------- | ---------------------- |
+| Controller | HTTP handling only  | Business logic, Prisma |
+| Service    | Business logic only | HTTP, Prisma           |
+| Repository | Prisma queries only | Business logic         |
 
 ## File Structure
+
 ```
 apps/api/src/[domain]/
 ├── controllers/[domain].controller.ts
@@ -30,6 +32,7 @@ apps/api/src/[domain]/
 ```
 
 ## DTOs (class-validator, NOT Zod)
+
 ```typescript
 export class CreateResourceDto {
   @IsString()
@@ -45,26 +48,31 @@ export class CreateResourceDto {
 ## DRY Patterns
 
 **Shared Utilities** - Extract to `common/utils/`:
+
 ```typescript
 // common/utils/slug.util.ts - reuse across services
-export function generateSlug(name: string, existingSlugs: string[]): string
+export function generateSlug(name: string, existingSlugs: string[]): string;
 
 // common/utils/prisma-selects.ts - reuse across repositories
 export const USER_SELECT = { id: true, name: true, email: true, avatar: true };
 ```
 
 **Refactoring Triggers:**
+
 - Same utility in 2+ services → extract to `common/utils/`
 - Same Prisma select in 3+ queries → create constant
 - Same error pattern → use `createApiError` utility
 
 ## Rules
+
 **✅ Always:**
+
 - Validate entity exists before update/delete
 - Use class-validator in DTOs
 - Extract repeated code to `common/utils/`
 
 **❌ Never:**
+
 - Business logic in controllers
 - Prisma in controllers or services
 - Duplicate utilities across services
