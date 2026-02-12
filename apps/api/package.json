@@ -2,14 +2,15 @@
   "name": "api",
   "version": "0.0.1",
   "dependencies": {
-    "@taskly/types": "workspace:*",
     "@nestjs/jwt": "^11.0.1",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/throttler": "^6.4.0",
+    "@taskly/types": "workspace:*",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
     "helmet": "^8.1.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1"

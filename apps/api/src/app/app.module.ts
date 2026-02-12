@@ -12,6 +12,7 @@ import { ProjectsModule } from '../projects/projects.module';
 import { TasksModule } from '../tasks/tasks.module';
 import { AiModule } from '../ai/ai.module';
 import { TaskDraftsModule } from '../task-drafts/task-drafts.module';
+import { GitHubModule } from '../github/github.module';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Module({
@@ -34,6 +35,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
     TasksModule,
     AiModule,
     TaskDraftsModule,
+    GitHubModule,
   ],
   controllers: [AppController],
   providers: [

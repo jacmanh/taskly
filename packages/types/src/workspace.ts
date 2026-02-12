@@ -10,6 +10,10 @@ export interface Workspace {
   color?: string;
   icon?: string;
   context?: string | null;
+  githubRepoUrl?: string | null;
+  githubRepoName?: string | null;
+  githubOwner?: string | null;
+  aiGeneratedContext?: string | null;
   ownerId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -28,6 +32,10 @@ export interface UpdateWorkspaceInput {
   color?: string;
   icon?: string;
   context?: string;
+  githubRepoUrl?: string;
+  githubRepoName?: string;
+  githubOwner?: string;
+  aiGeneratedContext?: string;
   deleteStrategy?: DeleteStrategy;
 }
 
