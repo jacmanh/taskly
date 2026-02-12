@@ -23,6 +23,22 @@ export class UpdateWorkspaceDto implements UpdateWorkspaceInput {
   @MaxLength(500)
   context?: UpdateWorkspaceInput['context'];
 
+  @IsString()
+  @IsOptional()
+  githubRepoUrl?: UpdateWorkspaceInput['githubRepoUrl'];
+
+  @IsString()
+  @IsOptional()
+  githubRepoName?: UpdateWorkspaceInput['githubRepoName'];
+
+  @IsString()
+  @IsOptional()
+  githubOwner?: UpdateWorkspaceInput['githubOwner'];
+
+  @IsString()
+  @IsOptional()
+  aiGeneratedContext?: UpdateWorkspaceInput['aiGeneratedContext'];
+
   @IsEnum(DeleteStrategy)
   @IsOptional()
   deleteStrategy?: DeleteStrategy;

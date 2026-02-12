@@ -1,5 +1,5 @@
 model Project {
-  id          String    @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
   slug        String
   description String?
@@ -14,9 +14,9 @@ model Project {
   sprints          Sprint[]
   taskDraftBatches TaskDraftBatch[]
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  archivedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  archivedAt DateTime?
 
   @@unique([workspaceId, slug])
   @@map("projects")

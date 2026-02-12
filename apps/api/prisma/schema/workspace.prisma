@@ -4,24 +4,30 @@ enum DeleteStrategy {
 }
 
 model Workspace {
-  id        String   @id @default(cuid())
-  name      String
-  slug      String   @unique       // ex: team-name, pratique pour les URLs
-  color     String?                // optionnel (tag visuel)
-  icon      String?                // optionnel (emoji/logo)
-  context   String?                // contexte pour la génération IA de tâches
+  id      String  @id @default(cuid())
+  name    String
+  slug    String  @unique // ex: team-name, pratique pour les URLs
+  color   String? // optionnel (tag visuel)
+  icon    String? // optionnel (emoji/logo)
+  context String? // contexte pour la génération IA de tâches
 
-  ownerId   String
-  owner     User     @relation("WorkspaceOwner", fields: [ownerId], references: [id])
+  // GitHub integration fields
+  githubRepoUrl      String? // Full GitHub repository URL
+  githubRepoName     String? // Repository name (e.g., "taskly")
+  githubOwner        String? // Repository owner/organization
+  aiGeneratedContext String? @db.Text // AI-generated context from repo analysis
 
-  members   WorkspaceMember[]
-  projects  Project[]
-  sprints   Sprint[]
+  ownerId String
+  owner   User   @relation("WorkspaceOwner", fields: [ownerId], references: [id])
+
+  members  WorkspaceMember[]
+  projects Project[]
+  sprints  Sprint[]
 
   deleteStrategy DeleteStrategy @default(SOFT)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   archivedAt DateTime?
 
   @@map("workspaces")
