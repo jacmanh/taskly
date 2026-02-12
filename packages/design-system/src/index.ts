@@ -83,10 +83,10 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-} from './lib/radix/Dialog';
+} from './lib/radix/dialog';
 
 export { RadioGroup, RadioGroupItem } from './lib/radix/RadioGroup';
-export { Label } from './lib/radix/Label';
+export { Label } from './lib/radix/label';
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './lib/radix/Tabs';
 
 // Calendar Components
