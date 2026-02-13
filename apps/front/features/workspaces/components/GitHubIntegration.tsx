@@ -1,28 +1,74 @@
 'use client';
 
-import { useState } from 'react';
-import { Button, Select, Label, Spinner } from '@taskly/design-system';
+import { useState, useCallback, useMemo } from 'react';
+import {
+  Button,
+  Label,
+  Spinner,
+  Autocomplete,
+  AutocompleteTrigger,
+  AutocompleteContent,
+  AutocompleteList,
+  AutocompleteItem,
+  AutocompleteEmpty,
+} from '@taskly/design-system';
+import type { AutocompleteOption } from '@taskly/design-system';
 import { useCurrentWorkspace } from '../hooks/useCurrentWorkspace';
-import { useGitHubAuth, useGitHubRepositories, useConnectGitHubToWorkspace } from '../../github/hooks/useGitHub';
-import type { GitHubRepository } from '../../github/services/github.service';
+import {
+  useGitHubAuth,
+  useGitHubRepositories,
+  useConnectGitHubToWorkspace,
+} from '../../github/hooks/useGitHub';
+import {
+  githubService,
+  type GitHubRepository,
+} from '../../github/services/github.service';
+
+const GITHUB_TOKEN_STORAGE_KEY = 'taskly_github_access_token';
 
 export function GitHubIntegration() {
   const { currentWorkspace: workspace } = useCurrentWorkspace();
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [selectedRepo, setSelectedRepo] = useState<GitHubRepository | null>(null);
+  const [accessToken, setAccessTokenState] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null;
+    return sessionStorage.getItem(GITHUB_TOKEN_STORAGE_KEY);
+  });
+
+  const setAccessToken = useCallback((token: string | null) => {
+    setAccessTokenState(token);
+    if (typeof window !== 'undefined') {
+      if (token) {
+        sessionStorage.setItem(GITHUB_TOKEN_STORAGE_KEY, token);
+      } else {
+        sessionStorage.removeItem(GITHUB_TOKEN_STORAGE_KEY);
+      }
+    }
+  }, []);
+  const [selectedRepo, setSelectedRepo] = useState<GitHubRepository | null>(
+    null
+  );
 
   const { mutate: initiateAuth, isPending: isAuthPending } = useGitHubAuth();
-  const { data: repositories, isLoading: isLoadingRepos } = useGitHubRepositories(accessToken);
-  const { mutate: connectRepo, isPending: isConnecting } = useConnectGitHubToWorkspace();
+  const { data: repositories, isLoading: isLoadingRepos } =
+    useGitHubRepositories(accessToken);
+  const { mutate: connectRepo, isPending: isConnecting } =
+    useConnectGitHubToWorkspace();
 
   const handleConnectGitHub = () => {
     initiateAuth(undefined, {
       onSuccess: () => {
         // Listen for OAuth callback message from popup window
-        const handleMessage = (event: MessageEvent) => {
-          if (event.data.type === 'github-auth-success' && event.data.accessToken) {
-            setAccessToken(event.data.accessToken);
+        const handleMessage = async (event: MessageEvent) => {
+          if (event.data.type === 'github-oauth-callback' && event.data.code) {
             window.removeEventListener('message', handleMessage);
+            try {
+              const { accessToken: token } = await githubService.handleCallback(
+                event.data.code,
+                event.data.state
+              );
+              setAccessToken(token);
+            } catch (error) {
+              console.error('Failed to exchange code for token', error);
+            }
           }
         };
         window.addEventListener('message', handleMessage);
@@ -57,6 +103,16 @@ export function GitHubIntegration() {
     );
   };
 
+  const repositoryOptions: AutocompleteOption<string>[] = useMemo(() => {
+    if (!repositories) return [];
+    return repositories.map((repo) => ({
+      value: repo.full_name,
+      label: repo.full_name,
+      description: repo.description || undefined,
+      metadata: { language: repo.language },
+    }));
+  }, [repositories]);
+
   const isConnected = !!workspace?.githubRepoUrl;
 
   return (
@@ -64,8 +120,8 @@ export function GitHubIntegration() {
       <div>
         <h4 className="font-medium leading-none mb-2">Intégration GitHub</h4>
         <p className="text-sm text-neutral-500 mb-4">
-          Connectez un dépôt GitHub pour permettre à l'IA d'analyser votre
-          projet et générer des user stories pertinentes.
+          Connectez un dépôt GitHub pour permettre à &apos;IA d&apos;analyser
+          votre projet et générer des user stories pertinentes.
         </p>
       </div>
 
@@ -94,7 +150,7 @@ export function GitHubIntegration() {
               Déconnecter
             </Button>
           </div>
-          
+
           {workspace.aiGeneratedContext && (
             <div className="mt-3 pt-3 border-t border-neutral-200">
               <p className="text-sm font-medium mb-2">Contexte IA généré:</p>
@@ -126,25 +182,50 @@ export function GitHubIntegration() {
                     </span>
                   </div>
                 ) : (
-                  <Select
-                    id="repository"
-                    value={selectedRepo?.full_name || ''}
-                    onValueChange={handleSelectRepository}
+                  <Autocomplete
+                    options={repositoryOptions}
+                    value={selectedRepo?.full_name}
+                    onValueChange={(value) => {
+                      if (value) handleSelectRepository(value as string);
+                    }}
+                    filter="default"
+                    placeholder="Rechercher un dépôt..."
+                    emptyMessage="Aucun dépôt trouvé"
                   >
-                    <option value="">-- Choisir un dépôt --</option>
-                    {repositories?.map((repo) => (
-                      <option key={repo.id} value={repo.full_name}>
-                        {repo.full_name}
-                        {repo.description && ` - ${repo.description}`}
-                      </option>
-                    ))}
-                  </Select>
+                    <AutocompleteTrigger placeholder="Rechercher un dépôt..." />
+                    <AutocompleteContent>
+                      <AutocompleteList>
+                        {repositoryOptions.map((option) => (
+                          <AutocompleteItem
+                            key={option.value}
+                            value={option.value}
+                          >
+                            <div>
+                              <span className="font-medium">
+                                {option.label}
+                              </span>
+                              {option.metadata?.language && (
+                                <span className="ml-2 text-xs text-neutral-400 bg-neutral-100 px-1.5 py-0.5 rounded">
+                                  {option.metadata.language as string}
+                                </span>
+                              )}
+                            </div>
+                          </AutocompleteItem>
+                        ))}
+                        <AutocompleteEmpty>
+                          Aucun dépôt trouvé
+                        </AutocompleteEmpty>
+                      </AutocompleteList>
+                    </AutocompleteContent>
+                  </Autocomplete>
                 )}
               </div>
 
               {selectedRepo && (
                 <div className="rounded-lg border border-neutral-200 p-3 bg-neutral-50">
-                  <p className="text-sm font-medium">{selectedRepo.full_name}</p>
+                  <p className="text-sm font-medium">
+                    {selectedRepo.full_name}
+                  </p>
                   {selectedRepo.description && (
                     <p className="text-sm text-neutral-600 mt-1">
                       {selectedRepo.description}

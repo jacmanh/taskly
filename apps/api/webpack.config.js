@@ -21,7 +21,8 @@ module.exports = composePlugins(withNx(), (config) => {
     'bcrypt',
     '@prisma/client',
     'class-validator',
-    'class-transformer'
+    'class-transformer',
+    'express-session'
   );
 
   return config;

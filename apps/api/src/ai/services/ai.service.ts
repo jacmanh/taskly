@@ -70,6 +70,7 @@ export class AiService {
       prompt: dto.prompt,
       workspaceName: workspace.name,
       workspaceContext: workspace.context,
+      githubContext: workspace.aiGeneratedContext,
       projectName: project.name,
       projectDescription: project.description,
       projectContext: project.context,

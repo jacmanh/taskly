@@ -11,34 +11,13 @@ function GitHubCallbackContent() {
     const code = searchParams.get('code');
     const state = searchParams.get('state');
 
-    if (code && state) {
-      // Send message to parent window with the OAuth data
-      if (window.opener) {
-        // Exchange code for token via API
-        fetch('/api/github/auth/callback?code=' + code + '&state=' + state)
-          .then((res) => res.json())
-          .then((data) => {
-            window.opener.postMessage(
-              {
-                type: 'github-auth-success',
-                accessToken: data.accessToken,
-              },
-              window.location.origin
-            );
-            window.close();
-          })
-          .catch((error) => {
-            console.error('Failed to exchange code for token', error);
-            window.opener.postMessage(
-              {
-                type: 'github-auth-error',
-                error: error.message,
-              },
-              window.location.origin
-            );
-            window.close();
-          });
-      }
+    if (code && state && window.opener) {
+      // Relay OAuth params to parent window, which has the auth context to call the API
+      window.opener.postMessage(
+        { type: 'github-oauth-callback', code, state },
+        window.location.origin
+      );
+      window.close();
     }
   }, [searchParams]);
 

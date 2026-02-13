@@ -83,10 +83,10 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-} from './lib/radix/dialog';
+} from './lib/radix/Dialog';
 
 export { RadioGroup, RadioGroupItem } from './lib/radix/RadioGroup';
-export { Label } from './lib/radix/label';
+export { Label } from './lib/radix/Label';
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './lib/radix/Tabs';
 
 // Calendar Components
@@ -131,3 +131,16 @@ export {
   type AutocompleteSeparatorProps,
   type EditableAutocompleteProps,
 } from './components/Autocomplete';
+
+export {
+  Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetPortal,
+  SheetOverlay,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+} from './lib/radix/Sheet';

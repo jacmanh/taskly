@@ -11,8 +11,12 @@
     "class-validator": "^0.14.2",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.3",
+    "express-session": "^1.18.1",
     "helmet": "^8.1.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/express-session": "^1.18.2"
   }
 }
