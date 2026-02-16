@@ -131,3 +131,16 @@ export {
   type AutocompleteSeparatorProps,
   type EditableAutocompleteProps,
 } from './components/Autocomplete';
+
+export {
+  Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetPortal,
+  SheetOverlay,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+} from './lib/radix/Sheet';

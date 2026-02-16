@@ -43,7 +43,7 @@ export const AutocompleteTrigger = forwardRef<
     multiple && hasValue && selectedOptions.length > 0 && !open;
 
   return (
-    <PopoverPrimitive.Trigger asChild>
+    <PopoverPrimitive.Anchor asChild>
       <div className={cn('relative w-full', className)}>
         <div
           className={cn(
@@ -148,7 +148,7 @@ export const AutocompleteTrigger = forwardRef<
         {/* Error message */}
         {error && <p className="mt-1 text-sm text-error-600">{error}</p>}
       </div>
-    </PopoverPrimitive.Trigger>
+    </PopoverPrimitive.Anchor>
   );
 });
 

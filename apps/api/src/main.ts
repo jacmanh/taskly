@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import session from 'express-session';
 import { AppModule } from './app/app.module';
 
 async function bootstrap() {
@@ -14,6 +15,20 @@ async function bootstrap() {
 
   // Parse cookies coming from the client
   app.use(cookieParser());
+
+  // Configure session middleware for OAuth flows
+  app.use(
+    session({
+      secret: process.env.COOKIE_SECRET ?? 'fallback-secret-change-in-production',
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 1000 * 60 * 15, // 15 minutes
+      },
+    })
+  );
 
   // Global DTO validation pipeline
   app.useGlobalPipes(

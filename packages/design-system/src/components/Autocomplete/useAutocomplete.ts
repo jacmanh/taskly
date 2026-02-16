@@ -349,10 +349,12 @@ export function useAutocomplete<
   const onInputBlur = useCallback(() => {
     // Delay closing to allow click on option
     setTimeout(() => {
-      // Only close if not focused on content
+      const active = document.activeElement;
+      // Only close if focus is not on the trigger input or inside the popover content
       if (
-        document.activeElement !== contentRef.current &&
-        !contentRef.current?.contains(document.activeElement)
+        active !== triggerRef.current &&
+        active !== contentRef.current &&
+        !contentRef.current?.contains(active)
       ) {
         setOpen(false);
       }

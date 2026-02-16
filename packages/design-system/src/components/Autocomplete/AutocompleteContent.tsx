@@ -41,12 +41,20 @@ export const AutocompleteContent = forwardRef<
         role="listbox"
         aria-label="Options"
         aria-multiselectable={props.multiple}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        onCloseAutoFocus={(e) => e.preventDefault()}
+        onFocusOutside={(e) => e.preventDefault()}
         onInteractOutside={(e) => {
-          // Prevent closing when clicking on the trigger input
+          // Allow closing when clicking truly outside (other parts of the page)
+          // Only prevent default if interacting with the trigger/input
           const target = e.target as HTMLElement;
-          if (refs.triggerRef.current?.contains(target)) {
+          const triggerElement = refs.triggerRef.current;
+          
+          if (triggerElement && (target === triggerElement || triggerElement.contains(target))) {
+            // Interaction is with the trigger/input - prevent Radix from closing
             e.preventDefault();
           }
+          // Otherwise, allow Radix to close the popover (don't preventDefault)
         }}
         onWheel={(e) => {
           // Allow wheel scrolling within the popover content

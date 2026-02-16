@@ -17,6 +17,7 @@ export interface GenerateTasksContext {
   prompt: string;
   workspaceName: string;
   workspaceContext?: string | null;
+  githubContext?: string | null;
   projectName: string;
   projectDescription?: string | null;
   projectContext?: string | null;
